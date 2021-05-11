@@ -10,14 +10,6 @@ terraform {
   }
 }
 
-# This is to work around an issue with azuredevops_resource_authorization
-# The service connection resource is not ready immediately
-# so the recommendation is to wait 30 seconds until it's ready
-# https://github.com/microsoft/terraform-provider-azuredevops/issues/266
-resource "time_sleep" "wait" {
-  create_duration = "30s"
-}
-
 resource "azuredevops_build_definition" "pipeline" {
   project_id = var.project_id
   name       = "${var.repository.name}.deploy"
@@ -55,8 +47,16 @@ resource "azuredevops_build_definition" "pipeline" {
   }
 }
 
-# code review serviceendpoint authorization
-resource "azuredevops_resource_authorization" "github_service_connection_auth" {
+# This is to work around an issue with azuredevops_resource_authorization
+# The service connection resource is not ready immediately
+# so the recommendation is to wait 30 seconds until it's ready
+# https://github.com/microsoft/terraform-provider-azuredevops/issues/266
+resource "time_sleep" "wait" {
+  create_duration = "30s"
+}
+
+# github_service_connection_id serviceendpoint authorization
+resource "azuredevops_resource_authorization" "github_service_connection_authorization" {
   depends_on = [azuredevops_build_definition.pipeline, time_sleep.wait]
 
   project_id    = var.project_id
@@ -66,12 +66,13 @@ resource "azuredevops_resource_authorization" "github_service_connection_auth" {
   type          = "endpoint"
 }
 
-resource "azuredevops_resource_authorization" "auth_service_connection_ids" {
+# others service_connection_ids serviceendpoint authorization
+resource "azuredevops_resource_authorization" "service_connection_ids_authorization" {
   depends_on = [azuredevops_build_definition.pipeline, time_sleep.wait]
-  count      = var.auth_service_connection_ids == null ? 0 : 1
+  count      = var.service_connection_ids_authorization == null ? 0 : 1
 
   project_id    = var.project_id
-  resource_id   = var.auth_service_connection_ids[count.index]
+  resource_id   = var.service_connection_ids_authorization[count.index]
   definition_id = azuredevops_build_definition.pipeline.id
   authorized    = true
   type          = "endpoint"

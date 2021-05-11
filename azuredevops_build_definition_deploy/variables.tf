@@ -30,7 +30,7 @@ variable "variables_secret" {
   description = "(Optional) Pipeline secret variables"
 }
 
-variable "auth_service_connection_ids" {
+variable "service_connection_ids_authorization" {
   type        = list(number)
   default     = null
   description = "(Optional) List service connection IDs that pipeline needs authorization. github_service_connection_id is authorized by default"
