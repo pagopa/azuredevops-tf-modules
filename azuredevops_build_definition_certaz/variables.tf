@@ -41,7 +41,7 @@ variable "variables_secret" {
 }
 
 variable "service_connection_ids_authorization" {
-  type        = list(string)
+  type        = list(any)
   default     = null
   description = "(Optional) List service connection IDs that pipeline needs authorization. github_service_connection_id is authorized by default"
 }
