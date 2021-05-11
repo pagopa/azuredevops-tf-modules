@@ -87,7 +87,7 @@ resource "azuredevops_resource_authorization" "github_service_connection_authori
 # others service_connection_ids serviceendpoint authorization
 resource "azuredevops_resource_authorization" "service_connection_ids_authorization" {
   depends_on = [azuredevops_build_definition.pipeline, time_sleep.wait]
-  count      = var.service_connection_ids_authorization == null ? 0 : 1
+  count      = var.service_connection_ids_authorization == null ? 0 : length(var.service_connection_ids_authorization)
 
   project_id    = var.project_id
   resource_id   = var.service_connection_ids_authorization[count.index]
