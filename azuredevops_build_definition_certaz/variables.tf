@@ -13,6 +13,16 @@ variable "repository" {
   description = "(Required) GitHub repository attributes"
 }
 
+variable "name" {
+  type        = string
+  description = "(Required) Pipeline name equals to domain name"
+}
+
+variable "path" {
+  type        = string
+  description = "(Required) Pipeline path on Azure DevOps"
+}
+
 variable "github_service_connection_id" {
   type        = number
   description = "(Required) GitHub service connection ID used to link Azure DevOps."
