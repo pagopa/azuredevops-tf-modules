@@ -13,8 +13,18 @@ variable "repository" {
   description = "(Required) GitHub repository attributes"
 }
 
+variable "name" {
+  type        = string
+  description = "(Required) Pipeline name equals to domain name"
+}
+
+variable "path" {
+  type        = string
+  description = "(Required) Pipeline path on Azure DevOps"
+}
+
 variable "github_service_connection_id" {
-  type        = number
+  type        = string
   description = "(Required) GitHub service connection ID used to link Azure DevOps."
 }
 
@@ -31,7 +41,7 @@ variable "variables_secret" {
 }
 
 variable "service_connection_ids_authorization" {
-  type        = list(number)
+  type        = list(string)
   default     = null
   description = "(Optional) List service connection IDs that pipeline needs authorization. github_service_connection_id is authorized by default"
 }

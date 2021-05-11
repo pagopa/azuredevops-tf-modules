@@ -12,8 +12,8 @@ terraform {
 
 resource "azuredevops_build_definition" "pipeline" {
   project_id = var.project_id
-  name       = "${var.repository.name}.deploy"
-  path       = "\\${var.repository.name}"
+  name       = var.name
+  path       = "\\${var.path}"
 
   repository {
     repo_type             = "GitHub"
@@ -28,7 +28,7 @@ resource "azuredevops_build_definition" "pipeline" {
     iterator = variable
 
     content {
-      name           = upper(variable.key)
+      name           = variable.key
       value          = variable.value
       allow_override = false
     }
@@ -39,7 +39,7 @@ resource "azuredevops_build_definition" "pipeline" {
     iterator = variable_secret
 
     content {
-      name           = upper(variable_secret.key)
+      name           = variable_secret.key
       secret_value   = variable_secret.value
       is_secret      = true
       allow_override = false
@@ -69,7 +69,7 @@ resource "azuredevops_resource_authorization" "github_service_connection_authori
 # others service_connection_ids serviceendpoint authorization
 resource "azuredevops_resource_authorization" "service_connection_ids_authorization" {
   depends_on = [azuredevops_build_definition.pipeline, time_sleep.wait]
-  count      = var.service_connection_ids_authorization == null ? 0 : 1
+  count      = var.service_connection_ids_authorization == null ? 0 : length(var.service_connection_ids_authorization)
 
   project_id    = var.project_id
   resource_id   = var.service_connection_ids_authorization[count.index]
