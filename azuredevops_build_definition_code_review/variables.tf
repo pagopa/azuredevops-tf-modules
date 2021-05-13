@@ -5,10 +5,11 @@ variable "project_id" {
 
 variable "repository" {
   type = object({
-    organization   = string
-    name           = string
-    branch_name    = string
-    pipelines_path = string
+    organization    = string
+    name            = string
+    branch_name     = string
+    pipelines_path  = string
+    yml_prefix_name = string
   })
   description = "(Required) GitHub repository attributes"
 }
