@@ -10,6 +10,10 @@ terraform {
   }
 }
 
+locals {
+  yml_prefix_name = var.repository.yml_prefix_name == null ? "" : "${var.repository.yml_prefix_name}-"
+}
+
 resource "azuredevops_build_definition" "pipeline" {
   project_id = var.project_id
   name       = "${var.repository.name}.deploy"
@@ -19,7 +23,7 @@ resource "azuredevops_build_definition" "pipeline" {
     repo_type             = "GitHub"
     repo_id               = "${var.repository.organization}/${var.repository.name}"
     branch_name           = var.repository.branch_name
-    yml_path              = "${var.repository.pipelines_path}/deploy-pipelines.yml"
+    yml_path              = "${var.repository.pipelines_path}/${local.yml_prefix_name}deploy-pipelines.yml"
     service_connection_id = var.github_service_connection_id
   }
 
