@@ -10,44 +10,29 @@ terraform {
   }
 }
 
+locals {
+  yml_prefix_name = var.repository.yml_prefix_name == null ? "" : "${var.repository.yml_prefix_name}-"
+}
+
 resource "azuredevops_build_definition" "pipeline" {
   project_id = var.project_id
-  name       = "${var.repository.name}.deploy"
+  name       = "${var.repository.name}.code-review"
   path       = "\\${var.repository.name}"
 
   repository {
     repo_type             = "GitHub"
     repo_id               = "${var.repository.organization}/${var.repository.name}"
     branch_name           = var.repository.branch_name
-    yml_path              = "azure-pipelines.yml"
+    yml_path              = "${var.repository.pipelines_path}/${local.yml_prefix_name}code-review-pipelines.yml"
     service_connection_id = var.github_service_connection_id
   }
 
-  ci_trigger {
-    override {
-      batch                            = false
-      max_concurrent_builds_per_branch = 1
-      polling_interval                 = 0
-      branch_filter {
-        exclude = []
-        include = [
-          "master",
-          "develop",
-          "release/*",
-          "features/*",
-          "hotfix/*",
-        ]
-      }
-      path_filter {
-        exclude = []
-        include = [
-          "api/*",
-          "app/*",
-          "core/*",
-          "integration/*",
-          "pom.xml",
-        ]
-      }
+  pull_request_trigger {
+    use_yaml       = var.pull_request_trigger_use_yaml
+    initial_branch = var.repository.branch_name
+    forks {
+      enabled       = false
+      share_secrets = false
     }
   }
 

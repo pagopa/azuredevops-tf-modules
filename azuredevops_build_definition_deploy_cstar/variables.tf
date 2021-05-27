@@ -14,6 +14,12 @@ variable "repository" {
   description = "(Required) GitHub repository attributes"
 }
 
+variable "ci_trigger_use_yaml" {
+  type        = bool
+  description = "(Optional) Use the azure-pipeline file for the build configuration. Defaults to false."
+  default     = false
+}
+
 variable "github_service_connection_id" {
   type        = string
   description = "(Required) GitHub service connection ID used to link Azure DevOps."

@@ -5,12 +5,19 @@ variable "project_id" {
 
 variable "repository" {
   type = object({
-    organization   = string
-    name           = string
-    branch_name    = string
-    pipelines_path = string
+    organization    = string
+    name            = string
+    branch_name     = string
+    pipelines_path  = string
+    yml_prefix_name = string
   })
   description = "(Required) GitHub repository attributes"
+}
+
+variable "pull_request_trigger_use_yaml" {
+  type        = bool
+  description = "(Optional) Use the azure-pipeline file for the build configuration. Defaults to false."
+  default     = false
 }
 
 variable "github_service_connection_id" {
