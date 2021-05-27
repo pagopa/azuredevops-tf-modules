@@ -14,22 +14,6 @@ variable "repository" {
   description = "(Required) GitHub repository attributes"
 }
 
-# todo not works
-# variable "ci_trigger" {
-#   type = object({
-#     branch_filter = object({
-#       exclude = list(string)
-#       include = list(string)
-#     })
-#     path_filter = object({
-#       exclude = list(string)
-#       include = list(string)
-#     })
-#   })
-#   description = "(Optional) CI trigger policy"
-#   default     = null
-# }
-
 variable "github_service_connection_id" {
   type        = string
   description = "(Required) GitHub service connection ID used to link Azure DevOps."

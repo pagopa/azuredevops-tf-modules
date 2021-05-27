@@ -27,26 +27,33 @@ resource "azuredevops_build_definition" "pipeline" {
     service_connection_id = var.github_service_connection_id
   }
 
-  # todo not works
-  # dynamic "ci_trigger" {
-  #   for_each = var.ci_trigger
-
-  #   content {
-  #     override {
-  #       batch                            = false
-  #       max_concurrent_builds_per_branch = 1
-  #       polling_interval                 = 0
-  #       branch_filter {
-  #         include = ci_trigger.value.branch_filter.include
-  #         exclude = ci_trigger.value.branch_filter.exclude
-  #       }
-  #       path_filter {
-  #         include = ci_trigger.value.path_filter.include
-  #         exclude = ci_trigger.value.path_filter.exclude
-  #       }
-  #     }
-  #   }
-  # }
+  ci_trigger {
+    override {
+      batch                            = false
+      max_concurrent_builds_per_branch = 1
+      polling_interval                 = 0
+      branch_filter {
+        exclude = []
+        include = [
+          "master",
+          "develop",
+          "release/*",
+          "features/*",
+          "hotfix/*",
+        ]
+      }
+      path_filter {
+        exclude = []
+        include = [
+          "api/*",
+          "app/*",
+          "core/*",
+          "integration/*",
+          "pom.xml",
+        ]
+      }
+    }
+  }
 
   dynamic "variable" {
     for_each = var.variables
