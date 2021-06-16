@@ -14,6 +14,12 @@ variable "repository" {
   description = "(Required) GitHub repository attributes"
 }
 
+variable "ci_trigger_use_yaml" {
+  type        = bool
+  description = "(Optional) Use the azure-pipeline file for the build configuration. Defaults to false."
+  default     = false
+}
+
 # todo not works
 # variable "ci_trigger" {
 #   type = object({

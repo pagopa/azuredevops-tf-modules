@@ -28,19 +28,26 @@ resource "azuredevops_build_definition" "pipeline" {
   }
 
   pull_request_trigger {
+    use_yaml       = var.pull_request_trigger_use_yaml == false ? null : true
     initial_branch = var.repository.branch_name
+
     forks {
       enabled       = false
       share_secrets = false
     }
-    override {
-      auto_cancel = false
-      branch_filter {
-        include = [var.repository.branch_name]
-      }
-      path_filter {
-        exclude = []
-        include = []
+
+    dynamic "override" {
+      for_each = var.pull_request_trigger_use_yaml == true ? [] : ["dummy"]
+
+      content {
+        auto_cancel = true
+        branch_filter {
+          include = [var.repository.branch_name]
+        }
+        path_filter {
+          exclude = []
+          include = []
+        }
       }
     }
   }
