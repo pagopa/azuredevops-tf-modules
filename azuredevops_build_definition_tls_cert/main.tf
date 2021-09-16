@@ -10,10 +10,6 @@ terraform {
   }
 }
 
-provider "azurerm" {
-  features {}
-}
-
 resource "azuredevops_build_definition" "pipeline" {
   depends_on = [null_resource.this, module.secrets]
 

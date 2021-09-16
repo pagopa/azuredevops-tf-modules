@@ -14,10 +14,6 @@ terraform {
   }
 }
 
-provider "azurerm" {
-  features {}
-}
-
 resource "null_resource" "this" {
   # needs az cli > 2.0.81
   # see https://github.com/Azure/azure-cli/issues/12152
