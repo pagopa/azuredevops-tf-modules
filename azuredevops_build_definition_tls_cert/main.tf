@@ -49,42 +49,63 @@ resource "azuredevops_build_definition" "pipeline" {
   }
 
   variable {
-    name         = "AZURE_TENANT_ID"
-    secret_value = var.tenant_id
-    is_secret    = true
+    name           = "LE_AZURE_TENANT_ID"
+    secret_value   = var.tenant_id
+    is_secret      = true
+    allow_override = false
   }
 
   variable {
-    name         = "AZURE_SUBSCRIPTION_ID"
-    secret_value = var.subscription_id
-    is_secret    = true
+    name           = "LE_AZURE_SUBSCRIPTION_ID"
+    secret_value   = var.subscription_id
+    is_secret      = true
+    allow_override = false
   }
 
   variable {
-    name         = "AZURE_CLIENT_ID"
-    secret_value = jsondecode(module.secrets.values["azdo-sp-acme-challenge-${replace(var.dns_record_name, ".", "-")}-${replace(var.dns_zone_name, ".", "-")}"].value).appId
-    is_secret    = true
+    name           = "LE_AZURE_CLIENT_ID"
+    secret_value   = jsondecode(module.secrets.values["azdo-sp-acme-challenge-${replace(var.dns_record_name, ".", "-")}-${replace(var.dns_zone_name, ".", "-")}"].value).appId
+    is_secret      = true
+    allow_override = false
   }
 
   variable {
-    name         = "AZURE_CLIENT_SECRET"
-    secret_value = jsondecode(module.secrets.values["azdo-sp-acme-challenge-${replace(var.dns_record_name, ".", "-")}-${replace(var.dns_zone_name, ".", "-")}"].value).password
-    is_secret    = true
+    name           = "LE_AZURE_CLIENT_SECRET"
+    secret_value   = jsondecode(module.secrets.values["azdo-sp-acme-challenge-${replace(var.dns_record_name, ".", "-")}-${replace(var.dns_zone_name, ".", "-")}"].value).password
+    is_secret      = true
+    allow_override = false
   }
 
   variable {
-    name  = "AZURE_DNS_ZONE_RESOURCE_GROUP"
-    value = var.dns_zone_resource_group
+    name           = "AZURE_DNS_ZONE_RESOURCE_GROUP"
+    value          = var.dns_zone_resource_group
+    allow_override = false
   }
 
   variable {
-    name  = "AZURE_DNS_ZONE"
-    value = var.dns_zone_name
+    name           = "AZURE_DNS_ZONE"
+    value          = var.dns_zone_name
+    allow_override = false
   }
 
   variable {
-    name  = "CSR_COMMON_NAME"
-    value = "${var.dns_record_name}.${var.dns_zone_name}"
+    name           = "CSR_COMMON_NAME"
+    value          = "${var.dns_record_name}.${var.dns_zone_name}"
+    allow_override = false
+  }
+
+  variable {
+    name           = "LE_PRIVATE_KEY_JSON"
+    secret_value   = module.secrets.values["le-private-key-json"].value
+    is_secret      = true
+    allow_override = false
+  }
+
+  variable {
+    name           = "LE_REGR_JSON"
+    secret_value   = module.secrets.values["le-regr-json"].value
+    is_secret      = true
+    allow_override = false
   }
 }
 
@@ -196,5 +217,7 @@ module "secrets" {
 
   secrets = [
     "azdo-sp-acme-challenge-${replace(var.dns_record_name, ".", "-")}-${replace(var.dns_zone_name, ".", "-")}",
+    "le-private-key-json",
+    "le-regr-json",
   ]
 }
