@@ -34,7 +34,8 @@ resource "null_resource" "this" {
 
       CREDENTIAL_VALUE=$(az ad sp create-for-rbac \
         --name "azdo-sp-${self.triggers.name}" \
-        --skip-assignment true)
+        --role "Reader" \
+        --scope "/subscriptions/${self.triggers.subscription_id}/resourceGroups/default-roleassignment-rg")
       
       az keyvault secret set \
         --subscription "${self.triggers.credential_subcription}" \
