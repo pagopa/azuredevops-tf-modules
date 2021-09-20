@@ -21,6 +21,7 @@ resource "null_resource" "this" {
   triggers = {
     name                      = var.name
     subscription_name         = var.subscription_name
+    subscription_id           = var.subscription_id
     credential_subcription    = var.credential_subcription
     credential_key_vault_name = var.credential_key_vault_name
   }
