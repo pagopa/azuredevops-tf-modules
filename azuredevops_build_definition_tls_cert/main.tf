@@ -10,11 +10,16 @@ terraform {
   }
 }
 
+locals {
+  csr_common_name = trim("${var.dns_record_name}.${var.dns_zone_name}", ".")
+  secret_name     = replace(trim("${var.dns_record_name}.${var.dns_zone_name}", "."), ".", "-")
+}
+
 resource "azuredevops_build_definition" "pipeline" {
   depends_on = [null_resource.this, module.secrets]
 
   project_id = var.project_id
-  name       = var.name
+  name       = trim(var.name, ".")
   path       = "\\${var.path}"
 
   repository {
@@ -64,14 +69,14 @@ resource "azuredevops_build_definition" "pipeline" {
 
   variable {
     name           = "LE_AZURE_CLIENT_ID"
-    secret_value   = jsondecode(module.secrets.values["azdo-sp-acme-challenge-${replace(var.dns_record_name, ".", "-")}-${replace(var.dns_zone_name, ".", "-")}"].value).appId
+    secret_value   = jsondecode(module.secrets.values["azdo-sp-acme-challenge-${local.secret_name}"].value).appId
     is_secret      = true
     allow_override = false
   }
 
   variable {
     name           = "LE_AZURE_CLIENT_SECRET"
-    secret_value   = jsondecode(module.secrets.values["azdo-sp-acme-challenge-${replace(var.dns_record_name, ".", "-")}-${replace(var.dns_zone_name, ".", "-")}"].value).password
+    secret_value   = jsondecode(module.secrets.values["azdo-sp-acme-challenge-${local.secret_name}"].value).password
     is_secret      = true
     allow_override = false
   }
@@ -90,7 +95,13 @@ resource "azuredevops_build_definition" "pipeline" {
 
   variable {
     name           = "CSR_COMMON_NAME"
-    value          = "${var.dns_record_name}.${var.dns_zone_name}"
+    value          = local.csr_common_name
+    allow_override = false
+  }
+
+  variable {
+    name           = "KEY_VAULT_CERT_NAME"
+    value          = local.secret_name
     allow_override = false
   }
 
@@ -151,25 +162,26 @@ resource "null_resource" "this" {
     credential_key_vault_name = var.credential_key_vault_name
     dns_record_name           = var.dns_record_name
     dns_zone_name             = var.dns_zone_name
+    name                      = local.secret_name
     dns_zone_resource_group   = var.dns_zone_resource_group
   }
 
   # https://docs.microsoft.com/it-it/cli/azure/ad/sp?view=azure-cli-latest#az_ad_sp_create_for_rbac
   provisioner "local-exec" {
     command = <<EOT
-      CURRENT_SUBSCRIPTION=$(az account list -o tsv --query "[?isDefault == \`true\`].{Name:name}")
+      CURRENT_SUBSCRIPTION=$(az account list -o tsv --query "[?isDefault == \`true\`].{Name:name}" --all)
 
       az account set --subscription "${self.triggers.subscription_name}"
 
       CREDENTIAL_VALUE=$(az ad sp create-for-rbac \
-        --name "azdo-sp-acme-challenge-${replace(self.triggers.dns_record_name, ".", "-")}-${replace(self.triggers.dns_zone_name, ".", "-")}" \
+        --name "azdo-sp-acme-challenge-${self.triggers.name}" \
         --role "DNS Zone Contributor" \
-        --scope "/subscriptions/${self.triggers.subscription_id}/resourceGroups/${self.triggers.dns_zone_resource_group}/providers/Microsoft.Network/dnszones/${self.triggers.dns_zone_name}/TXT/_acme-challenge.${self.triggers.dns_record_name}")
+        --scope "/subscriptions/${self.triggers.subscription_id}/resourceGroups/${self.triggers.dns_zone_resource_group}/providers/Microsoft.Network/dnszones/${self.triggers.dns_zone_name}/TXT/${trim("_acme-challenge.${self.triggers.dns_record_name}", ".")}")
 
       az keyvault secret set \
         --subscription "${self.triggers.credential_subcription}" \
         --vault-name "${self.triggers.credential_key_vault_name}" \
-        --name "azdo-sp-acme-challenge-${replace(self.triggers.dns_record_name, ".", "-")}-${replace(self.triggers.dns_zone_name, ".", "-")}" \
+        --name "azdo-sp-acme-challenge-${self.triggers.name}" \
         --value "$CREDENTIAL_VALUE"
       
       az account set --subscription "$CURRENT_SUBSCRIPTION"
@@ -180,12 +192,12 @@ resource "null_resource" "this" {
   provisioner "local-exec" {
     when    = destroy
     command = <<EOT
-      CURRENT_SUBSCRIPTION=$(az account list -o tsv --query "[?isDefault == \`true\`].{Name:name}")
+      CURRENT_SUBSCRIPTION=$(az account list -o tsv --query "[?isDefault == \`true\`].{Name:name}" --all)
 
       SERVICE_PRINCIPAL_ID=$(az keyvault secret show \
         --subscription "${self.triggers.credential_subcription}" \
         --vault-name "${self.triggers.credential_key_vault_name}" \
-        --name "azdo-sp-acme-challenge-${replace(self.triggers.dns_record_name, ".", "-")}-${replace(self.triggers.dns_zone_name, ".", "-")}" \
+        --name "azdo-sp-acme-challenge-${self.triggers.name}" \
         -o tsv --query value | jq -r '.appId')
 
       az account set --subscription "${self.triggers.subscription_name}"
@@ -194,14 +206,14 @@ resource "null_resource" "this" {
       az keyvault secret delete \
         --subscription "${self.triggers.credential_subcription}" \
         --vault-name "${self.triggers.credential_key_vault_name}" \
-        --name "azdo-sp-acme-challenge-${replace(self.triggers.dns_record_name, ".", "-")}-${replace(self.triggers.dns_zone_name, ".", "-")}"
+        --name "azdo-sp-acme-challenge-${self.triggers.name}"
       
       sleep 30
 
       az keyvault secret purge \
         --subscription "${self.triggers.credential_subcription}" \
         --vault-name "${self.triggers.credential_key_vault_name}" \
-        --name "azdo-sp-acme-challenge-${replace(self.triggers.dns_record_name, ".", "-")}-${replace(self.triggers.dns_zone_name, ".", "-")}"
+        --name "azdo-sp-acme-challenge-${self.triggers.name}"
 
       az account set --subscription "$CURRENT_SUBSCRIPTION"
     EOT
@@ -216,7 +228,7 @@ module "secrets" {
   key_vault_name = var.credential_key_vault_name
 
   secrets = [
-    "azdo-sp-acme-challenge-${replace(var.dns_record_name, ".", "-")}-${replace(var.dns_zone_name, ".", "-")}",
+    "azdo-sp-acme-challenge-${local.secret_name}",
     "le-private-key-json",
     "le-regr-json",
   ]
