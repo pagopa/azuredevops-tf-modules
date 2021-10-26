@@ -169,14 +169,15 @@ resource "null_resource" "this" {
   # https://docs.microsoft.com/it-it/cli/azure/ad/sp?view=azure-cli-latest#az_ad_sp_create_for_rbac
   provisioner "local-exec" {
     command = <<EOT
-      CURRENT_SUBSCRIPTION=$(az account list -o tsv --query "[?isDefault == \`true\`].{Name:name}" --all)
+      CURRENT_SUBSCRIPTION=$(az account show -o tsv --query "{Name:name}")
 
       az account set --subscription "${self.triggers.subscription_name}"
 
       CREDENTIAL_VALUE=$(az ad sp create-for-rbac \
         --name "azdo-sp-acme-challenge-${self.triggers.name}" \
         --role "DNS Zone Contributor" \
-        --scope "/subscriptions/${self.triggers.subscription_id}/resourceGroups/${self.triggers.dns_zone_resource_group}/providers/Microsoft.Network/dnszones/${self.triggers.dns_zone_name}/TXT/${trim("_acme-challenge.${self.triggers.dns_record_name}", ".")}")
+        --scope "/subscriptions/${self.triggers.subscription_id}/resourceGroups/${self.triggers.dns_zone_resource_group}/providers/Microsoft.Network/dnszones/${self.triggers.dns_zone_name}/TXT/${trim("_acme-challenge.${self.triggers.dns_record_name}", ".")}" \
+        -o json)
 
       az keyvault secret set \
         --subscription "${self.triggers.credential_subcription}" \
