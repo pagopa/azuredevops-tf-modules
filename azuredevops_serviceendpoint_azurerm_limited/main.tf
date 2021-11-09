@@ -14,6 +14,13 @@ terraform {
   }
 }
 
+# This is to work around an issue with azuredevops_resource_authorization
+# The service connection resource is not ready immediately
+# so the recommendation is to wait 30 seconds until it's ready
+resource "time_sleep" "wait" {
+  create_duration = "30s"
+}
+
 resource "null_resource" "this" {
   # needs az cli > 2.0.81
   # see https://github.com/Azure/azure-cli/issues/12152
@@ -100,5 +107,6 @@ resource "azuredevops_serviceendpoint_azurerm" "this" {
 }
 
 data "azuread_service_principal" "this" {
+  depends_on = [time_sleep.wait]
   display_name = jsondecode(module.secrets.values["azdo-sp-${var.name}"].value).displayName
 }
