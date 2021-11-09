@@ -30,10 +30,6 @@ resource "null_resource" "this" {
   # https://docs.microsoft.com/it-it/cli/azure/ad/sp?view=azure-cli-latest#az_ad_sp_create_for_rbac
   provisioner "local-exec" {
     command = <<EOT
-      CURRENT_SUBSCRIPTION=$(az account show -o tsv --query "{Name:name}")
-
-      az account set --subscription "${self.triggers.subscription_name}"
-
       CREDENTIAL_VALUE=$(az ad sp create-for-rbac \
         --name "azdo-sp-${self.triggers.name}" \
         --role "Reader" \
@@ -44,9 +40,7 @@ resource "null_resource" "this" {
         --subscription "${self.triggers.credential_subcription}" \
         --vault-name "${self.triggers.credential_key_vault_name}" \
         --name "azdo-sp-${self.triggers.name}" \
-        --value "$CREDENTIAL_VALUE"
-      
-      az account set --subscription "$CURRENT_SUBSCRIPTION"
+        --value "$CREDENTIAL_VALUE"      
     EOT
   }
 
@@ -54,15 +48,12 @@ resource "null_resource" "this" {
   provisioner "local-exec" {
     when    = destroy
     command = <<EOT
-      CCURRENT_SUBSCRIPTION=$(az account show -o tsv --query "{Name:name}")
-
       SERVICE_PRINCIPAL_ID=$(az keyvault secret show \
         --subscription "${self.triggers.credential_subcription}" \
         --vault-name "${self.triggers.credential_key_vault_name}" \
         --name "azdo-sp-${self.triggers.name}" \
         -o tsv --query value | jq -r '.appId')
 
-      az account set --subscription "${self.triggers.subscription_name}"
       az ad sp delete --id "$SERVICE_PRINCIPAL_ID"
       
       az keyvault secret delete \
@@ -76,8 +67,6 @@ resource "null_resource" "this" {
         --subscription "${self.triggers.credential_subcription}" \
         --vault-name "${self.triggers.credential_key_vault_name}" \
         --name "azdo-sp-${self.triggers.name}"
-
-      az account set --subscription "$CURRENT_SUBSCRIPTION"
     EOT
   }
 }
