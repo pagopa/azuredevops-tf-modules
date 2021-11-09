@@ -156,6 +156,7 @@ resource "null_resource" "this" {
   # see https://github.com/Azure/azure-cli/issues/12152
 
   triggers = {
+    renew_token               = var.renew_token
     subscription_id           = var.subscription_id
     subscription_name         = var.subscription_name
     credential_subcription    = var.credential_subcription
@@ -193,7 +194,7 @@ resource "null_resource" "this" {
   provisioner "local-exec" {
     when    = destroy
     command = <<EOT
-      CURRENT_SUBSCRIPTION=$(az account list -o tsv --query "[?isDefault == \`true\`].{Name:name}" --all)
+      CURRENT_SUBSCRIPTION=$(az account show -o tsv --query "{Name:name}")
 
       SERVICE_PRINCIPAL_ID=$(az keyvault secret show \
         --subscription "${self.triggers.credential_subcription}" \
