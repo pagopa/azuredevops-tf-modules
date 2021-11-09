@@ -13,6 +13,11 @@ variable "repository" {
   description = "(Required) GitHub repository attributes"
 }
 
+variable "renew_token" {
+  type        = string
+  description = "(Required) Renew token to recreate service principal. Change it to renew service principal credentials"
+}
+
 variable "name" {
   type        = string
   description = "(Required) Pipeline name equals to domain name"

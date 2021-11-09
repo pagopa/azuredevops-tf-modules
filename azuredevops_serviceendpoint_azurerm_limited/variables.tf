@@ -8,6 +8,11 @@ variable "project_id" {
   description = "(Required) Azure DevOps project ID"
 }
 
+variable "renew_token" {
+  type        = string
+  description = "(Required) Renew token to recreate service principal. Change it to renew service principal credentials"
+}
+
 variable "subscription_name" {
   type        = string
   description = "(Required) Azure Subscription name related to tenant where create service principal"

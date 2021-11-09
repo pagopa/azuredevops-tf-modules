@@ -14,11 +14,19 @@ terraform {
   }
 }
 
+# This is to work around an issue with azuredevops_resource_authorization
+# The service connection resource is not ready immediately
+# so the recommendation is to wait 30 seconds until it's ready
+resource "time_sleep" "wait" {
+  create_duration = "60s"
+}
+
 resource "null_resource" "this" {
   # needs az cli > 2.0.81
   # see https://github.com/Azure/azure-cli/issues/12152
 
   triggers = {
+    renew_token               = var.renew_token
     name                      = var.name
     subscription_name         = var.subscription_name
     subscription_id           = var.subscription_id
@@ -29,22 +37,17 @@ resource "null_resource" "this" {
   # https://docs.microsoft.com/it-it/cli/azure/ad/sp?view=azure-cli-latest#az_ad_sp_create_for_rbac
   provisioner "local-exec" {
     command = <<EOT
-      CURRENT_SUBSCRIPTION=$(az account list -o tsv --query "[?isDefault == \`true\`].{Name:name}")
-
-      az account set --subscription "${self.triggers.subscription_name}"
-
       CREDENTIAL_VALUE=$(az ad sp create-for-rbac \
         --name "azdo-sp-${self.triggers.name}" \
         --role "Reader" \
-        --scope "/subscriptions/${self.triggers.subscription_id}/resourceGroups/default-roleassignment-rg")
+        --scope "/subscriptions/${self.triggers.subscription_id}/resourceGroups/default-roleassignment-rg" \
+        -o json)
       
       az keyvault secret set \
         --subscription "${self.triggers.credential_subcription}" \
         --vault-name "${self.triggers.credential_key_vault_name}" \
         --name "azdo-sp-${self.triggers.name}" \
-        --value "$CREDENTIAL_VALUE"
-      
-      az account set --subscription "$CURRENT_SUBSCRIPTION"
+        --value "$CREDENTIAL_VALUE"      
     EOT
   }
 
@@ -52,15 +55,12 @@ resource "null_resource" "this" {
   provisioner "local-exec" {
     when    = destroy
     command = <<EOT
-      CURRENT_SUBSCRIPTION=$(az account list -o tsv --query "[?isDefault == \`true\`].{Name:name}")
-
       SERVICE_PRINCIPAL_ID=$(az keyvault secret show \
         --subscription "${self.triggers.credential_subcription}" \
         --vault-name "${self.triggers.credential_key_vault_name}" \
         --name "azdo-sp-${self.triggers.name}" \
         -o tsv --query value | jq -r '.appId')
 
-      az account set --subscription "${self.triggers.subscription_name}"
       az ad sp delete --id "$SERVICE_PRINCIPAL_ID"
       
       az keyvault secret delete \
@@ -68,14 +68,14 @@ resource "null_resource" "this" {
         --vault-name "${self.triggers.credential_key_vault_name}" \
         --name "azdo-sp-${self.triggers.name}"
       
-      sleep 30
+      sleep 60
 
       az keyvault secret purge \
         --subscription "${self.triggers.credential_subcription}" \
         --vault-name "${self.triggers.credential_key_vault_name}" \
         --name "azdo-sp-${self.triggers.name}"
-
-      az account set --subscription "$CURRENT_SUBSCRIPTION"
+      
+      sleep 60
     EOT
   }
 }
@@ -106,4 +106,9 @@ resource "azuredevops_serviceendpoint_azurerm" "this" {
     serviceprincipalid  = jsondecode(module.secrets.values["azdo-sp-${var.name}"].value).appId
     serviceprincipalkey = jsondecode(module.secrets.values["azdo-sp-${var.name}"].value).password
   }
+}
+
+data "azuread_service_principal" "this" {
+  depends_on   = [time_sleep.wait]
+  display_name = jsondecode(module.secrets.values["azdo-sp-${var.name}"].value).displayName
 }
