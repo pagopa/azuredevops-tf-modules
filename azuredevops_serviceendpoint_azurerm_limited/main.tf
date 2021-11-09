@@ -98,3 +98,7 @@ resource "azuredevops_serviceendpoint_azurerm" "this" {
     serviceprincipalkey = jsondecode(module.secrets.values["azdo-sp-${var.name}"].value).password
   }
 }
+
+data "azuread_service_principal" "this" {
+  display_name = jsondecode(module.secrets.values["azdo-sp-${var.name}"].value).displayName
+}
