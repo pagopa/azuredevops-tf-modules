@@ -10,8 +10,10 @@
 
 | Name | Version |
 |------|---------|
+| <a name="provider_azuread"></a> [azuread](#provider\_azuread) | n/a |
 | <a name="provider_azuredevops"></a> [azuredevops](#provider\_azuredevops) | 0.1.4 |
 | <a name="provider_null"></a> [null](#provider\_null) | 3.1.0 |
+| <a name="provider_time"></a> [time](#provider\_time) | 0.6.0 |
 
 ## Modules
 
@@ -25,6 +27,8 @@
 |------|------|
 | [azuredevops_serviceendpoint_azurerm.this](https://registry.terraform.io/providers/microsoft/azuredevops/0.1.4/docs/resources/serviceendpoint_azurerm) | resource |
 | [null_resource.this](https://registry.terraform.io/providers/hashicorp/null/3.1.0/docs/resources/resource) | resource |
+| [time_sleep.wait](https://registry.terraform.io/providers/hashicorp/time/latest/docs/resources/sleep) | resource |
+| [azuread_service_principal.this](https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/data-sources/service_principal) | data source |
 
 ## Inputs
 
@@ -44,7 +48,8 @@
 
 | Name | Description |
 |------|-------------|
-| <a name="output_service_endpoint_id"></a> [service\_endpoint\_id](#output\_service\_endpoint\_id) | description |
-| <a name="output_service_endpoint_name"></a> [service\_endpoint\_name](#output\_service\_endpoint\_name) | description |
-| <a name="output_service_principal_app_id"></a> [service\_principal\_app\_id](#output\_service\_principal\_app\_id) | description |
-| <a name="output_service_principal_name"></a> [service\_principal\_name](#output\_service\_principal\_name) | description |
+| <a name="output_service_endpoint_id"></a> [service\_endpoint\_id](#output\_service\_endpoint\_id) | Service endpoint id |
+| <a name="output_service_endpoint_name"></a> [service\_endpoint\_name](#output\_service\_endpoint\_name) | Service endpoint name |
+| <a name="output_service_principal_app_id"></a> [service\_principal\_app\_id](#output\_service\_principal\_app\_id) | Service principal application id |
+| <a name="output_service_principal_name"></a> [service\_principal\_name](#output\_service\_principal\_name) | Service principal name |
+| <a name="output_service_principal_object_id"></a> [service\_principal\_object\_id](#output\_service\_principal\_object\_id) | Service principal object id |

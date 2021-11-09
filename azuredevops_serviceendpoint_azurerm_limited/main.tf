@@ -74,6 +74,8 @@ resource "null_resource" "this" {
         --subscription "${self.triggers.credential_subcription}" \
         --vault-name "${self.triggers.credential_key_vault_name}" \
         --name "azdo-sp-${self.triggers.name}"
+      
+      sleep 30
     EOT
   }
 }
@@ -107,6 +109,6 @@ resource "azuredevops_serviceendpoint_azurerm" "this" {
 }
 
 data "azuread_service_principal" "this" {
-  depends_on = [time_sleep.wait]
+  depends_on   = [time_sleep.wait]
   display_name = jsondecode(module.secrets.values["azdo-sp-${var.name}"].value).displayName
 }
