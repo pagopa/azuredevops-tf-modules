@@ -201,14 +201,14 @@ resource "null_resource" "this" {
         --vault-name "${self.triggers.credential_key_vault_name}" \
         --name "azdo-sp-acme-challenge-${self.triggers.name}"
       
-      sleep 30
+      sleep 60
 
       az keyvault secret purge \
         --subscription "${self.triggers.credential_subcription}" \
         --vault-name "${self.triggers.credential_key_vault_name}" \
         --name "azdo-sp-acme-challenge-${self.triggers.name}"
       
-      sleep 30
+      sleep 60
     EOT
   }
 }
