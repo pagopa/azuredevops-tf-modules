@@ -40,7 +40,7 @@ resource "azuredevops_build_definition" "pipeline" {
       for_each = var.pull_request_trigger_use_yaml == true ? [] : ["dummy"]
 
       content {
-        auto_cancel = true
+        auto_cancel = false
         branch_filter {
           include = [var.repository.branch_name]
         }
