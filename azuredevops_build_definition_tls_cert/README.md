@@ -4,6 +4,7 @@
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.14.5 |
 | <a name="requirement_azuredevops"></a> [azuredevops](#requirement\_azuredevops) | >=0.1.8 |
+| <a name="requirement_null"></a> [null](#requirement\_null) | >= 3.1.0 |
 | <a name="requirement_time"></a> [time](#requirement\_time) | ~> 0.7.0 |
 
 ## Providers
@@ -11,7 +12,7 @@
 | Name | Version |
 |------|---------|
 | <a name="provider_azuredevops"></a> [azuredevops](#provider\_azuredevops) | >=0.1.8 |
-| <a name="provider_null"></a> [null](#provider\_null) | n/a |
+| <a name="provider_null"></a> [null](#provider\_null) | >= 3.1.0 |
 | <a name="provider_time"></a> [time](#provider\_time) | ~> 0.7.0 |
 
 ## Modules
