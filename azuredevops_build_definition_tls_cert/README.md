@@ -2,30 +2,33 @@
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_azuredevops"></a> [azuredevops](#requirement\_azuredevops) | = 0.1.4 |
-| <a name="requirement_time"></a> [time](#requirement\_time) | ~> 0.6.0 |
+| <a name="requirement_azuread"></a> [azuread](#requirement\_azuread) | >= 2.10.0 |
+| <a name="requirement_azuredevops"></a> [azuredevops](#requirement\_azuredevops) | >= 0.1.8 |
+| <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | >= 2.52.0 |
+| <a name="requirement_null"></a> [null](#requirement\_null) | >= 3.1.0 |
+| <a name="requirement_time"></a> [time](#requirement\_time) | >= 0.6.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_azuredevops"></a> [azuredevops](#provider\_azuredevops) | 0.1.4 |
-| <a name="provider_null"></a> [null](#provider\_null) | 3.1.0 |
-| <a name="provider_time"></a> [time](#provider\_time) | 0.6.0 |
+| <a name="provider_azuredevops"></a> [azuredevops](#provider\_azuredevops) | >= 0.1.8 |
+| <a name="provider_null"></a> [null](#provider\_null) | >= 3.1.0 |
+| <a name="provider_time"></a> [time](#provider\_time) | >= 0.6.0 |
 
 ## Modules
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_secrets"></a> [secrets](#module\_secrets) | git::https://github.com/pagopa/azurerm.git//key_vault_secrets_query | v1.0.11 |
+| <a name="module_secrets"></a> [secrets](#module\_secrets) | git::https://github.com/pagopa/azurerm.git//key_vault_secrets_query?ref=v1.0.11 |  |
 
 ## Resources
 
 | Name | Type |
 |------|------|
-| [azuredevops_build_definition.pipeline](https://registry.terraform.io/providers/microsoft/azuredevops/0.1.4/docs/resources/build_definition) | resource |
-| [azuredevops_resource_authorization.github_service_connection_authorization](https://registry.terraform.io/providers/microsoft/azuredevops/0.1.4/docs/resources/resource_authorization) | resource |
-| [azuredevops_resource_authorization.service_connection_ids_authorization](https://registry.terraform.io/providers/microsoft/azuredevops/0.1.4/docs/resources/resource_authorization) | resource |
+| [azuredevops_build_definition.pipeline](https://registry.terraform.io/providers/microsoft/azuredevops/latest/docs/resources/build_definition) | resource |
+| [azuredevops_resource_authorization.github_service_connection_authorization](https://registry.terraform.io/providers/microsoft/azuredevops/latest/docs/resources/resource_authorization) | resource |
+| [azuredevops_resource_authorization.service_connection_ids_authorization](https://registry.terraform.io/providers/microsoft/azuredevops/latest/docs/resources/resource_authorization) | resource |
 | [null_resource.this](https://registry.terraform.io/providers/hashicorp/null/latest/docs/resources/resource) | resource |
 | [time_sleep.wait](https://registry.terraform.io/providers/hashicorp/time/latest/docs/resources/sleep) | resource |
 
@@ -48,6 +51,7 @@
 | <a name="input_subscription_id"></a> [subscription\_id](#input\_subscription\_id) | (Required) Azure Subscription ID related to tenant where create service principal | `string` | n/a | yes |
 | <a name="input_subscription_name"></a> [subscription\_name](#input\_subscription\_name) | (Required) Azure Subscription name related to tenant where create service principal | `string` | n/a | yes |
 | <a name="input_tenant_id"></a> [tenant\_id](#input\_tenant\_id) | (Required) Azure Tenant ID related to tenant where create service principal | `string` | n/a | yes |
+| <a name="input_schedules"></a> [schedules](#input\_schedules) | n/a | <pre>object({<br>    days_to_build              = list(string)<br>    schedule_only_with_changes = bool<br>    start_hours                = number<br>    start_minutes              = number<br>    time_zone                  = string<br>    branch_filter = object({<br>      include = list(string)<br>      exclude = list(string)<br>    })<br>  })</pre> | <pre>{<br>  "branch_filter": {<br>    "exclude": [],<br>    "include": [<br>      "main",<br>      "master"<br>    ]<br>  },<br>  "days_to_build": [<br>    "Mon"<br>  ],<br>  "schedule_only_with_changes": false,<br>  "start_hours": 1,<br>  "start_minutes": 0,<br>  "time_zone": "(UTC+01:00) Amsterdam, Berlin, Bern, Rome, Stockholm, Vienna"<br>}</pre> | no |
 | <a name="input_service_connection_ids_authorization"></a> [service\_connection\_ids\_authorization](#input\_service\_connection\_ids\_authorization) | (Optional) List service connection IDs that pipeline needs authorization. github\_service\_connection\_id is authorized by default | `list(string)` | `null` | no |
 | <a name="input_variables"></a> [variables](#input\_variables) | (Optional) Pipeline variables | `map(any)` | `null` | no |
 | <a name="input_variables_secret"></a> [variables\_secret](#input\_variables\_secret) | (Optional) Pipeline secret variables | `map(any)` | `null` | no |

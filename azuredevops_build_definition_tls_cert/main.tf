@@ -2,7 +2,7 @@ terraform {
   required_providers {
     azuredevops = {
       source  = "microsoft/azuredevops"
-      version = ">= 0.1.4"
+      version = ">= 0.1.8"
     }
     time = {
       version = ">= 0.6.0"
@@ -128,6 +128,20 @@ resource "azuredevops_build_definition" "pipeline" {
     is_secret      = true
     allow_override = false
   }
+
+  dynamic "schedules" {
+    for_each = var.schedules != null ? [var.schedule] : []
+    iterator = s
+    content {
+      days_to_build              = s.value.days_to_build
+      schedule_only_with_changes = s.value.schedule_only_with_changes
+      start_hours                = s.value.start_hours
+      start_minutes              = s.value.start_minutes
+      time_zone                  = s.value.time_zone
+      branch_filter              = var.value.branch_filter
+    }
+  }
+
 }
 
 # This is to work around an issue with azuredevops_resource_authorization
