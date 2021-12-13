@@ -9,6 +9,13 @@ terraform {
     time = {
       version = "~> 0.7.0"
     }
+    null = {
+      source  = "hashicorp/null"
+      version = ">= 3.1.0"
+    }
+    azuread = {
+      version = ">= 2.10.0"
+    }
   }
 }
 
