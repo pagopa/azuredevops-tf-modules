@@ -1,3 +1,22 @@
+terraform {
+  required_version = ">= 0.14.5"
+  backend "azurerm" {
+    resource_group_name  = "io-infra-rg"
+    storage_account_name = "ioinfrastterraform"
+    container_name       = "azuredevopsstate"
+    key                  = "pagopa-projects.terraform.tfstate"
+  }
+  required_providers {
+    azuredevops = {
+      source  = "microsoft/azuredevops"
+      version = ">=0.1.8"
+    }
+    time = {
+      version = "~> 0.7.0"
+    }
+  }
+}
+
 locals {
   csr_common_name = trim("${var.dns_record_name}.${var.dns_zone_name}", ".")
   secret_name     = replace(trim("${var.dns_record_name}.${var.dns_zone_name}", "."), ".", "-")

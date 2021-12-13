@@ -1,3 +1,22 @@
+terraform {
+  required_version = ">= 0.14.5"
+  backend "azurerm" {
+    resource_group_name  = "io-infra-rg"
+    storage_account_name = "ioinfrastterraform"
+    container_name       = "azuredevopsstate"
+    key                  = "pagopa-projects.terraform.tfstate"
+  }
+  required_providers {
+    azuredevops = {
+      source  = "microsoft/azuredevops"
+      version = ">=0.1.8"
+    }
+    time = {
+      version = "~> 0.7.0"
+    }
+  }
+}
+
 # This is to work around an issue with azuredevops_resource_authorization
 # The service connection resource is not ready immediately
 # so the recommendation is to wait 30 seconds until it's ready
