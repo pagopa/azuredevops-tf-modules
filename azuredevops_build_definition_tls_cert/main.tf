@@ -121,7 +121,7 @@ resource "azuredevops_build_definition" "pipeline" {
   }
 
   dynamic "schedules" {
-    for_each = var.schedules != null ? [var.schedule] : []
+    for_each = var.schedules != null ? [var.schedules] : []
     iterator = s
     content {
       days_to_build              = s.value.days_to_build
@@ -129,7 +129,7 @@ resource "azuredevops_build_definition" "pipeline" {
       start_hours                = s.value.start_hours
       start_minutes              = s.value.start_minutes
       time_zone                  = s.value.time_zone
-      branch_filter              = var.value.branch_filter
+      branch_filter              = s.value.branch_filter
     }
   }
 
