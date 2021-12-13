@@ -129,7 +129,10 @@ resource "azuredevops_build_definition" "pipeline" {
       start_hours                = s.value.start_hours
       start_minutes              = s.value.start_minutes
       time_zone                  = s.value.time_zone
-      branch_filter              = s.value.branch_filter
+      branch_filter {
+        include = s.value.branch_filter.include
+        exclude = s.value.branch_filter.exclude
+      }
     }
   }
 
