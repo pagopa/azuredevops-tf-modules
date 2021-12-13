@@ -23,6 +23,12 @@ variable "name" {
   description = "(Required) Pipeline name equals to domain name"
 }
 
+variable "agent_pool_name" {
+  type        = string
+  default     = "Hosted Ubuntu 1604"
+  description = "The agent pool that should execute the build"
+}
+
 variable "path" {
   type        = string
   description = "(Required) Pipeline path on Azure DevOps"

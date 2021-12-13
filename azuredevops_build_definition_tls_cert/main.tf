@@ -19,9 +19,10 @@ locals {
 resource "azuredevops_build_definition" "pipeline" {
   depends_on = [null_resource.this, module.secrets]
 
-  project_id = var.project_id
-  name       = trim(var.name, ".")
-  path       = "\\${var.path}"
+  project_id      = var.project_id
+  name            = trim(var.name, ".")
+  path            = "\\${var.path}"
+  agent_pool_name = var.agent_pool_name
 
   repository {
     repo_type             = "GitHub"
