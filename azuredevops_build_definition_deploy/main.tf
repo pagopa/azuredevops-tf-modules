@@ -13,9 +13,10 @@ locals {
 }
 
 resource "azuredevops_build_definition" "pipeline" {
-  project_id = var.project_id
-  name       = "${var.repository.name}.deploy"
-  path       = "\\${var.repository.name}"
+  project_id      = var.project_id
+  name            = "${var.repository.name}.deploy"
+  path            = "\\${var.repository.name}"
+  agent_pool_name = var.agent_pool_name
 
   repository {
     repo_type             = "GitHub"

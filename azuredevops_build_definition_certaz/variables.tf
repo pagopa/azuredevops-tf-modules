@@ -23,6 +23,12 @@ variable "path" {
   description = "(Required) Pipeline path on Azure DevOps"
 }
 
+variable "agent_pool_name" {
+  type        = string
+  default     = "Hosted Ubuntu 1604"
+  description = "The agent pool that should execute the build"
+}
+
 variable "github_service_connection_id" {
   type        = string
   description = "(Required) GitHub service connection ID used to link Azure DevOps."
