@@ -1,25 +1,3 @@
-terraform {
-  required_providers {
-    azuredevops = {
-      source  = "microsoft/azuredevops"
-      version = ">= 0.1.4"
-    }
-    time = {
-      version = ">= 0.6.0"
-    }
-    null = {
-      source  = "hashicorp/null"
-      version = ">= 3.1.0"
-    }
-    azurerm = {
-      version = ">= 2.52.0"
-    }
-    azuread = {
-      version = ">= 2.10.0"
-    }
-  }
-}
-
 # This is to work around an issue with azuredevops_resource_authorization
 # The service connection resource is not ready immediately
 # so the recommendation is to wait 30 seconds until it's ready

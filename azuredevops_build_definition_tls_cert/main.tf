@@ -1,25 +1,3 @@
-terraform {
-  required_providers {
-    azuredevops = {
-      source  = "microsoft/azuredevops"
-      version = ">= 0.1.8"
-    }
-    time = {
-      version = ">= 0.6.0"
-    }
-    null = {
-      source  = "hashicorp/null"
-      version = ">= 3.1.0"
-    }
-    azurerm = {
-      version = ">= 2.52.0"
-    }
-    azuread = {
-      version = ">= 2.10.0"
-    }
-  }
-}
-
 locals {
   csr_common_name = trim("${var.dns_record_name}.${var.dns_zone_name}", ".")
   secret_name     = replace(trim("${var.dns_record_name}.${var.dns_zone_name}", "."), ".", "-")

@@ -1,15 +1,3 @@
-terraform {
-  required_providers {
-    azuredevops = {
-      source  = "microsoft/azuredevops"
-      version = "= 0.1.4"
-    }
-    time = {
-      version = "~> 0.6.0"
-    }
-  }
-}
-
 locals {
   yml_prefix_name = var.repository.yml_prefix_name == null ? "" : "${var.repository.yml_prefix_name}-"
 }

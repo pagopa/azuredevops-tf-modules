@@ -1,15 +1,3 @@
-terraform {
-  required_providers {
-    azuredevops = {
-      source  = "microsoft/azuredevops"
-      version = "= 0.1.4"
-    }
-    time = {
-      version = "~> 0.6.0"
-    }
-  }
-}
-
 resource "azuredevops_build_definition" "pipeline" {
   project_id = var.project_id
   name       = var.name
