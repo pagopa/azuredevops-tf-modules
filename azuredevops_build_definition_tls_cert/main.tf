@@ -1,21 +1,16 @@
 terraform {
+  required_version = ">= 0.14.5"
   required_providers {
     azuredevops = {
       source  = "microsoft/azuredevops"
-      version = ">= 0.1.4"
+      version = ">=0.1.8"
     }
     time = {
-      version = ">= 0.6.0"
+      version = "~> 0.7.0"
     }
     null = {
       source  = "hashicorp/null"
       version = ">= 3.1.0"
-    }
-    azurerm = {
-      version = ">= 2.52.0"
-    }
-    azuread = {
-      version = ">= 2.10.0"
     }
   }
 }
@@ -28,9 +23,10 @@ locals {
 resource "azuredevops_build_definition" "pipeline" {
   depends_on = [null_resource.this, module.secrets]
 
-  project_id = var.project_id
-  name       = trim(var.name, ".")
-  path       = "\\${var.path}"
+  project_id      = var.project_id
+  name            = trim(var.name, ".")
+  path            = "\\${var.path}"
+  agent_pool_name = var.agent_pool_name
 
   repository {
     repo_type             = "GitHub"
@@ -128,6 +124,23 @@ resource "azuredevops_build_definition" "pipeline" {
     is_secret      = true
     allow_override = false
   }
+
+  dynamic "schedules" {
+    for_each = var.schedules != null ? [var.schedules] : []
+    iterator = s
+    content {
+      days_to_build              = s.value.days_to_build
+      schedule_only_with_changes = s.value.schedule_only_with_changes
+      start_hours                = s.value.start_hours
+      start_minutes              = s.value.start_minutes
+      time_zone                  = s.value.time_zone
+      branch_filter {
+        include = s.value.branch_filter.include
+        exclude = s.value.branch_filter.exclude
+      }
+    }
+  }
+
 }
 
 # This is to work around an issue with azuredevops_resource_authorization

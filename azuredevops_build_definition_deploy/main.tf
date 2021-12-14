@@ -1,11 +1,9 @@
 terraform {
+  required_version = ">= 0.14.5"
   required_providers {
     azuredevops = {
       source  = "microsoft/azuredevops"
-      version = "= 0.1.4"
-    }
-    time = {
-      version = "~> 0.6.0"
+      version = ">=0.1.8"
     }
   }
 }
@@ -15,9 +13,10 @@ locals {
 }
 
 resource "azuredevops_build_definition" "pipeline" {
-  project_id = var.project_id
-  name       = "${var.repository.name}.deploy"
-  path       = "\\${var.repository.name}"
+  project_id      = var.project_id
+  name            = "${var.repository.name}.deploy"
+  path            = "\\${var.repository.name}"
+  agent_pool_name = var.agent_pool_name
 
   repository {
     repo_type             = "GitHub"

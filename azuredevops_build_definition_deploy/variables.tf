@@ -58,3 +58,9 @@ variable "service_connection_ids_authorization" {
   default     = null
   description = "(Optional) List service connection IDs that pipeline needs authorization. github_service_connection_id is authorized by default"
 }
+
+variable "agent_pool_name" {
+  type        = string
+  default     = "Hosted Ubuntu 1604"
+  description = "The agent pool that should execute the build"
+}
