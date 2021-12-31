@@ -42,7 +42,7 @@ resource "null_resource" "this" {
   # https://docs.microsoft.com/it-it/cli/azure/ad/sp?view=azure-cli-latest#az_ad_sp_create_for_rbac
   provisioner "local-exec" {
     command = <<EOT
-      CREDENTIAL_VALUE=$(az ad sp create-for-rbac \
+      SP_CREDENTIAL_VALUES=$(az ad sp create-for-rbac \
         --name "azdo-sp-${self.triggers.name}" \
         --role "Reader" \
         --scope "/subscriptions/${self.triggers.subscription_id}/resourceGroups/default-roleassignment-rg" \
@@ -52,7 +52,7 @@ resource "null_resource" "this" {
         --subscription "${self.triggers.credential_subcription}" \
         --vault-name "${self.triggers.credential_key_vault_name}" \
         --name "azdo-sp-${self.triggers.name}" \
-        --value "$CREDENTIAL_VALUE"      
+        --value "$SP_CREDENTIAL_VALUES"
     EOT
   }
 
@@ -101,12 +101,14 @@ module "secrets" {
 resource "azuredevops_serviceendpoint_azurerm" "this" {
   depends_on = [null_resource.this, module.secrets]
 
-  project_id                = var.project_id
-  service_endpoint_name     = "${upper(var.name)}-SERVICE-CONN"
-  description               = "${upper(var.name)} Service connection for TLS certificates"
+  project_id            = var.project_id
+  service_endpoint_name = "${upper(var.name)}-SERVICE-CONN"
+  description           = "${upper(var.name)} Service connection for TLS certificates"
+
   azurerm_subscription_name = var.subscription_name
   azurerm_spn_tenantid      = var.tenant_id
   azurerm_subscription_id   = var.subscription_id
+
   credentials {
     serviceprincipalid  = jsondecode(module.secrets.values["azdo-sp-${var.name}"].value).appId
     serviceprincipalkey = jsondecode(module.secrets.values["azdo-sp-${var.name}"].value).password
