@@ -1,7 +1,9 @@
 # azuredevops_serviceendpoint_azurerm_limited
 
-This module allow the creation of a service connection (azurerm type),
-using a Service Principal, and store the credentials into a Key Vault
+This module allow the creation of a service connection (azurerm type) with name: `azdo-sp-****`.
+Using a Service Principal, and store the credentials into a Key Vault.
+
+> 🏁 This connection can be used to manage from azure devops, azure resources inside subscription
 
 ## Architecture
 
