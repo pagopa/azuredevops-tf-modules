@@ -244,7 +244,7 @@ module "secrets" {
   key_vault_name = var.credential_key_vault_name
 
   secrets = [
-    "azdo-sp-acme-challenge-${self.triggers.name}",
+    "azdo-sp-acme-challenge-${local.secret_name}",
     "le-private-key-json",
     "le-regr-json",
   ]
