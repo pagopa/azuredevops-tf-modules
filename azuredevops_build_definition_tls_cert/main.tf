@@ -190,6 +190,10 @@ resource "null_resource" "this" {
     dns_zone_resource_group   = var.dns_zone_resource_group
   }
 
+  lifecycle {
+    ignore_changes = [triggers["subscription_id"]]
+  }
+
   # https://docs.microsoft.com/it-it/cli/azure/ad/sp?view=azure-cli-latest#az_ad_sp_create_for_rbac
   provisioner "local-exec" {
     command = <<EOT
