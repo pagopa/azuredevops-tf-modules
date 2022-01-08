@@ -75,14 +75,14 @@ resource "azuredevops_build_definition" "pipeline" {
 
   variable {
     name           = "LE_AZURE_CLIENT_ID"
-    secret_value   = jsondecode(module.secrets.values["azdo-sp-acme-challenge-${self.triggers.name}"].value).appId
+    secret_value   = jsondecode(module.secrets.values["azdo-sp-acme-challenge-${local.secret_name}"].value).appId
     is_secret      = true
     allow_override = false
   }
 
   variable {
     name           = "LE_AZURE_CLIENT_SECRET"
-    secret_value   = jsondecode(module.secrets.values["azdo-sp-acme-challenge-${self.triggers.name}"].value).password
+    secret_value   = jsondecode(module.secrets.values["azdo-sp-acme-challenge-${local.secret_name}"].value).password
     is_secret      = true
     allow_override = false
   }
