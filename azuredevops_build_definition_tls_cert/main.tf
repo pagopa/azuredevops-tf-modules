@@ -54,7 +54,7 @@ resource "azuredevops_build_definition" "pipeline" {
     content {
       name           = variable_secret.key
       secret_value   = variable_secret.value
-      is_secret      = true
+      is_secret      = false
       allow_override = false
     }
   }
@@ -62,28 +62,28 @@ resource "azuredevops_build_definition" "pipeline" {
   variable {
     name           = "LE_AZURE_TENANT_ID"
     secret_value   = var.tenant_id
-    is_secret      = true
+    is_secret      = false
     allow_override = false
   }
 
   variable {
     name           = "LE_AZURE_SUBSCRIPTION_ID"
     secret_value   = var.subscription_id
-    is_secret      = true
+    is_secret      = false
     allow_override = false
   }
 
   variable {
     name           = "LE_AZURE_CLIENT_ID"
     secret_value   = jsondecode(module.secrets.values["azdo-sp-acme-challenge-${local.secret_name}"].value).appId
-    is_secret      = true
+    is_secret      = false
     allow_override = false
   }
 
   variable {
     name           = "LE_AZURE_CLIENT_SECRET"
     secret_value   = jsondecode(module.secrets.values["azdo-sp-acme-challenge-${local.secret_name}"].value).password
-    is_secret      = true
+    is_secret      = false
     allow_override = false
   }
 
@@ -114,14 +114,14 @@ resource "azuredevops_build_definition" "pipeline" {
   variable {
     name           = "LE_PRIVATE_KEY_JSON"
     secret_value   = module.secrets.values["le-private-key-json"].value
-    is_secret      = true
+    is_secret      = false
     allow_override = false
   }
 
   variable {
     name           = "LE_REGR_JSON"
     secret_value   = module.secrets.values["le-regr-json"].value
-    is_secret      = true
+    is_secret      = false
     allow_override = false
   }
 
