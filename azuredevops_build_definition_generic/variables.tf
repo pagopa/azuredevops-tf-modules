@@ -9,7 +9,6 @@ variable "repository" {
     name            = string
     branch_name     = string
     pipelines_path  = string
-    yml_filename = string
   })
   description = "(Required) GitHub repository attributes"
 }
