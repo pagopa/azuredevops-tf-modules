@@ -16,13 +16,6 @@ Module that allows the creation of a pipeline dedicated to deploy terraform code
 
 No requirements.
 
-## Providers
-
-| Name | Version |
-|------|---------|
-| <a name="provider_azuredevops"></a> [azuredevops](#provider\_azuredevops) | n/a |
-| <a name="provider_time"></a> [time](#provider\_time) | n/a |
-
 ## Modules
 
 No modules.
