@@ -1,3 +1,45 @@
+# azuredevops_serviceendpoint_azurerm_limited
+
+This module allow the creation of a service connection (azurerm type) with name: `azdo-sp-****`.
+Using a Service Principal, and store the credentials into a Key Vault.
+
+> 🏁 This connection can be used to manage from azure devops, azure resources inside subscription
+
+## Architecture
+
+![This is an image](./docs/module-arch.drawio.png)
+
+## How to use it
+
+```json
+module "LAB-TLS-CERT-SERVICE-CONN" {
+  depends_on = [azuredevops_project.project]
+  source     = "git::https://github.com/pagopa/azuredevops-tf-modules.git//azuredevops_serviceendpoint_azurerm_limited?ref=v2.0.4"
+  providers = {
+    azurerm = azurerm.lab
+  }
+
+  project_id        = azuredevops_project.project.id
+  renew_token       = local.tlscert_renew_token
+  name              = "${local.prefix}-d-tls-cert"
+  tenant_id         = module.secrets.values["TENANTID"].value
+  subscription_id   = module.secrets.values["LAB-SUBSCRIPTION-ID"].value
+  subscription_name = var.lab_subscription_name
+
+  credential_subcription              = var.lab_subscription_name
+  credential_key_vault_name           = local.dev_key_vault_name
+  credential_key_vault_resource_group = local.dev_key_vault_resource_group
+}
+
+locals {
+    renew_token = "v1"
+}
+```
+
+> Use **renew_token** to force module to recreate the resource, for example change the value to "v2"
+
+<!-- markdownlint-disable -->
+<!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
 
 | Name | Version |
@@ -12,16 +54,16 @@
 
 | Name | Version |
 |------|---------|
-| <a name="provider_azuread"></a> [azuread](#provider\_azuread) | >= 2.10.0 |
-| <a name="provider_azuredevops"></a> [azuredevops](#provider\_azuredevops) | >=0.1.8 |
-| <a name="provider_null"></a> [null](#provider\_null) | >= 3.1.0 |
-| <a name="provider_time"></a> [time](#provider\_time) | ~> 0.7.0 |
+| <a name="provider_azuread"></a> [azuread](#provider\_azuread) | 2.13.0 |
+| <a name="provider_azuredevops"></a> [azuredevops](#provider\_azuredevops) | 0.1.8 |
+| <a name="provider_null"></a> [null](#provider\_null) | 3.1.0 |
+| <a name="provider_time"></a> [time](#provider\_time) | 0.7.2 |
 
 ## Modules
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_secrets"></a> [secrets](#module\_secrets) | git::https://github.com/pagopa/azurerm.git//key_vault_secrets_query?ref=v1.0.11 |  |
+| <a name="module_secrets"></a> [secrets](#module\_secrets) | git::https://github.com/pagopa/azurerm.git//key_vault_secrets_query | v2.0.22 |
 
 ## Resources
 
@@ -36,8 +78,8 @@
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_credential_key_vault_name"></a> [credential\_key\_vault\_name](#input\_credential\_key\_vault\_name) | (Required) key vault where store service principal credentials | `string` | n/a | yes |
-| <a name="input_credential_key_vault_resource_group"></a> [credential\_key\_vault\_resource\_group](#input\_credential\_key\_vault\_resource\_group) | (Required) key vault resource group where store service principal credentials | `string` | n/a | yes |
+| <a name="input_credential_key_vault_name"></a> [credential\_key\_vault\_name](#input\_credential\_key\_vault\_name) | (Required) Key vault name where store service principal credentials | `string` | n/a | yes |
+| <a name="input_credential_key_vault_resource_group"></a> [credential\_key\_vault\_resource\_group](#input\_credential\_key\_vault\_resource\_group) | (Required) Key vault resource group where store service principal credentials | `string` | n/a | yes |
 | <a name="input_credential_subcription"></a> [credential\_subcription](#input\_credential\_subcription) | (Required) Azure Subscription where store service principal credentials | `string` | n/a | yes |
 | <a name="input_name"></a> [name](#input\_name) | (Required) Service principal name | `string` | n/a | yes |
 | <a name="input_project_id"></a> [project\_id](#input\_project\_id) | (Required) Azure DevOps project ID | `string` | n/a | yes |
@@ -55,3 +97,4 @@
 | <a name="output_service_principal_app_id"></a> [service\_principal\_app\_id](#output\_service\_principal\_app\_id) | Service principal application id |
 | <a name="output_service_principal_name"></a> [service\_principal\_name](#output\_service\_principal\_name) | Service principal name |
 | <a name="output_service_principal_object_id"></a> [service\_principal\_object\_id](#output\_service\_principal\_object\_id) | Service principal object id |
+<!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

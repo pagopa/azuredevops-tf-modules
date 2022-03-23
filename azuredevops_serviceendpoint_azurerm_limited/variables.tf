@@ -35,10 +35,10 @@ variable "credential_subcription" {
 
 variable "credential_key_vault_name" {
   type        = string
-  description = "(Required) key vault where store service principal credentials"
+  description = "(Required) Key vault name where store service principal credentials"
 }
 
 variable "credential_key_vault_resource_group" {
   type        = string
-  description = "(Required) key vault resource group where store service principal credentials"
+  description = "(Required) Key vault resource group where store service principal credentials"
 }
