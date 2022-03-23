@@ -1,6 +1,9 @@
 terraform {
   required_version = ">= 0.14.5"
   required_providers {
+    azurerm = {
+      version = ">= 2.60.0"
+    }
     azuredevops = {
       source  = "microsoft/azuredevops"
       version = ">=0.1.8"
@@ -158,8 +161,9 @@ resource "azuredevops_resource_authorization" "github_service_connection_authori
   project_id    = var.project_id
   resource_id   = var.github_service_connection_id
   definition_id = azuredevops_build_definition.pipeline.id
-  authorized    = true
-  type          = "endpoint"
+
+  authorized = true
+  type       = "endpoint"
 }
 
 # others service_connection_ids serviceendpoint authorization
@@ -170,8 +174,9 @@ resource "azuredevops_resource_authorization" "service_connection_ids_authorizat
   project_id    = var.project_id
   resource_id   = var.service_connection_ids_authorization[count.index]
   definition_id = azuredevops_build_definition.pipeline.id
-  authorized    = true
-  type          = "endpoint"
+
+  authorized = true
+  type       = "endpoint"
 }
 
 resource "null_resource" "this" {
