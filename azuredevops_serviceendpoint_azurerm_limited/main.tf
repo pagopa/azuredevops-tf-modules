@@ -2,6 +2,9 @@ terraform {
   required_version = ">= 0.14.5"
 
   required_providers {
+    azurerm = {
+      version = ">= 2.60.0"
+    }
     azuredevops = {
       source  = "microsoft/azuredevops"
       version = ">=0.1.8"
