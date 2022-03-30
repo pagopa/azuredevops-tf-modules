@@ -19,5 +19,7 @@ Check your code before commit.
 https://github.com/antonbabenko/pre-commit-terraform#how-to-install
 
 ```sh
+# for terraform modules we need to initialize them with
+bash .utils/terraform_run_all.sh init local
 pre-commit run -a
 ```
