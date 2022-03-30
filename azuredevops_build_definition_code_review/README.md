@@ -17,8 +17,16 @@ Module that allows the creation of a pipeline dedicated to code review of terraf
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.14.5 |
-| <a name="requirement_azuredevops"></a> [azuredevops](#requirement\_azuredevops) | >=0.1.8 |
-| <a name="requirement_time"></a> [time](#requirement\_time) | ~> 0.7.0 |
+| <a name="requirement_azuredevops"></a> [azuredevops](#requirement\_azuredevops) | >= 0.1.8 |
+| <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | >= 2.60.0, <= 2.99.0 |
+| <a name="requirement_time"></a> [time](#requirement\_time) | >= 0.7.0 |
+
+## Providers
+
+| Name | Version |
+|------|---------|
+| <a name="provider_azuredevops"></a> [azuredevops](#provider\_azuredevops) | 0.2.0 |
+| <a name="provider_time"></a> [time](#provider\_time) | 0.7.2 |
 
 ## Modules
 

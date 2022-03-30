@@ -1,27 +1,3 @@
-terraform {
-  required_version = ">= 0.14.5"
-
-  required_providers {
-    azurerm = {
-      version = ">= 2.60.0"
-    }
-    azuredevops = {
-      source  = "microsoft/azuredevops"
-      version = ">=0.1.8"
-    }
-    time = {
-      version = "~> 0.7.0"
-    }
-    null = {
-      source  = "hashicorp/null"
-      version = ">= 3.1.0"
-    }
-    azuread = {
-      version = ">= 2.10.0"
-    }
-  }
-}
-
 # This is to work around an issue with azuredevops_resource_authorization
 # The service connection resource is not ready immediately
 # so the recommendation is to wait 30 seconds until it's ready
@@ -50,7 +26,7 @@ resource "null_resource" "this" {
         --role "Reader" \
         --scope "/subscriptions/${self.triggers.subscription_id}/resourceGroups/default-roleassignment-rg" \
         -o json)
-      
+
       az keyvault secret set \
         --subscription "${self.triggers.credential_subcription}" \
         --vault-name "${self.triggers.credential_key_vault_name}" \
@@ -70,19 +46,19 @@ resource "null_resource" "this" {
         -o tsv --query value | jq -r '.appId')
 
       az ad sp delete --id "$SERVICE_PRINCIPAL_ID"
-      
+
       az keyvault secret delete \
         --subscription "${self.triggers.credential_subcription}" \
         --vault-name "${self.triggers.credential_key_vault_name}" \
         --name "azdo-sp-${self.triggers.name}"
-      
+
       sleep 60
 
       az keyvault secret purge \
         --subscription "${self.triggers.credential_subcription}" \
         --vault-name "${self.triggers.credential_key_vault_name}" \
         --name "azdo-sp-${self.triggers.name}"
-      
+
       sleep 60
     EOT
   }

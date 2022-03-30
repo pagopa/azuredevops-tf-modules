@@ -10,11 +10,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: run_init all
+      - name: run_init
         run: |
-          bash terraform_run_all.sh init
+          bash .utils/terraform_run_all.sh init docker
 
       - name: run_test
         run: |
-          TAG="v1.64.0"
+          TAG=nightly
           docker run -v $(pwd):/lint -w /lint ghcr.io/antonbabenko/pre-commit-terraform:$TAG run -a
