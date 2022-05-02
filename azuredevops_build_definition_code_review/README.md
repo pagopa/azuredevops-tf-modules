@@ -25,7 +25,7 @@ Module that allows the creation of a pipeline dedicated to code review of terraf
 
 | Name | Version |
 |------|---------|
-| <a name="provider_azuredevops"></a> [azuredevops](#provider\_azuredevops) | 0.2.0 |
+| <a name="provider_azuredevops"></a> [azuredevops](#provider\_azuredevops) | 0.2.1 |
 | <a name="provider_time"></a> [time](#provider\_time) | 0.7.2 |
 
 ## Modules

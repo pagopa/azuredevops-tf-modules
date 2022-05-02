@@ -28,7 +28,7 @@ Module that allows:
 
 | Name | Version |
 |------|---------|
-| <a name="provider_azuredevops"></a> [azuredevops](#provider\_azuredevops) | 0.2.0 |
+| <a name="provider_azuredevops"></a> [azuredevops](#provider\_azuredevops) | 0.2.1 |
 | <a name="provider_null"></a> [null](#provider\_null) | 3.1.1 |
 | <a name="provider_time"></a> [time](#provider\_time) | 0.7.2 |
 
