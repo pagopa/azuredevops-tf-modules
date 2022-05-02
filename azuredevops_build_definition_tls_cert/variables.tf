@@ -125,5 +125,4 @@ variable "schedules" {
       exclude = []
     }
   }
-
 }

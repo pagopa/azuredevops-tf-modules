@@ -71,6 +71,22 @@ resource "azuredevops_build_definition" "pipeline" {
       allow_override = false
     }
   }
+
+  dynamic "schedules" {
+    for_each = var.schedules != null ? [var.schedules] : []
+    iterator = s
+    content {
+      days_to_build              = s.value.days_to_build
+      schedule_only_with_changes = s.value.schedule_only_with_changes
+      start_hours                = s.value.start_hours
+      start_minutes              = s.value.start_minutes
+      time_zone                  = s.value.time_zone
+      branch_filter {
+        include = s.value.branch_filter.include
+        exclude = s.value.branch_filter.exclude
+      }
+    }
+  }
 }
 
 # This is to work around an issue with azuredevops_resource_authorization
