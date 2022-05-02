@@ -64,3 +64,28 @@ variable "agent_pool_name" {
   default     = "Hosted Ubuntu 1604"
   description = "The agent pool that should execute the build"
 }
+
+variable "schedules" {
+  type = object({
+    days_to_build              = list(string)
+    schedule_only_with_changes = bool
+    start_hours                = number
+    start_minutes              = number
+    time_zone                  = string
+    branch_filter = object({
+      include = list(string)
+      exclude = list(string)
+    })
+  })
+  default = {
+    days_to_build              = ["Mon"]
+    schedule_only_with_changes = false
+    start_hours                = 1
+    start_minutes              = 0
+    time_zone                  = "(UTC+01:00) Amsterdam, Berlin, Bern, Rome, Stockholm, Vienna"
+    branch_filter = {
+      include = ["main", "master"]
+      exclude = []
+    }
+  }
+}

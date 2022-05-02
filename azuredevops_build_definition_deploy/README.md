@@ -10,6 +10,88 @@ Module that allows the creation of a pipeline dedicated to deploy terraform code
 
 ![architecture](./docs/module-arch.drawio.png)
 
+## How to use
+
+```ts
+variable "io-italia-it" {
+  default = {
+    repository = {
+      organization    = "pagopa"
+      name            = "io.italia.it"
+      branch_name     = "master"
+      pipelines_path  = ".devops"
+      yml_prefix_name = null
+    }
+    pipeline = {
+      enable_deploy = true
+      # common variables to all pipelines
+      variables = {
+        BLOB_CONTAINER_NAME       = "'$web'"
+        DEV_STORAGE_ACCOUNT_NAME  = "NA"
+        DEV_PROFILE_CDN_NAME      = "NA"
+        DEV_ENDPOINT_NAME         = "NA"
+        DEV_RESOURCE_GROUP_NAME   = "NA"
+        PROD_STORAGE_ACCOUNT_NAME = "iopstcdniowebsite"
+        PROD_PROFILE_CDN_NAME     = "io-p-cdn-common"
+        PROD_ENDPOINT_NAME        = "io-p-cdnendpoint-iowebsite"
+        PROD_RESOURCE_GROUP_NAME  = "io-p-rg-common"
+      }
+      # common secret variables to all pipelines
+      variables_secret = {
+      }
+    }
+  }
+}
+
+locals {
+  io-italia-it-variables = {
+    PROD_AZURE_SUBSCRIPTION = azuredevops_serviceendpoint_azurerm.PROD-IO.service_endpoint_name
+    DEV_AZURE_SUBSCRIPTION  = azuredevops_serviceendpoint_azurerm.DEV-IO.service_endpoint_name
+  }
+  io-italia-it-variables_secret = {
+  }
+}
+
+module "io-italia-it-deploy" {
+  source = "git::https://github.com/pagopa/azuredevops-tf-modules.git//azuredevops_build_definition_deploy?ref=v2.0.7"
+  count  = var.io-italia-it.pipeline.enable_deploy == true ? 1 : 0
+
+  project_id                   = azuredevops_project.project.id
+  repository                   = var.io-italia-it.repository
+  github_service_connection_id = azuredevops_serviceendpoint_github.io-azure-devops-github-pr.id
+
+  ci_trigger_use_yaml = false
+
+  variables = merge(
+    var.io-italia-it.pipeline.variables,
+    local.io-italia-it-variables,
+  )
+
+  variables_secret = merge(
+    var.io-italia-it.pipeline.variables_secret,
+    local.io-italia-it-variables_secret,
+  )
+
+  service_connection_ids_authorization = [
+    azuredevops_serviceendpoint_github.io-azure-devops-github-ro.id,
+    azuredevops_serviceendpoint_azurerm.PROD-IO.id,
+    azuredevops_serviceendpoint_azurerm.DEV-IO.id,
+  ]
+
+  schedules = {
+    days_to_build              = ["Mon","Tue","Wed","Thu","Fri"]
+    schedule_only_with_changes = false
+    start_hours                = 12
+    start_minutes              = 0
+    time_zone                  = "(UTC+01:00) Amsterdam, Berlin, Bern, Rome, Stockholm, Vienna"
+    branch_filter = {
+      include = ["master"]
+      exclude = []
+    }
+  }
+}
+```
+
 <!-- markdownlint-disable -->
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
@@ -25,7 +107,7 @@ Module that allows the creation of a pipeline dedicated to deploy terraform code
 
 | Name | Version |
 |------|---------|
-| <a name="provider_azuredevops"></a> [azuredevops](#provider\_azuredevops) | 0.2.0 |
+| <a name="provider_azuredevops"></a> [azuredevops](#provider\_azuredevops) | 0.2.1 |
 | <a name="provider_time"></a> [time](#provider\_time) | 0.7.2 |
 
 ## Modules
@@ -50,6 +132,7 @@ No modules.
 | <a name="input_github_service_connection_id"></a> [github\_service\_connection\_id](#input\_github\_service\_connection\_id) | (Required) GitHub service connection ID used to link Azure DevOps. | `string` | n/a | yes |
 | <a name="input_project_id"></a> [project\_id](#input\_project\_id) | (Required) Azure DevOps project ID | `string` | n/a | yes |
 | <a name="input_repository"></a> [repository](#input\_repository) | (Required) GitHub repository attributes | <pre>object({<br>    organization    = string<br>    name            = string<br>    branch_name     = string<br>    pipelines_path  = string<br>    yml_prefix_name = string<br>  })</pre> | n/a | yes |
+| <a name="input_schedules"></a> [schedules](#input\_schedules) | n/a | <pre>object({<br>    days_to_build              = list(string)<br>    schedule_only_with_changes = bool<br>    start_hours                = number<br>    start_minutes              = number<br>    time_zone                  = string<br>    branch_filter = object({<br>      include = list(string)<br>      exclude = list(string)<br>    })<br>  })</pre> | <pre>{<br>  "branch_filter": {<br>    "exclude": [],<br>    "include": [<br>      "main",<br>      "master"<br>    ]<br>  },<br>  "days_to_build": [<br>    "Mon"<br>  ],<br>  "schedule_only_with_changes": false,<br>  "start_hours": 1,<br>  "start_minutes": 0,<br>  "time_zone": "(UTC+01:00) Amsterdam, Berlin, Bern, Rome, Stockholm, Vienna"<br>}</pre> | no |
 | <a name="input_service_connection_ids_authorization"></a> [service\_connection\_ids\_authorization](#input\_service\_connection\_ids\_authorization) | (Optional) List service connection IDs that pipeline needs authorization. github\_service\_connection\_id is authorized by default | `list(string)` | `null` | no |
 | <a name="input_variables"></a> [variables](#input\_variables) | (Optional) Pipeline variables | `map(any)` | `null` | no |
 | <a name="input_variables_secret"></a> [variables\_secret](#input\_variables\_secret) | (Optional) Pipeline secret variables | `map(any)` | `null` | no |
