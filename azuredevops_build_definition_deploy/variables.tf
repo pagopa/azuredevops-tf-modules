@@ -77,15 +77,6 @@ variable "schedules" {
       exclude = list(string)
     })
   })
-  default = {
-    days_to_build              = ["Mon"]
-    schedule_only_with_changes = false
-    start_hours                = 1
-    start_minutes              = 0
-    time_zone                  = "(UTC+01:00) Amsterdam, Berlin, Bern, Rome, Stockholm, Vienna"
-    branch_filter = {
-      include = ["main", "master"]
-      exclude = []
-    }
-  }
+  default     = null
+  description = "Allow to setup schedules trigger in azure devops. Usign that the schedules used in the yaml will be disabled"
 }

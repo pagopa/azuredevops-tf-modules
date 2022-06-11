@@ -125,4 +125,5 @@ variable "schedules" {
       exclude = []
     }
   }
+  description = "Allow to setup schedules trigger in azure devops. Usign that the schedules used in the yaml will be disabled"
 }
