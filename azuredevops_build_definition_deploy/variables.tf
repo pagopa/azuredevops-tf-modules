@@ -5,13 +5,18 @@ variable "project_id" {
 
 variable "repository" {
   type = object({
-    organization    = string
-    name            = string
+    organization    = string # organization name (e.g. pagopaspa)
+    name            = string # repository name inside the organizzation
     branch_name     = string
-    pipelines_path  = string
-    yml_prefix_name = string
+    pipelines_path  = string # path where i can find the pipelines yaml
+    yml_prefix_name = string # prefix for yaml pipeline
   })
   description = "(Required) GitHub repository attributes"
+}
+
+variable "path" {
+  type        = string
+  description = "(Required) Pipeline path on Azure DevOps"
 }
 
 variable "ci_trigger_use_yaml" {
