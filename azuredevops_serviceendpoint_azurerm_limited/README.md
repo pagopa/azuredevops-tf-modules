@@ -55,7 +55,7 @@ locals {
 
 | Name | Version |
 |------|---------|
-| <a name="provider_azuread"></a> [azuread](#provider\_azuread) | 2.22.0 |
+| <a name="provider_azuread"></a> [azuread](#provider\_azuread) | 2.23.0 |
 | <a name="provider_azuredevops"></a> [azuredevops](#provider\_azuredevops) | 0.2.1 |
 | <a name="provider_null"></a> [null](#provider\_null) | 3.1.1 |
 | <a name="provider_time"></a> [time](#provider\_time) | 0.7.2 |
