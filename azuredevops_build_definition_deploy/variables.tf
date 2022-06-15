@@ -6,7 +6,7 @@ variable "project_id" {
 variable "pipeline_name" {
   type        = string
   description = "Name of the pipeline. If null it will be the repository name."
-  default     = "null"
+  default     = null
 }
 
 
