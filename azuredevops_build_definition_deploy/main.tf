@@ -4,7 +4,7 @@ locals {
 
 resource "azuredevops_build_definition" "pipeline" {
   project_id      = var.project_id
-  name            = "${var.repository.name}.deploy"
+  name            = var.pipeline_name != null ? var.pipeline_name : format("%s.deploy", var.repository.name)
   path            = "\\${var.path}"
   agent_pool_name = var.agent_pool_name
 
