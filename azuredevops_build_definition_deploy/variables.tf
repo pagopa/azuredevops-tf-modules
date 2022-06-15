@@ -3,6 +3,13 @@ variable "project_id" {
   description = "(Required) Azure DevOps project ID"
 }
 
+variable "pipeline_name" {
+  type        = string
+  description = "Name of the pipeline. If null it will be the repository name."
+  default     = "null"
+}
+
+
 variable "repository" {
   type = object({
     organization    = string # organization name (e.g. pagopaspa)
