@@ -9,13 +9,6 @@
 | <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | >= 2.60.0, <= 2.99.0 |
 | <a name="requirement_time"></a> [time](#requirement\_time) | >= 0.7.0 |
 
-## Providers
-
-| Name | Version |
-|------|---------|
-| <a name="provider_azuredevops"></a> [azuredevops](#provider\_azuredevops) | 0.2.1 |
-| <a name="provider_time"></a> [time](#provider\_time) | 0.7.2 |
-
 ## Modules
 
 No modules.
