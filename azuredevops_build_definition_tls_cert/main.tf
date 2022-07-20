@@ -1,20 +1,3 @@
-terraform {
-  required_version = ">= 0.14.5"
-  required_providers {
-    azuredevops = {
-      source  = "microsoft/azuredevops"
-      version = ">=0.1.8"
-    }
-    time = {
-      version = "~> 0.7.0"
-    }
-    null = {
-      source  = "hashicorp/null"
-      version = ">= 3.1.0"
-    }
-  }
-}
-
 locals {
   csr_common_name = trim("${var.dns_record_name}.${var.dns_zone_name}", ".")
   secret_name     = replace(trim("${var.dns_record_name}.${var.dns_zone_name}", "."), ".", "-")
@@ -158,8 +141,9 @@ resource "azuredevops_resource_authorization" "github_service_connection_authori
   project_id    = var.project_id
   resource_id   = var.github_service_connection_id
   definition_id = azuredevops_build_definition.pipeline.id
-  authorized    = true
-  type          = "endpoint"
+
+  authorized = true
+  type       = "endpoint"
 }
 
 # others service_connection_ids serviceendpoint authorization
@@ -170,8 +154,9 @@ resource "azuredevops_resource_authorization" "service_connection_ids_authorizat
   project_id    = var.project_id
   resource_id   = var.service_connection_ids_authorization[count.index]
   definition_id = azuredevops_build_definition.pipeline.id
-  authorized    = true
-  type          = "endpoint"
+
+  authorized = true
+  type       = "endpoint"
 }
 
 resource "null_resource" "this" {
@@ -218,19 +203,19 @@ resource "null_resource" "this" {
         -o tsv --query value | jq -r '.appId')
 
       az ad sp delete --id "$SERVICE_PRINCIPAL_ID"
-      
+
       az keyvault secret delete \
         --subscription "${self.triggers.credential_subcription}" \
         --vault-name "${self.triggers.credential_key_vault_name}" \
         --name "azdo-sp-acme-challenge-${self.triggers.name}"
-      
+
       sleep 60
 
       az keyvault secret purge \
         --subscription "${self.triggers.credential_subcription}" \
         --vault-name "${self.triggers.credential_key_vault_name}" \
         --name "azdo-sp-acme-challenge-${self.triggers.name}"
-      
+
       sleep 60
     EOT
   }

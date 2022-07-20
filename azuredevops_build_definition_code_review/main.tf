@@ -1,16 +1,3 @@
-terraform {
-  required_version = ">= 0.14.5"
-  required_providers {
-    azuredevops = {
-      source  = "microsoft/azuredevops"
-      version = ">=0.1.8"
-    }
-    time = {
-      version = "~> 0.7.0"
-    }
-  }
-}
-
 locals {
   yml_prefix_name = var.repository.yml_prefix_name == null ? "" : "${var.repository.yml_prefix_name}-"
 }
@@ -18,7 +5,7 @@ locals {
 resource "azuredevops_build_definition" "pipeline" {
   project_id      = var.project_id
   name            = "${var.repository.name}.code-review"
-  path            = "\\${var.repository.name}"
+  path            = "\\${var.path}"
   agent_pool_name = var.agent_pool_name
 
   repository {

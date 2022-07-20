@@ -1,21 +1,11 @@
-terraform {
-  required_version = ">= 0.14.5"
-  required_providers {
-    azuredevops = {
-      source  = "microsoft/azuredevops"
-      version = ">=0.1.8"
-    }
-  }
-}
-
 locals {
   yml_prefix_name = var.repository.yml_prefix_name == null ? "" : "${var.repository.yml_prefix_name}-"
 }
 
 resource "azuredevops_build_definition" "pipeline" {
   project_id      = var.project_id
-  name            = "${var.repository.name}.deploy"
-  path            = "\\${var.repository.name}"
+  name            = var.pipeline_name != null ? var.pipeline_name : format("%s.deploy", var.repository.name)
+  path            = "\\${var.path}"
   agent_pool_name = var.agent_pool_name
 
   repository {
@@ -25,10 +15,6 @@ resource "azuredevops_build_definition" "pipeline" {
     yml_path              = "${var.repository.pipelines_path}/${local.yml_prefix_name}deploy-pipelines.yml"
     service_connection_id = var.github_service_connection_id
   }
-
-  # ci_trigger {
-  #   use_yaml = var.ci_trigger_use_yaml == false ? null : true
-  # }
 
   dynamic "ci_trigger" {
     for_each = var.ci_trigger_use_yaml == false ? [] : ["dummy"]
@@ -79,6 +65,22 @@ resource "azuredevops_build_definition" "pipeline" {
       secret_value   = variable_secret.value
       is_secret      = true
       allow_override = false
+    }
+  }
+
+  dynamic "schedules" {
+    for_each = var.schedules != null ? [var.schedules] : []
+    iterator = s
+    content {
+      days_to_build              = s.value.days_to_build
+      schedule_only_with_changes = s.value.schedule_only_with_changes
+      start_hours                = s.value.start_hours
+      start_minutes              = s.value.start_minutes
+      time_zone                  = s.value.time_zone
+      branch_filter {
+        include = s.value.branch_filter.include
+        exclude = s.value.branch_filter.exclude
+      }
     }
   }
 }
