@@ -1,7 +1,7 @@
 resource "azuredevops_build_definition" "pipeline" {
   project_id      = var.project_id
   name            = var.pipeline_name
-  path            = "\\${var.repository.name}"
+  path            = "\\${var.path}"
   agent_pool_name = var.agent_pool_name
 
   repository {

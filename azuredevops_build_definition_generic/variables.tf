@@ -3,6 +3,11 @@ variable "project_id" {
   description = "(Required) Azure DevOps project ID"
 }
 
+variable "path" {
+  type        = string
+  description = "(Required) The path where the pipelines will be created"
+}
+
 variable "repository" {
   type = object({
     organization   = string
