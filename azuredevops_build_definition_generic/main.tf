@@ -1,16 +1,6 @@
-terraform {
-  required_version = ">= 0.14.5"
-  required_providers {
-    azuredevops = {
-      source  = "microsoft/azuredevops"
-      version = ">=0.1.8"
-    }
-  }
-}
-
 resource "azuredevops_build_definition" "pipeline" {
   project_id      = var.project_id
-  name            = "${var.pipeline_name}"
+  name            = var.pipeline_name
   path            = "\\${var.repository.name}"
   agent_pool_name = var.agent_pool_name
 
