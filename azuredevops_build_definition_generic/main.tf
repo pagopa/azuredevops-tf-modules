@@ -24,6 +24,14 @@ resource "azuredevops_build_definition" "pipeline" {
     }
   }
 
+  dynamic "pull_request_trigger" {
+    for_each = var.pull_request_trigger_use_yaml == false ? [] : ["dummy"]
+
+    content {
+      use_yaml = var.pull_request_trigger_use_yaml
+    }
+  }
+
   # todo not works
   # dynamic "ci_trigger" {
   #   for_each = var.ci_trigger
