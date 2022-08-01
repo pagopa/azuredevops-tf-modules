@@ -30,7 +30,7 @@ resource "azuredevops_build_definition" "pipeline" {
     content {
       use_yaml = var.pull_request_trigger_use_yaml
       forks {
-        enabled = false
+        enabled       = false
         share_secrets = false
       }
     }
