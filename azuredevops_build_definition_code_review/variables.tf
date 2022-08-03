@@ -20,9 +20,9 @@ variable "path" {
 }
 
 variable "pipeline_name_prefix" {
-  desdescription = "(Optional) Pipeline name prefix to join to the .code-review suffix"
-  type = string
-  default = ""
+  description = "(Optional) Pipeline name prefix to join to the .code-review suffix"
+  type        = string
+  default     = ""
 }
 
 variable "pull_request_trigger_use_yaml" {

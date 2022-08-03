@@ -41,6 +41,7 @@ No modules.
 | <a name="input_agent_pool_name"></a> [agent\_pool\_name](#input\_agent\_pool\_name) | The agent pool that should execute the build | `string` | `"Azure Pipelines"` | no |
 | <a name="input_github_service_connection_id"></a> [github\_service\_connection\_id](#input\_github\_service\_connection\_id) | (Required) GitHub service connection ID used to link Azure DevOps. | `string` | n/a | yes |
 | <a name="input_path"></a> [path](#input\_path) | (Required) Pipeline path on Azure DevOps | `string` | n/a | yes |
+| <a name="input_pipeline_name_prefix"></a> [pipeline\_name\_prefix](#input\_pipeline\_name\_prefix) | (Optional) Pipeline name prefix to join to the .code-review suffix | `string` | `""` | no |
 | <a name="input_project_id"></a> [project\_id](#input\_project\_id) | (Required) Azure DevOps project ID | `string` | n/a | yes |
 | <a name="input_pull_request_trigger_use_yaml"></a> [pull\_request\_trigger\_use\_yaml](#input\_pull\_request\_trigger\_use\_yaml) | (Optional) Use the azure-pipeline file for the build configuration. Defaults to false. | `bool` | `false` | no |
 | <a name="input_repository"></a> [repository](#input\_repository) | (Required) GitHub repository attributes | <pre>object({<br>    organization    = string # organization name (e.g. pagopaspa)<br>    name            = string # repository name inside the organizzation<br>    branch_name     = string<br>    pipelines_path  = string # path where i can find the pipelines yaml<br>    yml_prefix_name = string # prefix for yaml pipeline<br>  })</pre> | n/a | yes |
