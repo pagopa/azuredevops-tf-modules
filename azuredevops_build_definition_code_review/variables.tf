@@ -19,6 +19,12 @@ variable "path" {
   description = "(Required) Pipeline path on Azure DevOps"
 }
 
+variable "pipeline_name_prefix" {
+  desdescription = "(Optional) Pipeline name prefix to join to the .code-review suffix"
+  type = string
+  default = ""
+}
+
 variable "pull_request_trigger_use_yaml" {
   type        = bool
   description = "(Optional) Use the azure-pipeline file for the build configuration. Defaults to false."

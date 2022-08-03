@@ -1,10 +1,11 @@
 locals {
   yml_prefix_name = var.repository.yml_prefix_name == null ? "" : "${var.repository.yml_prefix_name}-"
+  pipeline_prefix = var.pipeline_name_prefix ? var.pipeline_name_prefix : var.repository.name
 }
 
 resource "azuredevops_build_definition" "pipeline" {
   project_id      = var.project_id
-  name            = "${var.repository.name}.code-review"
+  name            = "${local.pipeline_prefix}.code-review"
   path            = "\\${var.path}"
   agent_pool_name = var.agent_pool_name
 
