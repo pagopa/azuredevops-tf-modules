@@ -50,6 +50,6 @@ variable "service_connection_ids_authorization" {
 
 variable "agent_pool_name" {
   type        = string
-  default     = "Hosted Ubuntu 1604"
+  default     = "Azure Pipelines"
   description = "The agent pool that should execute the build"
 }

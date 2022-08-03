@@ -32,6 +32,12 @@ variable "ci_trigger_use_yaml" {
   default     = false
 }
 
+variable "pull_request_trigger_use_yaml" {
+  type        = bool
+  description = "(Optional) Use the azure-pipeline file for the build configuration. Defaults to false."
+  default     = false
+}
+
 # todo not works
 # variable "ci_trigger" {
 #   type = object({
@@ -73,7 +79,7 @@ variable "service_connection_ids_authorization" {
 
 variable "agent_pool_name" {
   type        = string
-  default     = "Hosted Ubuntu 1604"
+  default     = "Azure Pipelines"
   description = "The agent pool that should execute the build"
 }
 
