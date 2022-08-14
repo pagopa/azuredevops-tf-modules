@@ -5,7 +5,7 @@ locals {
 
 resource "azuredevops_build_definition" "pipeline" {
   project_id      = var.project_id
-  name            = "${local.pipeline_prefix}.code-review"
+  name            = var.pipeline_name_prefix != null ? "${var.pipeline_name_prefix}.code-review" : "${var.repository.name}.code-review"
   path            = "\\${var.path}"
   agent_pool_name = var.agent_pool_name
 

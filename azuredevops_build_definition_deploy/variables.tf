@@ -9,7 +9,6 @@ variable "pipeline_name_prefix" {
   default     = null
 }
 
-
 variable "repository" {
   type = object({
     organization    = string # organization name (e.g. pagopaspa)
