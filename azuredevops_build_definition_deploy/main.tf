@@ -52,7 +52,6 @@ resource "azuredevops_build_definition" "pipeline" {
         }
       }  
     }
-
   }
 
   # todo not works
