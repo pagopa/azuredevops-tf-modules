@@ -3,9 +3,9 @@ variable "project_id" {
   description = "(Required) Azure DevOps project ID"
 }
 
-variable "pipeline_name" {
+variable "pipeline_name_prefix" {
   type        = string
-  description = "Name of the pipeline. If null it will be the repository name."
+  description = "Prefix name of the pipeline. If null it will be the repository name. To attach to .deploy suffix"
   default     = null
 }
 
