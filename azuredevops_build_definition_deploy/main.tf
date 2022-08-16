@@ -4,7 +4,7 @@ locals {
 
 resource "azuredevops_build_definition" "pipeline" {
   project_id      = var.project_id
-  name            = var.pipeline_name != null ? var.pipeline_name : format("%s.deploy", var.repository.name)
+  name            = var.pipeline_name_prefix != null ? "${var.pipeline_name_prefix}.deploy" : "${var.repository.name}.deploy"
   path            = "\\${var.path}"
   agent_pool_name = var.agent_pool_name
 
@@ -24,26 +24,31 @@ resource "azuredevops_build_definition" "pipeline" {
     }
   }
 
-  pull_request_trigger {
-    use_yaml       = var.pull_request_trigger_use_yaml == false ? null : true
-    initial_branch = var.repository.branch_name
+  dynamic "pull_request_trigger" {
 
-    forks {
-      enabled       = false
-      share_secrets = false
-    }
+    for_each = var.pull_request_trigger_use_yaml == false ? [] : ["dummy"]
 
-    dynamic "override" {
-      for_each = var.pull_request_trigger_use_yaml == true ? [] : ["dummy"]
+    content {
+      use_yaml       = var.pull_request_trigger_use_yaml == false ? null : true
+      initial_branch = var.repository.branch_name
 
-      content {
-        auto_cancel = false
-        branch_filter {
-          include = [var.repository.branch_name]
-        }
-        path_filter {
-          exclude = []
-          include = []
+      forks {
+        enabled       = false
+        share_secrets = false
+      }
+
+      dynamic "override" {
+        for_each = var.pull_request_trigger_use_yaml == true ? [] : ["dummy"]
+
+        content {
+          auto_cancel = false
+          branch_filter {
+            include = [var.repository.branch_name]
+          }
+          path_filter {
+            exclude = []
+            include = []
+          }
         }
       }
     }
