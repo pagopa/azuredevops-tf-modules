@@ -43,7 +43,7 @@ resource "azuredevops_build_definition" "pipeline" {
             include = []
           }
         }
-      }  
+      }
     }
   }
 
