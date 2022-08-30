@@ -1,6 +1,5 @@
 locals {
   yml_prefix_name = var.repository.yml_prefix_name == null ? "" : "${var.repository.yml_prefix_name}-"
-  pipeline_prefix = var.pipeline_name_prefix != "" ? var.pipeline_name_prefix : var.repository.name
 }
 
 resource "azuredevops_build_definition" "pipeline" {
