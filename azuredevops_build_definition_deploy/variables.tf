@@ -5,7 +5,7 @@ variable "project_id" {
 
 variable "pipeline_name_prefix" {
   type        = string
-  description = "Prefix name of the pipeline. If null it will be the repository name. To attach to .deploy suffix"
+  description = "(Optional) Prefix name of the pipeline. If null it will be the repository name. To attach to .deploy suffix"
   default     = null
 }
 

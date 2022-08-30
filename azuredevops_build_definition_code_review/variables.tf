@@ -22,7 +22,7 @@ variable "path" {
 variable "pipeline_name_prefix" {
   description = "(Optional) Pipeline name prefix to join to the .code-review suffix"
   type        = string
-  default     = ""
+  default     = null
 }
 
 variable "pull_request_trigger_use_yaml" {
