@@ -42,3 +42,9 @@ variable "credential_key_vault_resource_group" {
   type        = string
   description = "(Required) Key vault resource group where store service principal credentials"
 }
+
+variable "default_roleassignment_rg_prefix" {
+  type        = string
+  default     = ""
+  description = "(Optional) Add a prefix to default_roleassignment_rg"
+}
