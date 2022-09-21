@@ -10,12 +10,13 @@ resource "null_resource" "this" {
   # see https://github.com/Azure/azure-cli/issues/12152
 
   triggers = {
-    renew_token               = var.renew_token
-    name                      = var.name
-    subscription_name         = var.subscription_name
-    subscription_id           = var.subscription_id
-    credential_subcription    = var.credential_subcription
-    credential_key_vault_name = var.credential_key_vault_name
+    renew_token                      = var.renew_token
+    name                             = var.name
+    subscription_name                = var.subscription_name
+    subscription_id                  = var.subscription_id
+    credential_subcription           = var.credential_subcription
+    credential_key_vault_name        = var.credential_key_vault_name
+    default_roleassignment_rg_prefix = var.default_roleassignment_rg_prefix
   }
 
   # https://docs.microsoft.com/it-it/cli/azure/ad/sp?view=azure-cli-latest#az_ad_sp_create_for_rbac
@@ -24,7 +25,7 @@ resource "null_resource" "this" {
       SP_CREDENTIAL_VALUES=$(az ad sp create-for-rbac \
         --name "azdo-sp-${self.triggers.name}" \
         --role "Reader" \
-        --scope "/subscriptions/${self.triggers.subscription_id}/resourceGroups/default-roleassignment-rg" \
+        --scope "/subscriptions/${self.triggers.subscription_id}/resourceGroups/${self.triggers.default_roleassignment_rg_prefix}default-roleassignment-rg" \
         -o json)
 
       az keyvault secret set \
