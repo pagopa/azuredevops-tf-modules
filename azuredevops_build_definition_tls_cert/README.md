@@ -20,7 +20,7 @@ Module that allows:
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.14.5 |
 | <a name="requirement_azuredevops"></a> [azuredevops](#requirement\_azuredevops) | >= 0.1.8 |
-| <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | >= 2.60.0, <= 2.99.0 |
+| <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | >= 2.90.0 |
 | <a name="requirement_null"></a> [null](#requirement\_null) | >= 3.1.0 |
 | <a name="requirement_time"></a> [time](#requirement\_time) | >= 0.7.0 |
 
@@ -28,7 +28,7 @@ Module that allows:
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_secrets"></a> [secrets](#module\_secrets) | git::https://github.com/pagopa/azurerm.git//key_vault_secrets_query | v1.0.11 |
+| <a name="module_secrets"></a> [secrets](#module\_secrets) | git::https://github.com/pagopa/azurerm.git//key_vault_secrets_query | v2.19.1 |
 
 ## Resources
 
