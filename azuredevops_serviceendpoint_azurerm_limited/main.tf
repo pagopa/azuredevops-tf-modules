@@ -48,26 +48,20 @@ resource "null_resource" "this" {
 
       az ad sp delete --id "$SERVICE_PRINCIPAL_ID"
 
-      az keyvault secret delete \
+      az keyvault secret set \
         --subscription "${self.triggers.credential_subcription}" \
         --vault-name "${self.triggers.credential_key_vault_name}" \
-        --name "azdo-sp-${self.triggers.name}"
-
-      sleep 60
-
-      az keyvault secret purge \
-        --subscription "${self.triggers.credential_subcription}" \
-        --vault-name "${self.triggers.credential_key_vault_name}" \
-        --name "azdo-sp-${self.triggers.name}"
-
-      sleep 60
+        --name "azdo-sp-${self.triggers.name}" \
+        --value "DELETEME" \
+        --disabled true \
+        --description "DELETEME"
     EOT
   }
 }
 
 module "secrets" {
   depends_on = [null_resource.this]
-  source     = "git::https://github.com/pagopa/azurerm.git//key_vault_secrets_query?ref=v1.0.11"
+  source     = "git::https://github.com/pagopa/azurerm.git//key_vault_secrets_query?ref=v2.19.1"
 
   resource_group = var.credential_key_vault_resource_group
   key_vault_name = var.credential_key_vault_name
