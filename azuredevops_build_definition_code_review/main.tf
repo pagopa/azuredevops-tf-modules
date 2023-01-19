@@ -16,6 +16,14 @@ resource "azuredevops_build_definition" "pipeline" {
     service_connection_id = var.github_service_connection_id
   }
 
+  dynamic "ci_trigger" {
+    for_each = var.ci_trigger_use_yaml == false ? [] : ["dummy"]
+
+    content {
+      use_yaml = var.ci_trigger_use_yaml
+    }
+  }
+
   dynamic "pull_request_trigger" {
 
     for_each = var.pull_request_trigger_use_yaml == false ? [] : ["dummy"]

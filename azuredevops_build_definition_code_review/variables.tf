@@ -25,6 +25,12 @@ variable "pipeline_name_prefix" {
   default     = null
 }
 
+variable "ci_trigger_use_yaml" {
+  type        = bool
+  description = "(Optional) Use the azure-pipeline file for the build configuration. Defaults to false."
+  default     = false
+}
+
 variable "pull_request_trigger_use_yaml" {
   type        = bool
   description = "(Optional) Use the azure-pipeline file for the build configuration. Defaults to false."
