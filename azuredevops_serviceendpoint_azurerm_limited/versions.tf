@@ -1,5 +1,5 @@
 terraform {
-  required_version = ">= 3.1.0"
+  required_version = ">= 1.3.0"
 
   required_providers {
     azuread = {
@@ -20,7 +20,7 @@ terraform {
     }
     null = {
       source  = "hashicorp/null"
-      version = ">= 3.1.0"
+      version = ">= 1.3.0"
     }
   }
 }
