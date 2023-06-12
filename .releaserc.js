@@ -1,7 +1,6 @@
 module.exports = {
   branches: ["main", "master"],
   ci: false,
-  tagFormat: "microservice-chart-${version}",
   plugins: [
     [
       "@semantic-release/commit-analyzer",
