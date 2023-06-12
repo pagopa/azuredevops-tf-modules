@@ -216,8 +216,8 @@ resource "null_resource" "this" {
 }
 
 module "secrets" {
-  depends_on = [null_resource.this]
-  source = "git::https://github.com/pagopa/terraform-azurerm-v3.git//key_vault_secrets_query?ref=v6.15.2"
+  depends_on     = [null_resource.this]
+  source         = "git::https://github.com/pagopa/terraform-azurerm-v3.git//key_vault_secrets_query?ref=v6.15.2"
   resource_group = var.credential_key_vault_resource_group
   key_vault_name = var.credential_key_vault_name
 
