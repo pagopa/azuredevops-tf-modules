@@ -18,7 +18,7 @@ repos:
   #       exclude_types: [sql, txt]
   ## terraform
   - repo: https://github.com/antonbabenko/pre-commit-terraform
-    rev: v1.74.1
+    rev: v1.79.1
     hooks:
       - id: terraform_fmt
       - id: terraform_docs
@@ -32,3 +32,9 @@ repos:
         args:
           - --args=-json
           - --args=-no-color
+      # - id: terraform_providers_lock
+      #   args:
+      #     - --args=-platform=windows_amd64
+      #     - --args=-platform=darwin_amd64
+      #     - --args=-platform=darwin_arm64
+      #     - --args=-platform=linux_amd64
