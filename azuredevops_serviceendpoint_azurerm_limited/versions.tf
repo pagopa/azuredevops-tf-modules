@@ -1,5 +1,5 @@
 terraform {
-  required_version = ">= 0.14.5"
+  required_version = ">= 3.1.0"
 
   required_providers {
     azuread = {
@@ -8,11 +8,11 @@ terraform {
     }
     azuredevops = {
       source  = "microsoft/azuredevops"
-      version = ">= 0.1.8"
+      version = ">= 0.5.0"
     }
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = ">= 2.90.0"
+      version = ">= 3.53.0"
     }
     time = {
       source  = "hashicorp/time"
