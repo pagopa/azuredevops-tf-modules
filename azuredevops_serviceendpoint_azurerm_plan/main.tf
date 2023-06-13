@@ -11,7 +11,7 @@ data "azurerm_key_vault" "kv" {
 # Create App
 #
 resource "azuread_application" "plan_app" {
-  display_name = var.name
+  display_name = local.app_name
 }
 
 resource "azuread_service_principal" "plan_app" {
@@ -33,7 +33,7 @@ resource "azuread_service_principal_password" "plan_app" {
 # KeyVault
 #
 resource "azurerm_key_vault_secret" "credentials_password_value" {
-  name         = "azdo-sp-plan-${var.name}"
+  name         = local.app_name
   value        = azuread_service_principal_password.plan_app.value
   key_vault_id = data.azurerm_key_vault.kv.id
 }
@@ -76,7 +76,7 @@ resource "azurerm_role_assignment" "plan_app_subscription" {
 
 #   triggers = {
 #     renew_token                      = var.renew_token
-#     name                             = var.name
+#     name                             = var.name_suffix
 #     subscription_name                = var.subscription_name
 #     subscription_id                  = var.subscription_id
 #     credential_subcription           = var.credential_subcription
@@ -141,16 +141,16 @@ resource "azuredevops_serviceendpoint_azurerm" "this" {
   depends_on = [module.secrets]
 
   project_id            = var.project_id
-  service_endpoint_name = "${upper(var.name)}-SERVICE-CONN"
-  description           = "${upper(var.name)} Azure Service connection with manual SP"
+  service_endpoint_name = "${upper(var.name_suffix)}-SERVICE-CONN"
+  description           = "${upper(var.name_suffix)} Azure Service connection with manual SP"
 
   # azurerm_subscription_name = var.subscription_name
   azurerm_spn_tenantid      = var.tenant_id
   azurerm_subscription_id   = var.subscription_id
 
   credentials {
-    serviceprincipalid  = jsondecode(module.secrets.values["azdo-sp-${var.name}"].value).appId
-    serviceprincipalkey = jsondecode(module.secrets.values["azdo-sp-${var.name}"].value).password
+    serviceprincipalid  = jsondecode(module.secrets.values[local.app_name].value).appId
+    serviceprincipalkey = jsondecode(module.secrets.values[local.app_name].value).password
   }
 }
 
@@ -163,5 +163,5 @@ resource "time_sleep" "wait" {
 
 data "azuread_service_principal" "this" {
   depends_on   = [time_sleep.wait]
-  display_name = jsondecode(module.secrets.values["azdo-sp-${var.name}"].value).displayName
+  display_name = jsondecode(module.secrets.values[local.app_name].value).displayName
 }

@@ -1,4 +1,6 @@
 locals {
+  app_name = "azdo-sp-plan-${var.name_suffix}"
+
   plan_app_roles = {
     permissions = [
       "Reader",
@@ -15,9 +17,9 @@ locals {
   }
 }
 
-variable "name" {
+variable "name_suffix" {
   type        = string
-  description = "(Required) Service principal name"
+  description = "(Required) Service principal name suffix"
 }
 
 variable "project_id" {

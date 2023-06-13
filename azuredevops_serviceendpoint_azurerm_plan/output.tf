@@ -1,5 +1,5 @@
 output "service_principal_app_id" {
-  value       = jsondecode(module.secrets.values["azdo-sp-${var.name}"].value).appId
+  value       = jsondecode(module.secrets.values[local.app_name].value).appId
   sensitive   = true
   description = "Service principal application id"
 }
@@ -11,7 +11,7 @@ output "service_principal_object_id" {
 }
 
 output "service_principal_name" {
-  value       = "azdo-sp-${var.name}"
+  value       = local.app_name
   description = "Service principal name"
 }
 
