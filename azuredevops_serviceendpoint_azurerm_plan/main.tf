@@ -33,7 +33,7 @@ resource "azuread_service_principal_password" "plan_app" {
 # KeyVault
 #
 resource "azurerm_key_vault_secret" "credentials_password_value" {
-  name         = "azdo-sp-${var.name}"
+  name         = "azdo-sp-plan-${var.name}"
   value        = azuread_service_principal_password.plan_app.value
   key_vault_id = data.azurerm_key_vault.kv.id
 }
