@@ -8,7 +8,6 @@ data "azurerm_key_vault" "kv" {
 }
 
 data "azurerm_subscription" "this" {
-  subscription_id = data.azurerm_subscription.this.subscription_id
 }
 
 #
