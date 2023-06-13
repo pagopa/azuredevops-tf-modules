@@ -144,7 +144,7 @@ resource "azuredevops_serviceendpoint_azurerm" "this" {
   service_endpoint_name = "${upper(var.name)}-SERVICE-CONN"
   description           = "${upper(var.name)} Azure Service connection with manual SP"
 
-  azurerm_subscription_name = var.subscription_name
+  # azurerm_subscription_name = var.subscription_name
   azurerm_spn_tenantid      = var.tenant_id
   azurerm_subscription_id   = var.subscription_id
 
