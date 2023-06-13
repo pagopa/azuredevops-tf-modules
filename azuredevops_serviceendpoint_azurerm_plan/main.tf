@@ -150,6 +150,7 @@ resource "azuredevops_serviceendpoint_azurerm" "this" {
   # azurerm_subscription_name = var.subscription_name
   azurerm_spn_tenantid      = var.tenant_id
   azurerm_subscription_id   = data.azurerm_subscription.this.id
+  azurerm_subscription_name = data.azurerm_subscription.this.display_name
 
   credentials {
     serviceprincipalid  = azuread_service_principal.plan_app.object_id
