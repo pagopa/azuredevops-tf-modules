@@ -144,8 +144,8 @@ resource "azuredevops_serviceendpoint_azurerm" "this" {
   depends_on = [module.secrets]
 
   project_id            = var.project_id
-  service_endpoint_name = "${upper(var.name_suffix)}-SERVICE-CONN"
-  description           = "${upper(var.name_suffix)} Azure Service connection with manual SP"
+  service_endpoint_name = "${upper(var.name_suffix)}-PLAN-SERVICE-CONN"
+  description           = "${upper(var.name_suffix)} Azure Service connection for PLAN"
 
   # azurerm_subscription_name = var.subscription_name
   azurerm_spn_tenantid      = var.tenant_id
