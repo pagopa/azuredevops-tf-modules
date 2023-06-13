@@ -152,8 +152,8 @@ resource "azuredevops_serviceendpoint_azurerm" "this" {
   azurerm_subscription_id   = data.azurerm_subscription.this.id
 
   credentials {
-    serviceprincipalid  = jsondecode(module.secrets.values[local.app_name].value).appId
-    serviceprincipalkey = jsondecode(module.secrets.values[local.app_name].value).password
+    serviceprincipalid  = azuread_service_principal.plan_app.object_id
+    serviceprincipalkey = azuread_service_principal_password.plan_app.value
   }
 }
 
@@ -166,5 +166,5 @@ resource "time_sleep" "wait" {
 
 data "azuread_service_principal" "this" {
   depends_on   = [time_sleep.wait]
-  display_name = jsondecode(module.secrets.values[local.app_name].value).displayName
+  display_name = azuread_service_principal.plan_app.display_name
 }
