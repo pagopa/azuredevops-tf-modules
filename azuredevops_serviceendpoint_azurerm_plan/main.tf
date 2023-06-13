@@ -7,6 +7,10 @@ data "azurerm_key_vault" "kv" {
   resource_group_name = var.credential_key_vault_resource_group
 }
 
+data "azurerm_subscription" "this" {
+  subscription_id = data.azurerm_subscription.this.subscription_id
+}
+
 #
 # Create App
 #
@@ -49,7 +53,7 @@ resource "azuread_group_member" "add_plan_app_to_directory_readers_group" {
 }
 
 resource "azurerm_role_assignment" "pagopa_iac_reader" {
-  scope                = var.subscription_id
+  scope                = data.azurerm_subscription.this.subscription_id
   role_definition_name = var.custom_role_name
   principal_id         = azuread_service_principal.plan_app.object_id
 }
@@ -57,7 +61,7 @@ resource "azurerm_role_assignment" "pagopa_iac_reader" {
 resource "azurerm_role_assignment" "plan_app_subscription" {
   for_each             = toset(local.plan_app_roles.permissions)
 
-  scope                = var.subscription_id
+  scope                = data.azurerm_subscription.this.subscription_id
   role_definition_name = each.key
   principal_id         = azuread_service_principal.plan_app.object_id
 }
@@ -78,7 +82,7 @@ resource "azurerm_role_assignment" "plan_app_subscription" {
 #     renew_token                      = var.renew_token
 #     name                             = var.name_suffix
 #     subscription_name                = var.subscription_name
-#     subscription_id                  = var.subscription_id
+#     subscription_id                  = data.azurerm_subscription.this.subscription_id
 #     credential_subcription           = var.credential_subcription
 #     credential_key_vault_name        = var.credential_key_vault_name
 #     default_roleassignment_rg_prefix = var.default_roleassignment_rg_prefix
@@ -146,7 +150,7 @@ resource "azuredevops_serviceendpoint_azurerm" "this" {
 
   # azurerm_subscription_name = var.subscription_name
   azurerm_spn_tenantid      = var.tenant_id
-  azurerm_subscription_id   = var.subscription_id
+  azurerm_subscription_id   = data.azurerm_subscription.this.subscription_id
 
   credentials {
     serviceprincipalid  = jsondecode(module.secrets.values[local.app_name].value).appId
