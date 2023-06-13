@@ -45,10 +45,10 @@ variable "tenant_id" {
   description = "(Required) Azure Tenant ID related to tenant where create service principal"
 }
 
-variable "credential_subcription" {
-  type        = string
-  description = "(Required) Azure Subscription where store service principal credentials"
-}
+# variable "credential_subcription" {
+#   type        = string
+#   description = "(Required) Azure Subscription where store service principal credentials"
+# }
 
 variable "credential_key_vault_name" {
   type        = string
