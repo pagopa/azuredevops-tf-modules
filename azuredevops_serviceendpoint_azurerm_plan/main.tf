@@ -26,7 +26,7 @@ resource "time_rotating" "credential_password_days" {
 }
 
 resource "azuread_application_password" "plan_app" {
-  service_principal_id = azuread_application.plan_app.object_id
+  application_object_id = azuread_application.plan_app.object_id
   rotate_when_changed = {
     rotation = time_rotating.credential_password_days.id
   }
@@ -42,7 +42,7 @@ resource "azuread_service_principal" "plan_app" {
 #
 resource "azurerm_key_vault_secret" "credentials_password_value" {
   name         = local.app_name
-  value        = azuread_service_principal_password.plan_app.value
+  value        = azuread_application_password.plan_app.value
   key_vault_id = data.azurerm_key_vault.kv.id
 }
 
@@ -166,7 +166,7 @@ resource "azuredevops_serviceendpoint_azurerm" "this" {
 
   credentials {
     serviceprincipalid  = azuread_service_principal.plan_app.object_id
-    serviceprincipalkey = azuread_service_principal_password.plan_app.value
+    serviceprincipalkey = azuread_application_password.plan_app.value
   }
 }
 
