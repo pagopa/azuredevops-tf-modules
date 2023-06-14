@@ -21,19 +21,20 @@ resource "azuread_application" "plan_app" {
   display_name = local.app_name
 }
 
-resource "azuread_service_principal" "plan_app" {
-  application_id = azuread_application.plan_app.application_id
-}
-
 resource "time_rotating" "credential_password_days" {
   rotation_days = var.password_time_rotation_days
 }
 
-resource "azuread_service_principal_password" "plan_app" {
-  service_principal_id = azuread_service_principal.plan_app.object_id
+resource "azuread_application_password" "plan_app" {
+  service_principal_id = azuread_application.plan_app.object_id
   rotate_when_changed = {
     rotation = time_rotating.credential_password_days.id
   }
+}
+
+## SP
+resource "azuread_service_principal" "plan_app" {
+  application_id = azuread_application.plan_app.application_id
 }
 
 #
