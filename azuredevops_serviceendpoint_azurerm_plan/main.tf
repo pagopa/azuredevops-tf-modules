@@ -10,6 +10,10 @@ data "azurerm_key_vault" "kv" {
 data "azurerm_subscription" "this" {
 }
 
+data "azurerm_resource_group" "this" {
+  name = "default-roleassignment-rg"
+}
+
 #
 # Create App
 #
@@ -51,9 +55,10 @@ resource "azuread_group_member" "add_plan_app_to_directory_readers_group" {
   member_object_id = azuread_service_principal.plan_app.object_id
 }
 
-resource "azurerm_role_assignment" "pagopa_iac_reader" {
-  scope                = data.azurerm_subscription.this.id
-  role_definition_name = var.custom_role_name
+# assign SP to default resource group to allow to be linked to subscription
+resource "azurerm_role_assignment" "default_resource_group_reader" {
+  scope                = data.azurerm_resource_group.this.id
+  role_definition_name = "Reader"
   principal_id         = azuread_service_principal.plan_app.object_id
 }
 
