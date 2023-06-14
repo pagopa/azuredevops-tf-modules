@@ -165,7 +165,7 @@ resource "azuredevops_serviceendpoint_azurerm" "this" {
   azurerm_subscription_name = data.azurerm_subscription.this.display_name
 
   credentials {
-    serviceprincipalid  = azuread_service_principal.plan_app.object_id
+    serviceprincipalid  = azuread_service_principal.plan_app.application_id
     serviceprincipalkey = azuread_application_password.plan_app.value
   }
 }
