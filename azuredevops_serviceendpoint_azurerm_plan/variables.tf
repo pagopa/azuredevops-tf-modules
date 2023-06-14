@@ -3,6 +3,7 @@ locals {
 
   plan_app_roles = {
     permissions = [
+      "PagoPA IaC Reader",
       "Reader",
       "Reader and Data Access",
       "Storage Blob Data Reader",
@@ -68,12 +69,6 @@ variable "default_roleassignment_rg_prefix" {
   description = "(Optional) Add a prefix to default_roleassignment_rg"
 }
 
-variable "custom_role_name" {
-  type        = string
-  description = "Custom role that allows IaC SP to read resources and generate kubernetes credentials"
-  default     = "PagoPA IaC Reader"
-}
-
 variable "password_time_rotation_days" {
   type = number
   description = "How many days before the password(credentials) is rotated"
@@ -83,4 +78,10 @@ variable "password_time_rotation_days" {
 variable "iac_aad_group_name" {
   type        = string
   description = "Azure AD group name for iac sp apps (with Directory Reader permissions at leats)"
+}
+
+variable "default_resource_group_name" {
+type = string
+description = "The name of the default resource group to link with the new app to allow the connection"
+default = "default-roleassignment-rg"
 }
