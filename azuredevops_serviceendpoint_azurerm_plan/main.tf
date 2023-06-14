@@ -62,6 +62,12 @@ resource "azurerm_role_assignment" "default_resource_group_reader" {
   principal_id         = azuread_service_principal.plan_app.object_id
 }
 
+resource "azurerm_role_assignment" "pagopa_iac_reader" {
+  scope                = data.azurerm_subscription.this.id
+  role_definition_name = var.custom_role_name
+  principal_id         = azuread_service_principal.plan_app.object_id
+}
+
 resource "azurerm_role_assignment" "plan_app_subscription" {
   for_each             = toset(local.plan_app_roles.permissions)
 
