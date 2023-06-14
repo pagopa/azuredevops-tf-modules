@@ -70,9 +70,9 @@ variable "default_roleassignment_rg_prefix" {
 }
 
 variable "password_time_rotation_days" {
-  type = number
+  type        = number
   description = "How many days before the password(credentials) is rotated"
-  default = 365
+  default     = 365
 }
 
 variable "iac_aad_group_name" {
@@ -81,7 +81,7 @@ variable "iac_aad_group_name" {
 }
 
 variable "default_resource_group_name" {
-type = string
-description = "The name of the default resource group to link with the new app to allow the connection"
-default = "default-roleassignment-rg"
+  type        = string
+  description = "The name of the default resource group to link with the new app to allow the connection"
+  default     = "default-roleassignment-rg"
 }

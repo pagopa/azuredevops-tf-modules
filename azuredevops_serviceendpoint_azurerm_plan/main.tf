@@ -64,7 +64,7 @@ resource "azurerm_role_assignment" "default_resource_group_reader" {
 }
 
 resource "azurerm_role_assignment" "plan_app_subscription" {
-  for_each             = toset(local.plan_app_roles.permissions)
+  for_each = toset(local.plan_app_roles.permissions)
 
   scope                = data.azurerm_subscription.this.id
   role_definition_name = each.key
