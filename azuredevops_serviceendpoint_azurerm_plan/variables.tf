@@ -85,3 +85,9 @@ variable "default_resource_group_name" {
   description = "The name of the default resource group to link with the new app to allow the connection"
   default     = "default-roleassignment-rg"
 }
+
+variable "renew_token" {
+  type        = string
+  description = "(Optional) Renew token to recreate service principal. Change it to renew service principal credentials"
+  default = "v1"
+}

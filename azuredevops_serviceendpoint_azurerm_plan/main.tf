@@ -29,6 +29,7 @@ resource "azuread_application_password" "plan_app" {
   application_object_id = azuread_application.plan_app.object_id
   rotate_when_changed = {
     rotation = time_rotating.credential_password_days.id
+    renew = var.renew_token
   }
 }
 
