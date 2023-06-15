@@ -1,7 +1,11 @@
 # azuredevops_serviceendpoint_azurerm_limited
 
-This module allow the creation of a service connection (azurerm type) with name: `azdo-sp-****`.
+This module allow the creation of a service connection (azurerm type) with name: `azdo-sp-plan-****`.
 Using a Service Principal, and store the credentials into a Key Vault.
+
+This Service principal is in charge to execute plans without require an approvation.
+
+* `password_time_rotation_days`: The default credentials inside the app are created with 2 years of validation, this variable allow to renew before the expiration day
 
 > 🏁 This connection can be used to manage from azure devops, azure resources inside subscription
 
@@ -12,27 +16,27 @@ Using a Service Principal, and store the credentials into a Key Vault.
 ## How to use it
 
 ```json
-module "LAB-TLS-CERT-SERVICE-CONN" {
-  depends_on = [azuredevops_project.project]
-  source     = "git::https://github.com/pagopa/azuredevops-tf-modules.git//azuredevops_serviceendpoint_azurerm_limited?ref=v2.0.4"
+module "DEV-CSTAR-PLAN-SERVICE-CONN" {
+
   providers = {
-    azurerm = azurerm.lab
+    azurerm = azurerm.dev
   }
 
-  project_id        = azuredevops_project.project.id
-  renew_token       = local.tlscert_renew_token
-  name              = "${local.prefix}-d-tls-cert"
-  tenant_id         = module.secrets.values["TENANTID"].value
-  subscription_id   = module.secrets.values["LAB-SUBSCRIPTION-ID"].value
-  subscription_name = var.lab_subscription_name
+  depends_on = [data.azuredevops_project.project]
+  source     = "git::https://github.com/pagopa/azuredevops-tf-modules.git//azuredevops_serviceendpoint_azurerm_plan?ref=add-service-endpoint-sp-personal"
 
-  credential_subcription              = var.lab_subscription_name
-  credential_key_vault_name           = local.dev_key_vault_name
-  credential_key_vault_resource_group = local.dev_key_vault_resource_group
-}
+  name_suffix                 = "${local.project_prefix_short}-dev"
+  iac_aad_group_name          = "azure-devops-iac-service-connection"
+  password_time_rotation_days = 365
+  #renew_token                 = "v2" <- optional
 
-locals {
-    renew_token = "v1"
+
+  project_id      = data.azuredevops_project.project.id
+  tenant_id       = module.secret_azdo.values["PAGOPAIT-TENANTID"].value
+  subscription_id = module.secret_azdo.values["PAGOPAIT-DEV-CSTAR-SUBSCRIPTION-ID"].value
+
+  credential_key_vault_name           = local.dev_idpay_key_vault_name
+  credential_key_vault_resource_group = local.dev_idpay_key_vault_resource_group
 }
 ```
 
