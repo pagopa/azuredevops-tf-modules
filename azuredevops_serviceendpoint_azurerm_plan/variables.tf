@@ -89,5 +89,5 @@ variable "default_resource_group_name" {
 variable "renew_token" {
   type        = string
   description = "(Optional) Renew token to recreate service principal. Change it to renew service principal credentials"
-  default = "v1"
+  default     = "v1"
 }

@@ -93,6 +93,7 @@ module "DEV-CSTAR-PLAN-SERVICE-CONN" {
 | <a name="input_name_suffix"></a> [name\_suffix](#input\_name\_suffix) | (Required) Service principal name suffix | `string` | n/a | yes |
 | <a name="input_password_time_rotation_days"></a> [password\_time\_rotation\_days](#input\_password\_time\_rotation\_days) | How many days before the password(credentials) is rotated | `number` | `365` | no |
 | <a name="input_project_id"></a> [project\_id](#input\_project\_id) | (Required) Azure DevOps project ID | `string` | n/a | yes |
+| <a name="input_renew_token"></a> [renew\_token](#input\_renew\_token) | (Optional) Renew token to recreate service principal. Change it to renew service principal credentials | `string` | `"v1"` | no |
 | <a name="input_subscription_id"></a> [subscription\_id](#input\_subscription\_id) | (Required) Azure Subscription ID related to tenant where create service principal | `string` | n/a | yes |
 | <a name="input_tenant_id"></a> [tenant\_id](#input\_tenant\_id) | (Required) Azure Tenant ID related to tenant where create service principal | `string` | n/a | yes |
 
