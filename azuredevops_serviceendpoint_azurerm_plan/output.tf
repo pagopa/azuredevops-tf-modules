@@ -1,18 +1,18 @@
-output "service_principal_app_id" {
-  value       = jsondecode(module.secrets.values[local.app_name].value).appId
+output "application_id" {
+  value       = azuread_application.plan_app.application_id
   sensitive   = true
   description = "Service principal application id"
 }
 
-output "service_principal_object_id" {
-  value       = data.azuread_service_principal.this.object_id
-  sensitive   = true
-  description = "Service principal object id"
+output "app_name" {
+  value       = local.app_name
+  description = "App name"
 }
 
-output "service_principal_name" {
-  value       = local.app_name
-  description = "Service principal name"
+output "service_principal_object_id" {
+  value       = azuread_service_principal.sp_plan.object_id
+  sensitive   = true
+  description = "Service principal object id"
 }
 
 output "service_endpoint_name" {

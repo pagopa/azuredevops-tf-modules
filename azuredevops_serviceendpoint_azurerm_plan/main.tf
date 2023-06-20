@@ -34,7 +34,7 @@ resource "azuread_application_password" "plan_app" {
 }
 
 ## SP
-resource "azuread_service_principal" "plan_app" {
+resource "azuread_service_principal" "sp_plan" {
   application_id = azuread_application.plan_app.application_id
 }
 
@@ -54,14 +54,14 @@ resource "azurerm_key_vault_secret" "credentials_password_value" {
 # assign SP to group with Directory Reader
 resource "azuread_group_member" "add_plan_app_to_directory_readers_group" {
   group_object_id  = data.azuread_group.group_directory_reader_permissions.id
-  member_object_id = azuread_service_principal.plan_app.object_id
+  member_object_id = azuread_service_principal.sp_plan.object_id
 }
 
 # assign SP to default resource group to allow to be linked to subscription
 resource "azurerm_role_assignment" "default_resource_group_reader" {
   scope                = data.azurerm_resource_group.this.id
   role_definition_name = "Reader"
-  principal_id         = azuread_service_principal.plan_app.object_id
+  principal_id         = azuread_service_principal.sp_plan.object_id
 }
 
 resource "azurerm_role_assignment" "plan_app_subscription" {
@@ -69,7 +69,7 @@ resource "azurerm_role_assignment" "plan_app_subscription" {
 
   scope                = data.azurerm_subscription.this.id
   role_definition_name = each.key
-  principal_id         = azuread_service_principal.plan_app.object_id
+  principal_id         = azuread_service_principal.sp_plan.object_id
 }
 
 module "secrets" {
@@ -98,19 +98,19 @@ resource "azuredevops_serviceendpoint_azurerm" "this" {
   azurerm_subscription_name = data.azurerm_subscription.this.display_name
 
   credentials {
-    serviceprincipalid  = azuread_service_principal.plan_app.application_id
+    serviceprincipalid  = azuread_service_principal.sp_plan.application_id
     serviceprincipalkey = azuread_application_password.plan_app.value
   }
 }
 
-# This is to work around an issue with azuredevops_resource_authorization
-# The service connection resource is not ready immediately
-# so the recommendation is to wait 30 seconds until it's ready
-resource "time_sleep" "wait" {
-  create_duration = "60s"
-}
+# # This is to work around an issue with azuredevops_resource_authorization
+# # The service connection resource is not ready immediately
+# # so the recommendation is to wait 30 seconds until it's ready
+# resource "time_sleep" "wait" {
+#   create_duration = "60s"
+# }
 
-data "azuread_service_principal" "this" {
-  depends_on   = [time_sleep.wait]
-  display_name = azuread_service_principal.plan_app.display_name
-}
+# data "azuread_service_principal" "this" {
+#   depends_on   = [time_sleep.wait]
+#   display_name = azuread_service_principal.sp_plan.display_name
+# }
