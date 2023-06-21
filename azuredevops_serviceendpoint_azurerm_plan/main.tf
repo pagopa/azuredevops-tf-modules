@@ -102,15 +102,3 @@ resource "azuredevops_serviceendpoint_azurerm" "this" {
     serviceprincipalkey = azuread_application_password.plan_app.value
   }
 }
-
-# # This is to work around an issue with azuredevops_resource_authorization
-# # The service connection resource is not ready immediately
-# # so the recommendation is to wait 30 seconds until it's ready
-# resource "time_sleep" "wait" {
-#   create_duration = "60s"
-# }
-
-# data "azuread_service_principal" "this" {
-#   depends_on   = [time_sleep.wait]
-#   display_name = azuread_service_principal.sp_plan.display_name
-# }
