@@ -88,10 +88,10 @@ variable "schedule_configuration" {
     condition = alltrue(
         flatten([
           for s in var.schedule_configuration.aks : [
-            length(split(",", s.nodes_on_start)) == 2,
-            length(split(",", s.nodes_on_stop)) == 2,
-            length(split(",", s.nodes_on_start)) == 2,
-            length(split(",", s.nodes_on_stop)) == 2
+            length(split(",", s.user.nodes_on_start)) == 2,
+            length(split(",", s.user.nodes_on_stop)) == 2,
+            length(split(",", s.system.nodes_on_start)) == 2,
+            length(split(",", s.system.nodes_on_stop)) == 2
           ]
         ])
       )
