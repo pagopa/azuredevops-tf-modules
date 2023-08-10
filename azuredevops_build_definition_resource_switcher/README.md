@@ -1,6 +1,8 @@
-# azuredevops_build_definition_switcher
+# azuredevops_build_definition_resource_switcher
 
-This module provides the pipeline definitions used to automatically manage the scale up/down of aks node pools, based on the provided configuration
+This module provides the pipeline definitions used to automatically manage the scale up/down of aks node pools, based on the provided configuration.
+
+It will create 2 pipelines for each cluster configured: one to start it and one to stop it
 
 ## Usage
 
@@ -10,20 +12,20 @@ variable "my_variables" {
   default = {
     repository = {
       organization    = "pagopa"
-      name            = "devopslab-infra"
+      name            = "eng-common-scripts"
       branch_name     = "refs/heads/main"
-      pipelines_path  = ".devops"
-      yml_prefix_name = "marco"
+      pipelines_path  = "devops"
+      yml_prefix_name = null
     }
     pipeline = {
-      path            = "marco"
+      path            = "<my_name>"
     }
   }
 }
 
 
 module "my_service_switcher" {
-  source = "git::https://github.com/pagopa/azuredevops-tf-modules.git//azuredevops_build_definition_switcher?ref=<ref_version>"
+  source = "git::https://github.com/pagopa/azuredevops-tf-modules.git//azuredevops_build_definition_resource_switcher?ref=<ref_version>"
   path   = var.my_variables.pipeline.path
   
   providers = {
@@ -56,7 +58,7 @@ module "my_service_switcher" {
     days_to_build = ["Mon", "Tue", "Wed", "Thu", "Fri"]
     timezone = "(UTC+01:00) Amsterdam, Berlin, Bern, Rome, Stockholm, Vienna"
     branch_filter = {
-      include = ["feat-switcher-pipeline"]
+      include = ["main"]
       exclude = []
     }
     aks = [
@@ -112,11 +114,21 @@ repository = {
     - `nodes_on_start`: minimum and maximum number of nodes to be configured in the autoscaler when the node pool is started. expressed in `<min>,<max>` format
     - `nodes_on_stop`: minimum and maximum number of nodes to be configured in the autoscaler when the node pool is stopped. expressed in `<min>,<max>` format. Min on system nodes must be at least 1
 
+**NB:** scaling down, the provided pipeline template will use only the `min` value configured for the field `nodes_on_stop`, but you still need to configure if using the format defined above
 
 
-## Architecture
+### Variables passed to the pipelines
 
-![architecture](./docs/module-arch.drawio.png)
+| Name                     | Description                                                     |
+|--------------------------|-----------------------------------------------------------------|
+| TF_CLUSTER_NAME          | Name of the AKS cluster                                         |
+| TF_CLUSTER_RG            | Resource group name of the AKS cluster                          |
+| TF_ACTION                | Action to execute: `start, stop`                                |
+| TF_USER_NODE_COUNT_MIN   | Minimum number of nodes to configure on "User" type node pool   |
+| TF_USER_NODE_COUNT_MAX   | Maximum number of nodes to configure on "User" type node pool   |
+| TF_SYSTEM_NODE_COUNT_MIN | Minimum number of nodes to configure on "System" type node pool |
+| TF_SYSTEM_NODE_COUNT_MAX | Maximum number of nodes to configure on "System" type node pool |
+
 
 <!-- markdownlint-disable -->
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
