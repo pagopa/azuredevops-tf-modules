@@ -86,10 +86,14 @@ variable "schedule_configuration" {
   description = "(Required) structure defining which service to manage, when and how. See README.md for details"
   validation {
     condition = alltrue(
-          length(split(",", var.schedule_configuration.aks.user.nodes_on_start)) == 2,
-          length(split(",", var.schedule_configuration.aks.user.nodes_on_stop)) == 2,
-          length(split(",", var.schedule_configuration.aks.system.nodes_on_start)) == 2,
-          length(split(",", var.schedule_configuration.aks.system.nodes_on_stop)) == 2
+        flatten([
+          for s in var.schedule_configuration.aks : [
+            length(split(",", s.nodes_on_start)) == 2,
+            length(split(",", s.nodes_on_stop)) == 2,
+            length(split(",", s.nodes_on_start)) == 2,
+            length(split(",", s.nodes_on_stop)) == 2
+          ]
+        ])
       )
     error_message = "Number of nodes configured is not valid. The expected format is <min>,<max>"
   }
