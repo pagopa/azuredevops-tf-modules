@@ -23,14 +23,10 @@ locals {
     ]
   ]))
 
-  service_connection_count                   = var.service_connection_ids_authorization == null ? 0 : length(var.service_connection_ids_authorization)
-  service_connection_ids_combinations_number = length(local.aks_config) * local.service_connection_count
+  service_connection_ids_total_combinations_count = length(local.aks_config) * local.service_connection_count
 
 }
 
-output "debug" {
-  value = local.aks_config
-}
 
 resource "azuredevops_build_definition" "pipeline" {
 
@@ -86,16 +82,31 @@ resource "azuredevops_build_definition" "pipeline" {
     allow_override = false
   }
 
+
   variable {
-    name           = "TF_USER_NODE_COUNT"
-    value          = local.aks_config[count.index].user_node_count
+    name           = "TF_USER_NODE_COUNT_MIN"
+    value          = split(",", local.aks_config[count.index].user_node_count)[0]
     is_secret      = false
     allow_override = false
   }
 
   variable {
-    name           = "TF_SYSTEM_NODE_COUNT"
-    value          = local.aks_config[count.index].system_node_count
+    name           = "TF_USER_NODE_COUNT_MAX"
+    value          = split(",", local.aks_config[count.index].user_node_count)[1]
+    is_secret      = false
+    allow_override = false
+  }
+
+   variable {
+    name           = "TF_SYSTEM_NODE_COUNT_MIN"
+    value          = split(",", local.aks_config[count.index].system_node_count)[0]
+    is_secret      = false
+    allow_override = false
+  }
+
+  variable {
+    name           = "TF_SYSTEM_NODE_COUNT_MAX"
+    value          = split(",", local.aks_config[count.index].system_node_count)[1]
     is_secret      = false
     allow_override = false
   }
@@ -169,11 +180,11 @@ resource "azuredevops_resource_authorization" "github_service_connection_authori
 # others service_connection_ids serviceendpoint authorization
 resource "azuredevops_resource_authorization" "service_connection_ids_authorization" {
   depends_on = [azuredevops_build_definition.pipeline, time_sleep.wait]
-  count      = local.service_connection_ids_combinations_number
+  count      = local.service_connection_ids_total_combinations_count
 
   project_id    = var.project_id
-  resource_id   = var.service_connection_ids_authorization[floor(count.index / local.service_connection_count)]
-  definition_id = azuredevops_build_definition.pipeline[count.index % local.service_connection_count].id
+  resource_id   = var.service_connection_ids_authorization[floor(count.index / length(var.service_connection_ids_authorization))]
+  definition_id = azuredevops_build_definition.pipeline[count.index % length(var.service_connection_ids_authorization)].id
 
   authorized = true
   type       = "endpoint"

@@ -45,7 +45,7 @@ variable "variables_secret" {
 
 variable "service_connection_ids_authorization" {
   type        = list(string)
-  default     = null
+  default     = []
   description = "(Optional) List service connection IDs that pipeline needs authorization. github_service_connection_id is authorized by default"
 }
 
@@ -84,4 +84,12 @@ variable "schedule_configuration" {
     }))
   })
   description = "(Required) structure defining which service to manage, when and how. See README.md for details"
+  validation {
+    condition = alltrue(
+          length(split(",", var.schedule_configuration.aks.user.nodes_on_start)) == 2,
+          length(split(",", var.schedule_configuration.aks.user.nodes_on_stop)) == 2
+          length(split(",", var.schedule_configuration.aks.system.nodes_on_start)) == 2
+          length(split(",", var.schedule_configuration.aks.system.nodes_on_stop)) == 2
+      )
+  }
 }

@@ -1,4 +1,4 @@
-# azuredevops_build_definition_switcher
+# azuredevops_build_definition_resource_switcher
 
 This module provides the pipeline definitions used to automatically manage the scale up/down of aks node pools, based on the provided configuration
 
@@ -10,20 +10,20 @@ variable "my_variables" {
   default = {
     repository = {
       organization    = "pagopa"
-      name            = "devopslab-infra"
+      name            = "eng-common-scripts"
       branch_name     = "refs/heads/main"
-      pipelines_path  = ".devops"
-      yml_prefix_name = "marco"
+      pipelines_path  = "devops"
+      yml_prefix_name = null
     }
     pipeline = {
-      path            = "marco"
+      path            = "<my_name>"
     }
   }
 }
 
 
 module "my_service_switcher" {
-  source = "git::https://github.com/pagopa/azuredevops-tf-modules.git//azuredevops_build_definition_switcher?ref=<ref_version>"
+  source = "git::https://github.com/pagopa/azuredevops-tf-modules.git//azuredevops_build_definition_resource_switcher?ref=<ref_version>"
   path   = var.my_variables.pipeline.path
   
   providers = {
@@ -56,7 +56,7 @@ module "my_service_switcher" {
     days_to_build = ["Mon", "Tue", "Wed", "Thu", "Fri"]
     timezone = "(UTC+01:00) Amsterdam, Berlin, Bern, Rome, Stockholm, Vienna"
     branch_filter = {
-      include = ["feat-switcher-pipeline"]
+      include = ["main"]
       exclude = []
     }
     aks = [
@@ -114,9 +114,6 @@ repository = {
 
 
 
-## Architecture
-
-![architecture](./docs/module-arch.drawio.png)
 
 <!-- markdownlint-disable -->
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
