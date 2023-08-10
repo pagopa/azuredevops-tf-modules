@@ -89,7 +89,7 @@ variable "schedule_configuration" {
           length(split(",", var.schedule_configuration.aks.user.nodes_on_start)) == 2,
           length(split(",", var.schedule_configuration.aks.user.nodes_on_stop)) == 2,
           length(split(",", var.schedule_configuration.aks.system.nodes_on_start)) == 2,
-          length(split(",", var.schedule_configuration.aks.system.nodes_on_stop)) == 2,
+          length(split(",", var.schedule_configuration.aks.system.nodes_on_stop)) == 2
       )
   }
 }
