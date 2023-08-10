@@ -91,5 +91,6 @@ variable "schedule_configuration" {
           length(split(",", var.schedule_configuration.aks.system.nodes_on_start)) == 2,
           length(split(",", var.schedule_configuration.aks.system.nodes_on_stop)) == 2
       )
+    error_message = "Number of nodes configured is not valid. The expected format is <min>,<max>"
   }
 }
