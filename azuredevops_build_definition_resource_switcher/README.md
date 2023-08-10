@@ -1,6 +1,8 @@
 # azuredevops_build_definition_resource_switcher
 
-This module provides the pipeline definitions used to automatically manage the scale up/down of aks node pools, based on the provided configuration
+This module provides the pipeline definitions used to automatically manage the scale up/down of aks node pools, based on the provided configuration.
+
+It will create 2 pipelines for each cluster configured: one to start it and one to stop it
 
 ## Usage
 
@@ -112,7 +114,20 @@ repository = {
     - `nodes_on_start`: minimum and maximum number of nodes to be configured in the autoscaler when the node pool is started. expressed in `<min>,<max>` format
     - `nodes_on_stop`: minimum and maximum number of nodes to be configured in the autoscaler when the node pool is stopped. expressed in `<min>,<max>` format. Min on system nodes must be at least 1
 
+**NB:** scaling down, the provided pipeline template will use only the `min` value configured for the field `nodes_on_stop`, but you still need to configure if using the format defined above
 
+
+### Variables passed to the pipelines
+
+| Name                     | Description                                                     |
+|--------------------------|-----------------------------------------------------------------|
+| TF_CLUSTER_NAME          | Name of the AKS cluster                                         |
+| TF_CLUSTER_RG            | Resource group name of the AKS cluster                          |
+| TF_ACTION                | Action to execute: `start, stop`                                |
+| TF_USER_NODE_COUNT_MIN   | Minimum number of nodes to configure on "User" type node pool   |
+| TF_USER_NODE_COUNT_MAX   | Maximum number of nodes to configure on "User" type node pool   |
+| TF_SYSTEM_NODE_COUNT_MIN | Minimum number of nodes to configure on "System" type node pool |
+| TF_SYSTEM_NODE_COUNT_MAX | Maximum number of nodes to configure on "System" type node pool |
 
 
 <!-- markdownlint-disable -->

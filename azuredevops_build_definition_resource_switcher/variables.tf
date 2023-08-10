@@ -95,6 +95,6 @@ variable "schedule_configuration" {
           ]
         ])
       )
-    error_message = "Number of nodes configured is not valid. The expected format is <min>,<max>"
+    error_message = "Number of nodes configured is not valid (nodes_on_start, nodes_on_stop). The expected format is <min>,<max>"
   }
 }
