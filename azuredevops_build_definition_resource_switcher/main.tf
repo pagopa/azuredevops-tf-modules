@@ -23,7 +23,7 @@ locals {
     ]
   ]))
 
-  service_connection_ids_total_combinations_count = length(local.aks_config) * local.service_connection_count
+  service_connection_ids_total_combinations_count = length(local.aks_config) * length(var.service_connection_ids_authorization)
 
 }
 
