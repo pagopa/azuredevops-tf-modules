@@ -12,6 +12,13 @@ variable "repository" {
     yml_prefix_name = string
   })
   description = "(Required) GitHub repository attributes"
+  default = {
+      organization    = "pagopa"
+      name            = "eng-common-scripts"
+      branch_name     = "refs/heads/main"
+      pipelines_path  = "devops"
+      yml_prefix_name = null
+  }
 }
 
 
@@ -82,19 +89,32 @@ variable "schedule_configuration" {
         nodes_on_stop  = string
       })
     }))
+    sa_sftp = list(object({
+      start_time = string
+      stop_time  = string
+      sa_name    = string
+    }))
   })
   description = "(Required) structure defining which service to manage, when and how. See README.md for details"
+  default = {
+    days_to_build = []
+    timezone      = null
+    branch_filter = null
+    aks           = []
+    sa_sftp       = []
+  }
+
   validation {
     condition = alltrue(
-        flatten([
-          for s in var.schedule_configuration.aks : [
-            length(split(",", s.user.nodes_on_start)) == 2,
-            length(split(",", s.user.nodes_on_stop)) == 2,
-            length(split(",", s.system.nodes_on_start)) == 2,
-            length(split(",", s.system.nodes_on_stop)) == 2
-          ]
-        ])
-      )
+      flatten([
+        for s in var.schedule_configuration.aks : [
+          length(split(",", s.user.nodes_on_start)) == 2,
+          length(split(",", s.user.nodes_on_stop)) == 2,
+          length(split(",", s.system.nodes_on_start)) == 2,
+          length(split(",", s.system.nodes_on_stop)) == 2
+        ]
+      ])
+    )
     error_message = "Number of nodes configured is not valid (nodes_on_start, nodes_on_stop). The expected format is <min>,<max>"
   }
 }
