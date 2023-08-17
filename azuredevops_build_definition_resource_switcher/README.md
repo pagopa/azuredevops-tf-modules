@@ -1,8 +1,8 @@
 # azuredevops_build_definition_resource_switcher
 
-This module provides the pipeline definitions used to automatically manage the scale up/down of aks node pools, based on the provided configuration.
+This module provides the pipeline definitions used to automatically manage the scale up/down of various resource types, based on the provided configuration.
 
-It will create 2 pipelines for each cluster configured: one to start it and one to stop it
+It will create 2 pipelines for each instance of the resource configured: one to start it and one to stop it
 
 ## Usage
 
@@ -77,6 +77,13 @@ module "my_service_switcher" {
         }
       }
     ]
+    sa_sftp = [
+      {
+        start_time   = "08:00"
+        stop_time    = "21:00"
+        sa_name = "my_storage_account_name"
+      }
+    ]
   }
 }
 ```
@@ -86,7 +93,8 @@ For safety reasons, this pipeline should be available only on dev environment; u
 
 
 **Repository configuration:**
-Although you can define a custom pipeline yaml to be used by this definition, one has already been defined, and takes care of scaling up or down the aks clusters. To use it, your `repository` configuration must be as follows:
+Although you can define a custom pipeline yaml to be used by this definition, the default templates have already been defined and cofigured as default. Each resource use a specific template stored in that repository  
+To use it, your `repository` configuration must be as follows:
 
 ```hcl
 repository = {
@@ -113,22 +121,52 @@ repository = {
   - `system`: configuration for `system` typed node pools
     - `nodes_on_start`: minimum and maximum number of nodes to be configured in the autoscaler when the node pool is started. expressed in `<min>,<max>` format
     - `nodes_on_stop`: minimum and maximum number of nodes to be configured in the autoscaler when the node pool is stopped. expressed in `<min>,<max>` format. Min on system nodes must be at least 1
+- `sa_sftp`: start/stop configuration for Storage Account SFTP servers
+  - `start_time`: start time, expressed in `HH:mm` format, when to start the server
+  - `stop_time`: stop time, expressed in `HH:mm` format, when to stop the server
+  - `sa_name`: name of the storage account on which the SFTP server should be managed
 
-**NB:** scaling down, the provided pipeline template will use only the `min` value configured for the field `nodes_on_stop`, but you still need to configure if using the format defined above
+**NB:** scaling down aks clusters, the provided pipeline template will use only the `min` value configured for the field `nodes_on_stop`, but you still need to configure if using the format defined above
+
+
+### Required variables for this module
+
+| Name                               | Description                   | Example                                                                    |
+|------------------------------------|-------------------------------|----------------------------------------------------------------------------|
+| TF_AZURE_SERVICE_CONNECTION_NAME   | Azure service connection name | azuredevops_serviceendpoint_azurerm.DEV-SERVICE-CONN.service_endpoint_name |
+| TF_AZURE_DEVOPS_POOL_AGENT_NAME    | AZ DevOps agent pool name     | devopslab-dev-linux                                                        |
+
+
 
 
 ### Variables passed to the pipelines
 
-| Name                     | Description                                                     |
-|--------------------------|-----------------------------------------------------------------|
-| TF_CLUSTER_NAME          | Name of the AKS cluster                                         |
-| TF_CLUSTER_RG            | Resource group name of the AKS cluster                          |
-| TF_ACTION                | Action to execute: `start, stop`                                |
-| TF_USER_NODE_COUNT_MIN   | Minimum number of nodes to configure on "User" type node pool   |
-| TF_USER_NODE_COUNT_MAX   | Maximum number of nodes to configure on "User" type node pool   |
-| TF_SYSTEM_NODE_COUNT_MIN | Minimum number of nodes to configure on "System" type node pool |
-| TF_SYSTEM_NODE_COUNT_MAX | Maximum number of nodes to configure on "System" type node pool |
+| Name                     | Description                                                     | Resource        |
+|--------------------------|-----------------------------------------------------------------|-----------------|
+| TF_ACTION                | Action to execute: `start, stop`                                | common          |
+| TF_CLUSTER_NAME          | Name of the AKS cluster                                         | AKS             |
+| TF_CLUSTER_RG            | Resource group name of the AKS cluster                          | AKS             |
+| TF_USER_NODE_COUNT_MIN   | Minimum number of nodes to configure on "User" type node pool   | AKS             |
+| TF_USER_NODE_COUNT_MAX   | Maximum number of nodes to configure on "User" type node pool   | AKS             |
+| TF_SYSTEM_NODE_COUNT_MIN | Minimum number of nodes to configure on "System" type node pool | AKS             |
+| TF_SYSTEM_NODE_COUNT_MAX | Maximum number of nodes to configure on "System" type node pool | AKS             |
+| TF_SA_NAME               | Storage Account name                                            | Storage Account |
 
+
+
+## How to handle a new resource
+
+First of all, you need to create a new `tf` file for dedicated to the new resource, similar to `storage_account_pipeline.tf` or `aks_pipeline.tf`, in which you will:
+
+- customize the variables passed to the pipeline template
+- change the names of the resources to avoid overlapping 
+- parse the scheduling configuration for your resource
+- change the name of the pipeline template that will be used (`repository.yml_path`)
+
+You also have to update the `variables.tf` to include the definition of your specific scheduling configuration
+
+In addition, you'll have to define the pipeline template to handle your resource; in the repo `eng-common-scripts/devops` you'll find the templates that manage aks and storage account.
+You'll have to create your own, customizing the parameters reading section, and the shell script which actually switches on/off the resource
 
 <!-- markdownlint-disable -->
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
@@ -150,10 +188,14 @@ No modules.
 
 | Name | Type |
 |------|------|
-| [azuredevops_build_definition.pipeline](https://registry.terraform.io/providers/microsoft/azuredevops/latest/docs/resources/build_definition) | resource |
-| [azuredevops_resource_authorization.github_service_connection_authorization](https://registry.terraform.io/providers/microsoft/azuredevops/latest/docs/resources/resource_authorization) | resource |
-| [azuredevops_resource_authorization.service_connection_ids_authorization](https://registry.terraform.io/providers/microsoft/azuredevops/latest/docs/resources/resource_authorization) | resource |
-| [time_sleep.wait](https://registry.terraform.io/providers/hashicorp/time/latest/docs/resources/sleep) | resource |
+| [azuredevops_build_definition.aks_pipeline](https://registry.terraform.io/providers/microsoft/azuredevops/latest/docs/resources/build_definition) | resource |
+| [azuredevops_build_definition.sa_pipeline](https://registry.terraform.io/providers/microsoft/azuredevops/latest/docs/resources/build_definition) | resource |
+| [azuredevops_resource_authorization.aks_github_service_connection_authorization](https://registry.terraform.io/providers/microsoft/azuredevops/latest/docs/resources/resource_authorization) | resource |
+| [azuredevops_resource_authorization.aks_service_connection_ids_authorization](https://registry.terraform.io/providers/microsoft/azuredevops/latest/docs/resources/resource_authorization) | resource |
+| [azuredevops_resource_authorization.sa_github_service_connection_authorization](https://registry.terraform.io/providers/microsoft/azuredevops/latest/docs/resources/resource_authorization) | resource |
+| [azuredevops_resource_authorization.sa_service_connection_ids_authorization](https://registry.terraform.io/providers/microsoft/azuredevops/latest/docs/resources/resource_authorization) | resource |
+| [time_sleep.aks_wait](https://registry.terraform.io/providers/hashicorp/time/latest/docs/resources/sleep) | resource |
+| [time_sleep.sa_wait](https://registry.terraform.io/providers/hashicorp/time/latest/docs/resources/sleep) | resource |
 
 ## Inputs
 
@@ -164,8 +206,8 @@ No modules.
 | <a name="input_path"></a> [path](#input\_path) | (Required) Pipeline path on Azure DevOps | `string` | n/a | yes |
 | <a name="input_project_id"></a> [project\_id](#input\_project\_id) | (Required) Azure DevOps project ID | `string` | n/a | yes |
 | <a name="input_repository"></a> [repository](#input\_repository) | (Required) GitHub repository attributes | <pre>object({<br>    organization    = string<br>    name            = string<br>    branch_name     = string<br>    pipelines_path  = string<br>    yml_prefix_name = string<br>  })</pre> | n/a | yes |
-| <a name="input_schedule_configuration"></a> [schedule\_configuration](#input\_schedule\_configuration) | (Required) structure defining which service to manage, when and how. See README.md for details | <pre>object({<br>    days_to_build = list(string)<br>    timezone      = string<br>    branch_filter = object({<br>      include = list(string)<br>      exclude = list(string)<br>    })<br>    aks = list(object({<br>      cluster_name = string<br>      start_time   = string<br>      stop_time    = string<br>      rg           = string<br>      user = object({<br>        nodes_on_start = string<br>        nodes_on_stop  = string<br>      })<br>      system = object({<br>        nodes_on_start = string<br>        nodes_on_stop  = string<br>      })<br>    }))<br>  })</pre> | n/a | yes |
-| <a name="input_service_connection_ids_authorization"></a> [service\_connection\_ids\_authorization](#input\_service\_connection\_ids\_authorization) | (Optional) List service connection IDs that pipeline needs authorization. github\_service\_connection\_id is authorized by default | `list(string)` | `null` | no |
+| <a name="input_schedule_configuration"></a> [schedule\_configuration](#input\_schedule\_configuration) | (Required) structure defining which service to manage, when and how. See README.md for details | <pre>object({<br>    days_to_build = list(string)<br>    timezone      = string<br>    branch_filter = object({<br>      include = list(string)<br>      exclude = list(string)<br>    })<br>    aks = list(object({<br>      cluster_name = string<br>      start_time   = string<br>      stop_time    = string<br>      rg           = string<br>      user = object({<br>        nodes_on_start = string<br>        nodes_on_stop  = string<br>      })<br>      system = object({<br>        nodes_on_start = string<br>        nodes_on_stop  = string<br>      })<br>    }))<br>    sa_sftp = list(object({<br>      start_time = string<br>      stop_time  = string<br>      sa_name    = string<br>    }))<br>  })</pre> | <pre>{<br>  "aks": [],<br>  "branch_filter": null,<br>  "days_to_build": [],<br>  "sa_sftp": [],<br>  "timezone": null<br>}</pre> | no |
+| <a name="input_service_connection_ids_authorization"></a> [service\_connection\_ids\_authorization](#input\_service\_connection\_ids\_authorization) | (Optional) List service connection IDs that pipeline needs authorization. github\_service\_connection\_id is authorized by default | `list(string)` | `[]` | no |
 | <a name="input_subscription_id"></a> [subscription\_id](#input\_subscription\_id) | (Required) Azure Subscription ID related to tenant where create service principal | `string` | n/a | yes |
 | <a name="input_tenant_id"></a> [tenant\_id](#input\_tenant\_id) | (Required) Azure Tenant ID related to tenant where create service principal | `string` | n/a | yes |
 | <a name="input_variables"></a> [variables](#input\_variables) | (Optional) Pipeline variables | `map(any)` | `null` | no |
@@ -173,7 +215,5 @@ No modules.
 
 ## Outputs
 
-| Name | Description |
-|------|-------------|
-| <a name="output_debug"></a> [debug](#output\_debug) | n/a |
+No outputs.
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
