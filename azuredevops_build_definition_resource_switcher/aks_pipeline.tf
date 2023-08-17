@@ -190,23 +190,3 @@ resource "azuredevops_resource_authorization" "aks_service_connection_ids_author
   type       = "endpoint"
 }
 
-moved {
-  from = azuredevops_build_definition.pipeline
-  to   = azuredevops_build_definition.aks_pipeline
-}
-
-
-moved {
-  from = azuredevops_resource_authorization.service_connection_ids_authorization
-  to   = azuredevops_resource_authorization.aks_service_connection_ids_authorization
-}
-
-moved {
-  from = azuredevops_resource_authorization.github_service_connection_authorization
-  to   = azuredevops_resource_authorization.aks_github_service_connection_authorization
-}
-
-moved {
-  from = time_sleep.wait
-  to   = time_sleep.aks_wait
-}
