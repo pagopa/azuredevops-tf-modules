@@ -13,11 +13,11 @@ variable "repository" {
   })
   description = "(Required) GitHub repository attributes"
   default = {
-      organization    = "pagopa"
-      name            = "eng-common-scripts"
-      branch_name     = "refs/heads/main"
-      pipelines_path  = "devops"
-      yml_prefix_name = null
+    organization    = "pagopa"
+    name            = "eng-common-scripts"
+    branch_name     = "refs/heads/main"
+    pipelines_path  = "devops"
+    yml_prefix_name = null
   }
 }
 
@@ -56,16 +56,6 @@ variable "service_connection_ids_authorization" {
   description = "(Optional) List service connection IDs that pipeline needs authorization. github_service_connection_id is authorized by default"
 }
 
-
-variable "subscription_id" {
-  type        = string
-  description = "(Required) Azure Subscription ID related to tenant where create service principal"
-}
-
-variable "tenant_id" {
-  type        = string
-  description = "(Required) Azure Tenant ID related to tenant where create service principal"
-}
 
 variable "schedule_configuration" {
   type = object({
