@@ -125,7 +125,6 @@ variable "schedule_configuration" {
     )
     error_message = "System pool min nodes must not be lower than 1"
   }
-}
 
 validation {
     condition = alltrue(
