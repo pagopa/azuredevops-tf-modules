@@ -118,7 +118,7 @@ variable "schedule_configuration" {
     condition = alltrue(
       flatten([
         for s in var.schedule_configuration.aks : [
-          length(split(",", s.system.nodes_on_stop)[0]) >= 1
+          split(",", s.system.nodes_on_stop)[0] >= 1
         ]
       ])
     )
