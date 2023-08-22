@@ -148,6 +148,7 @@ repository = {
 | Name                     | Description                                                     | Resource        |
 |--------------------------|-----------------------------------------------------------------|-----------------|
 | TF_ACTION                | Action to execute: `start, stop`                                | common          |
+| TF_TIMEOUT               | Pipeline timeout, in minutes                                    | common          |
 | TF_CLUSTER_NAME          | Name of the AKS cluster                                         | AKS             |
 | TF_CLUSTER_RG            | Resource group name of the AKS cluster                          | AKS             |
 | TF_USER_NODE_COUNT_MIN   | Minimum number of nodes to configure on "User" type node pool   | AKS             |

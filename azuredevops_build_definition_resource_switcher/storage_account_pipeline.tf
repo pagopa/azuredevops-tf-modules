@@ -75,6 +75,13 @@ resource "azuredevops_build_definition" "sa_pipeline" {
     allow_override = false
   }
 
+  variable {
+    name           = "TF_TIMEOUT"
+    value          = var.timeout
+    is_secret      = false
+    allow_override = false
+  }
+
 
 
   schedules {

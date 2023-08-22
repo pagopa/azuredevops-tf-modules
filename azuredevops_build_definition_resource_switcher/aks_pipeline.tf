@@ -82,6 +82,13 @@ resource "azuredevops_build_definition" "aks_pipeline" {
     allow_override = false
   }
 
+  variable {
+    name           = "TF_TIMEOUT"
+    value          = var.timeout
+    is_secret      = false
+    allow_override = false
+  }
+
 
   variable {
     name           = "TF_USER_NODE_COUNT_MIN"
