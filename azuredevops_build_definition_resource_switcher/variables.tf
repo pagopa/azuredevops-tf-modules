@@ -58,7 +58,7 @@ variable "service_connection_ids_authorization" {
 
 
 variable "timeout" {
-  type = number
+  type        = number
   description = "(Optional) Switcher pipeline timeout, in minutes"
   default     = 30
 }
@@ -126,7 +126,7 @@ variable "schedule_configuration" {
     error_message = "System pool min nodes must not be lower than 1"
   }
 
-validation {
+  validation {
     condition = alltrue(
       flatten([
         for s in var.schedule_configuration.aks : [
@@ -135,6 +135,6 @@ validation {
         ]
       ])
     )
-    error_message = "Nodes on start max value myst be higher than min value"
+    error_message = "Nodes on start max value must be higher than min value"
   }
 }

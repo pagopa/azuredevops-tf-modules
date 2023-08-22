@@ -52,6 +52,7 @@ module "my_service_switcher" {
     local.some_other_secret_variables,
   )
 
+  timeout = 20
 
   service_connection_ids_authorization = [
     azuredevops_serviceendpoint_github.azure-devops-github-ro.id,
@@ -213,6 +214,7 @@ No modules.
 | <a name="input_repository"></a> [repository](#input\_repository) | (Required) GitHub repository attributes | <pre>object({<br>    organization    = string<br>    name            = string<br>    branch_name     = string<br>    pipelines_path  = string<br>    yml_prefix_name = string<br>  })</pre> | <pre>{<br>  "branch_name": "refs/heads/main",<br>  "name": "eng-common-scripts",<br>  "organization": "pagopa",<br>  "pipelines_path": "devops",<br>  "yml_prefix_name": null<br>}</pre> | no |
 | <a name="input_schedule_configuration"></a> [schedule\_configuration](#input\_schedule\_configuration) | (Required) structure defining which service to manage, when and how. See README.md for details | <pre>object({<br>    days_to_build = list(string)<br>    timezone      = string<br>    branch_filter = object({<br>      include = list(string)<br>      exclude = list(string)<br>    })<br>    aks = list(object({<br>      cluster_name = string<br>      start_time   = string<br>      stop_time    = string<br>      rg           = string<br>      user = object({<br>        nodes_on_start = string<br>        nodes_on_stop  = string<br>      })<br>      system = object({<br>        nodes_on_start = string<br>        nodes_on_stop  = string<br>      })<br>    }))<br>    sa_sftp = list(object({<br>      start_time = string<br>      stop_time  = string<br>      sa_name    = string<br>    }))<br>  })</pre> | <pre>{<br>  "aks": [],<br>  "branch_filter": null,<br>  "days_to_build": [],<br>  "sa_sftp": [],<br>  "timezone": null<br>}</pre> | no |
 | <a name="input_service_connection_ids_authorization"></a> [service\_connection\_ids\_authorization](#input\_service\_connection\_ids\_authorization) | (Optional) List service connection IDs that pipeline needs authorization. github\_service\_connection\_id is authorized by default | `list(string)` | `[]` | no |
+| <a name="input_timeout"></a> [timeout](#input\_timeout) | (Optional) Switcher pipeline timeout, in minutes | `number` | `30` | no |
 | <a name="input_variables"></a> [variables](#input\_variables) | (Optional) Pipeline variables | `map(any)` | `null` | no |
 | <a name="input_variables_secret"></a> [variables\_secret](#input\_variables\_secret) | (Optional) Pipeline secret variables | `map(any)` | `null` | no |
 
