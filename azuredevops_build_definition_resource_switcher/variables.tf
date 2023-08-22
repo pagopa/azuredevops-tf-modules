@@ -118,10 +118,24 @@ variable "schedule_configuration" {
     condition = alltrue(
       flatten([
         for s in var.schedule_configuration.aks : [
-          split(",", s.system.nodes_on_stop)[0] >= 1
+          split(",", s.system.nodes_on_stop)[0] >= 1,
+          split(",", s.system.nodes_on_start)[0] >= 1
         ]
       ])
     )
     error_message = "System pool min nodes must not be lower than 1"
+  }
+}
+
+validation {
+    condition = alltrue(
+      flatten([
+        for s in var.schedule_configuration.aks : [
+          split(",", s.system.nodes_on_start)[0] < split(",", s.system.nodes_on_start)[1],
+          split(",", s.user.nodes_on_start)[0] < split(",", s.user.nodes_on_start)[1],
+        ]
+      ])
+    )
+    error_message = "Nodes on start max value myst be higher than min value"
   }
 }
