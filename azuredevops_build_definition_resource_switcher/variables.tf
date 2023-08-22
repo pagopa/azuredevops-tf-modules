@@ -57,6 +57,12 @@ variable "service_connection_ids_authorization" {
 }
 
 
+variable "timeout" {
+  type        = number
+  description = "(Optional) Switcher pipeline timeout, in minutes"
+  default     = 30
+}
+
 variable "schedule_configuration" {
   type = object({
     days_to_build = list(string)
@@ -106,5 +112,29 @@ variable "schedule_configuration" {
       ])
     )
     error_message = "Number of nodes configured is not valid (nodes_on_start, nodes_on_stop). The expected format is <min>,<max>"
+  }
+
+  validation {
+    condition = alltrue(
+      flatten([
+        for s in var.schedule_configuration.aks : [
+          split(",", s.system.nodes_on_stop)[0] >= 1,
+          split(",", s.system.nodes_on_start)[0] >= 1
+        ]
+      ])
+    )
+    error_message = "System pool min nodes must not be lower than 1"
+  }
+
+  validation {
+    condition = alltrue(
+      flatten([
+        for s in var.schedule_configuration.aks : [
+          split(",", s.system.nodes_on_start)[0] < split(",", s.system.nodes_on_start)[1],
+          split(",", s.user.nodes_on_start)[0] < split(",", s.user.nodes_on_start)[1],
+        ]
+      ])
+    )
+    error_message = "Nodes on start max value must be higher than min value"
   }
 }
