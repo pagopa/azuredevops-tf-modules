@@ -72,6 +72,7 @@ module "my_service_switcher" {
         start_time = "15:20"
         stop_time = "15:30"
         rg = "my_rg"
+        node_pool_exclusions = ["myNodePoolName"]
         user = {
           nodes_on_start = "1,3"
           nodes_on_stop = "0,0"
@@ -115,18 +116,19 @@ repository = {
 - `days_to_build`: days in which the pipeline should be triggered
 - `timezone`: timezone reference for the start and stop time
 - `branch_filter`: branches on which the pipeline should operate
-- `aks`: start/stop configuration for aks clusters
+- `aks`: (Optional) start/stop configuration for aks clusters
   - `cluster_name`: complete name of the cluster to be managed
   - `start_time`: start time, expressed in `HH:mm` format, when to scale up/start the cluster
   - `stop_time`: stop time, expressed in `HH:mm` format, when to scale down/stop the cluster
   - `rg`: resource group name of the cluster to manage
+  - `node_pool_exclusions`: (Optional) list of node pool names to exclude from the switcher elaboration
   - `user`: configuration for `user` typed node pools
     - `nodes_on_start`: minimum and maximum number of nodes to be configured in the autoscaler when the node pool is started. expressed in `<min>,<max>` format
     - `nodes_on_stop`: minimum and maximum number of nodes to be configured in the autoscaler when the node pool is stopped. expressed in `<min>,<max>` format
   - `system`: configuration for `system` typed node pools
     - `nodes_on_start`: minimum and maximum number of nodes to be configured in the autoscaler when the node pool is started. expressed in `<min>,<max>` format
     - `nodes_on_stop`: minimum and maximum number of nodes to be configured in the autoscaler when the node pool is stopped. expressed in `<min>,<max>` format. Min on system nodes must be at least 1
-- `sa_sftp`: start/stop configuration for Storage Account SFTP servers
+- `sa_sftp`:(Optional) start/stop configuration for Storage Account SFTP servers
   - `start_time`: start time, expressed in `HH:mm` format, when to start the server
   - `stop_time`: stop time, expressed in `HH:mm` format, when to stop the server
   - `sa_name`: name of the storage account on which the SFTP server should be managed
@@ -146,17 +148,18 @@ repository = {
 
 ### Variables passed to the pipelines
 
-| Name                     | Description                                                     | Resource        |
-|--------------------------|-----------------------------------------------------------------|-----------------|
-| TF_ACTION                | Action to execute: `start, stop`                                | common          |
-| TF_TIMEOUT               | Pipeline timeout, in minutes                                    | common          |
-| TF_CLUSTER_NAME          | Name of the AKS cluster                                         | AKS             |
-| TF_CLUSTER_RG            | Resource group name of the AKS cluster                          | AKS             |
-| TF_USER_NODE_COUNT_MIN   | Minimum number of nodes to configure on "User" type node pool   | AKS             |
-| TF_USER_NODE_COUNT_MAX   | Maximum number of nodes to configure on "User" type node pool   | AKS             |
-| TF_SYSTEM_NODE_COUNT_MIN | Minimum number of nodes to configure on "System" type node pool | AKS             |
-| TF_SYSTEM_NODE_COUNT_MAX | Maximum number of nodes to configure on "System" type node pool | AKS             |
-| TF_SA_NAME               | Storage Account name                                            | Storage Account |
+| Name                     | Description                                                                           | Resource        |
+|--------------------------|---------------------------------------------------------------------------------------|-----------------|
+| TF_ACTION                | Action to execute: `start, stop`                                                      | common          |
+| TF_TIMEOUT               | Pipeline timeout, in minutes                                                          | common          |
+| TF_CLUSTER_NAME          | Name of the AKS cluster                                                               | AKS             |
+| TF_CLUSTER_RG            | Resource group name of the AKS cluster                                                | AKS             |
+| TF_USER_NODE_COUNT_MIN   | Minimum number of nodes to configure on "User" type node pool                         | AKS             |
+| TF_USER_NODE_COUNT_MAX   | Maximum number of nodes to configure on "User" type node pool                         | AKS             |
+| TF_SYSTEM_NODE_COUNT_MIN | Minimum number of nodes to configure on "System" type node pool                       | AKS             |
+| TF_SYSTEM_NODE_COUNT_MAX | Maximum number of nodes to configure on "System" type node pool                       | AKS             |
+| TF_NODE_POOL_EXCLUSIONS  | List of node pool names to exclude from processing, expressed in json string[] format | AKS             |
+| TF_SA_NAME               | Storage Account name                                                                  | Storage Account |
 
 
 
@@ -212,7 +215,7 @@ No modules.
 | <a name="input_path"></a> [path](#input\_path) | (Required) Pipeline path on Azure DevOps | `string` | n/a | yes |
 | <a name="input_project_id"></a> [project\_id](#input\_project\_id) | (Required) Azure DevOps project ID | `string` | n/a | yes |
 | <a name="input_repository"></a> [repository](#input\_repository) | (Required) GitHub repository attributes | <pre>object({<br>    organization    = string<br>    name            = string<br>    branch_name     = string<br>    pipelines_path  = string<br>    yml_prefix_name = string<br>  })</pre> | <pre>{<br>  "branch_name": "refs/heads/main",<br>  "name": "eng-common-scripts",<br>  "organization": "pagopa",<br>  "pipelines_path": "devops",<br>  "yml_prefix_name": null<br>}</pre> | no |
-| <a name="input_schedule_configuration"></a> [schedule\_configuration](#input\_schedule\_configuration) | (Required) structure defining which service to manage, when and how. See README.md for details | <pre>object({<br>    days_to_build = list(string)<br>    timezone      = string<br>    branch_filter = object({<br>      include = list(string)<br>      exclude = list(string)<br>    })<br>    aks = list(object({<br>      cluster_name = string<br>      start_time   = string<br>      stop_time    = string<br>      rg           = string<br>      user = object({<br>        nodes_on_start = string<br>        nodes_on_stop  = string<br>      })<br>      system = object({<br>        nodes_on_start = string<br>        nodes_on_stop  = string<br>      })<br>    }))<br>    sa_sftp = list(object({<br>      start_time = string<br>      stop_time  = string<br>      sa_name    = string<br>    }))<br>  })</pre> | <pre>{<br>  "aks": [],<br>  "branch_filter": null,<br>  "days_to_build": [],<br>  "sa_sftp": [],<br>  "timezone": null<br>}</pre> | no |
+| <a name="input_schedule_configuration"></a> [schedule\_configuration](#input\_schedule\_configuration) | (Required) structure defining which service to manage, when and how. See README.md for details | <pre>object({<br>    days_to_build = list(string)<br>    timezone      = string<br>    branch_filter = object({<br>      include = list(string)<br>      exclude = list(string)<br>    })<br>    aks = list(object({<br>      cluster_name         = string<br>      start_time           = string<br>      stop_time            = string<br>      rg                   = string<br>      node_pool_exclusions = optional(list(string), [])<br>      user = object({<br>        nodes_on_start = string<br>        nodes_on_stop  = string<br>      })<br>      system = object({<br>        nodes_on_start = string<br>        nodes_on_stop  = string<br>      })<br>    }))<br>    sa_sftp = list(object({<br>      start_time = string<br>      stop_time  = string<br>      sa_name    = string<br>    }))<br>  })</pre> | <pre>{<br>  "aks": [],<br>  "branch_filter": null,<br>  "days_to_build": [],<br>  "sa_sftp": [],<br>  "timezone": null<br>}</pre> | no |
 | <a name="input_service_connection_ids_authorization"></a> [service\_connection\_ids\_authorization](#input\_service\_connection\_ids\_authorization) | (Optional) List service connection IDs that pipeline needs authorization. github\_service\_connection\_id is authorized by default | `list(string)` | `[]` | no |
 | <a name="input_timeout"></a> [timeout](#input\_timeout) | (Optional) Switcher pipeline timeout, in minutes | `number` | `30` | no |
 | <a name="input_variables"></a> [variables](#input\_variables) | (Optional) Pipeline variables | `map(any)` | `null` | no |

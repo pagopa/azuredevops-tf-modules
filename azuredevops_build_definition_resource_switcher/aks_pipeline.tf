@@ -9,6 +9,7 @@ locals {
         user_node_count        = cluster.user.nodes_on_start
         system_node_count      = cluster.system.nodes_on_start
         rg                     = cluster.rg
+        exclusions             = cluster.node_pool_exclusions == null ? [] : cluster.node_pool_exclusions
       },
       {
         cluster_name           = cluster.cluster_name
@@ -18,6 +19,7 @@ locals {
         user_node_count        = cluster.user.nodes_on_stop
         system_node_count      = cluster.system.nodes_on_stop
         rg                     = cluster.rg
+        exclusions             = cluster.node_pool_exclusions == null ? [] : cluster.node_pool_exclusions
       }
     ]
   ]))
@@ -121,6 +123,13 @@ resource "azuredevops_build_definition" "aks_pipeline" {
   variable {
     name           = "TF_CLUSTER_RG"
     value          = local.aks_config[count.index].rg
+    is_secret      = false
+    allow_override = false
+  }
+
+  variable {
+    name           = "TF_NODE_POOL_EXCLUSIONS"
+    value          = jsonencode(local.aks_config[count.index].exclusions)
     is_secret      = false
     allow_override = false
   }
