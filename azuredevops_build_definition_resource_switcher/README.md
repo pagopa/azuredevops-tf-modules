@@ -23,6 +23,7 @@ variable "my_variables" {
   }
 }
 
+# Required
 locals {
   required_variables = {
       TF_AZURE_SERVICE_CONNECTION_NAME = azuredevops_serviceendpoint_azurerm.DEV-SERVICE-CONN.service_endpoint_name
@@ -148,18 +149,18 @@ repository = {
 
 ### Variables passed to the pipelines
 
-| Name                     | Description                                                                           | Resource        |
-|--------------------------|---------------------------------------------------------------------------------------|-----------------|
-| TF_ACTION                | Action to execute: `start, stop`                                                      | common          |
-| TF_TIMEOUT               | Pipeline timeout, in minutes                                                          | common          |
-| TF_CLUSTER_NAME          | Name of the AKS cluster                                                               | AKS             |
-| TF_CLUSTER_RG            | Resource group name of the AKS cluster                                                | AKS             |
-| TF_USER_NODE_COUNT_MIN   | Minimum number of nodes to configure on "User" type node pool                         | AKS             |
-| TF_USER_NODE_COUNT_MAX   | Maximum number of nodes to configure on "User" type node pool                         | AKS             |
-| TF_SYSTEM_NODE_COUNT_MIN | Minimum number of nodes to configure on "System" type node pool                       | AKS             |
-| TF_SYSTEM_NODE_COUNT_MAX | Maximum number of nodes to configure on "System" type node pool                       | AKS             |
-| TF_NODE_POOL_EXCLUSIONS  | List of node pool names to exclude from processing, expressed in json string[] format | AKS             |
-| TF_SA_NAME               | Storage Account name                                                                  | Storage Account |
+| Name                     | Description                                                                           | Resource        | Required | Default |
+|--------------------------|---------------------------------------------------------------------------------------|-----------------|----------|---------|
+| TF_ACTION                | Action to execute: `start, stop`                                                      | common          | y        | -       |
+| TF_TIMEOUT               | Pipeline timeout, in minutes                                                          | common          | n        | 30      |
+| TF_CLUSTER_NAME          | Name of the AKS cluster                                                               | AKS             | y        | -       |
+| TF_CLUSTER_RG            | Resource group name of the AKS cluster                                                | AKS             | y        | -       |
+| TF_USER_NODE_COUNT_MIN   | Minimum number of nodes to configure on "User" type node pool                         | AKS             | y        | -       |
+| TF_USER_NODE_COUNT_MAX   | Maximum number of nodes to configure on "User" type node pool                         | AKS             | y        | -       |
+| TF_SYSTEM_NODE_COUNT_MIN | Minimum number of nodes to configure on "System" type node pool                       | AKS             | y        | -       |
+| TF_SYSTEM_NODE_COUNT_MAX | Maximum number of nodes to configure on "System" type node pool                       | AKS             | y        | -       |
+| TF_NODE_POOL_EXCLUSIONS  | List of node pool names to exclude from processing, expressed in json string[] format | AKS             | n        | []      |
+| TF_SA_NAME               | Storage Account name                                                                  | Storage Account | y        | -       |
 
 
 

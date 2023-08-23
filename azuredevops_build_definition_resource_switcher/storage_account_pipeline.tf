@@ -60,14 +60,9 @@ resource "azuredevops_build_definition" "sa_pipeline" {
     }
   }
 
-
-  variable {
-    name           = "TF_SA_NAME"
-    value          = local.sa_config[count.index].sa_name
-    is_secret      = false
-    allow_override = false
-  }
-
+  ##################
+  # common variables
+  ##################
   variable {
     name           = "TF_ACTION"
     value          = local.sa_config[count.index].action
@@ -81,6 +76,18 @@ resource "azuredevops_build_definition" "sa_pipeline" {
     is_secret      = false
     allow_override = false
   }
+
+  ##################
+  # aks specific variables
+  ##################
+  variable {
+    name           = "TF_SA_NAME"
+    value          = local.sa_config[count.index].sa_name
+    is_secret      = false
+    allow_override = false
+  }
+
+
 
 
 
