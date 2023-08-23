@@ -156,8 +156,8 @@ resource "azuredevops_resource_authorization" "sa_service_connection_ids_authori
   count      = local.service_connection_ids_sa_total_combinations_count
 
   project_id    = var.project_id
-  resource_id   = var.service_connection_ids_authorization[floor(count.index / length(var.service_connection_ids_authorization))]
-  definition_id = azuredevops_build_definition.aks_pipeline[count.index % length(var.service_connection_ids_authorization)].id
+  resource_id   = var.service_connection_ids_authorization[count.index % length(var.service_connection_ids_authorization)]
+  definition_id = azuredevops_build_definition.aks_pipeline[floor(count.index / length(var.service_connection_ids_authorization))].id
 
   authorized = true
   type       = "endpoint"
