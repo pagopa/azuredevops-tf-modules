@@ -9,6 +9,7 @@ locals {
         user_node_count        = cluster.user.nodes_on_start
         system_node_count      = cluster.system.nodes_on_start
         rg                     = cluster.rg
+        exclusions             = cluster.node_pool_exclusions == null ? [] : cluster.node_pool_exclusions
       },
       {
         cluster_name           = cluster.cluster_name
@@ -18,6 +19,7 @@ locals {
         user_node_count        = cluster.user.nodes_on_stop
         system_node_count      = cluster.system.nodes_on_stop
         rg                     = cluster.rg
+        exclusions             = cluster.node_pool_exclusions == null ? [] : cluster.node_pool_exclusions
       }
     ]
   ]))
@@ -67,14 +69,9 @@ resource "azuredevops_build_definition" "aks_pipeline" {
     }
   }
 
-
-  variable {
-    name           = "TF_CLUSTER_NAME"
-    value          = local.aks_config[count.index].cluster_name
-    is_secret      = false
-    allow_override = false
-  }
-
+  ##################
+  # common variables
+  ##################
   variable {
     name           = "TF_ACTION"
     value          = local.aks_config[count.index].action
@@ -89,7 +86,27 @@ resource "azuredevops_build_definition" "aks_pipeline" {
     allow_override = false
   }
 
+  ##################
+  # aks specific variables
+  ##################
 
+  # cluster name. check README for details
+  variable {
+    name           = "TF_CLUSTER_NAME"
+    value          = local.aks_config[count.index].cluster_name
+    is_secret      = false
+    allow_override = false
+  }
+
+  # cluster's resource group name. check README for details
+  variable {
+    name           = "TF_CLUSTER_RG"
+    value          = local.aks_config[count.index].rg
+    is_secret      = false
+    allow_override = false
+  }
+
+  # user node pool min nodes count. check README for details
   variable {
     name           = "TF_USER_NODE_COUNT_MIN"
     value          = split(",", local.aks_config[count.index].user_node_count)[0]
@@ -97,6 +114,7 @@ resource "azuredevops_build_definition" "aks_pipeline" {
     allow_override = false
   }
 
+  # user node pool max nodes count. check README for details
   variable {
     name           = "TF_USER_NODE_COUNT_MAX"
     value          = split(",", local.aks_config[count.index].user_node_count)[1]
@@ -104,6 +122,7 @@ resource "azuredevops_build_definition" "aks_pipeline" {
     allow_override = false
   }
 
+  # system node pool min nodes count. check README for details
   variable {
     name           = "TF_SYSTEM_NODE_COUNT_MIN"
     value          = split(",", local.aks_config[count.index].system_node_count)[0]
@@ -111,6 +130,7 @@ resource "azuredevops_build_definition" "aks_pipeline" {
     allow_override = false
   }
 
+  # system node pool max nodes count. check README for details
   variable {
     name           = "TF_SYSTEM_NODE_COUNT_MAX"
     value          = split(",", local.aks_config[count.index].system_node_count)[1]
@@ -118,9 +138,10 @@ resource "azuredevops_build_definition" "aks_pipeline" {
     allow_override = false
   }
 
+  # list of nodepool names to avoid processing. check README for details
   variable {
-    name           = "TF_CLUSTER_RG"
-    value          = local.aks_config[count.index].rg
+    name           = "TF_NODE_POOL_EXCLUSIONS"
+    value          = jsonencode(local.aks_config[count.index].exclusions)
     is_secret      = false
     allow_override = false
   }

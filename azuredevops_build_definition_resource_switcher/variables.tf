@@ -72,10 +72,11 @@ variable "schedule_configuration" {
       exclude = list(string)
     })
     aks = list(object({
-      cluster_name = string
-      start_time   = string
-      stop_time    = string
-      rg           = string
+      cluster_name         = string
+      start_time           = string
+      stop_time            = string
+      rg                   = string
+      node_pool_exclusions = optional(list(string), [])
       user = object({
         nodes_on_start = string
         nodes_on_stop  = string
