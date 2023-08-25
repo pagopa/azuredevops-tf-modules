@@ -76,6 +76,7 @@ variable "schedule_configuration" {
       start_time           = string
       stop_time            = string
       rg                   = string
+      force                = optional(bool, false)
       node_pool_exclusions = optional(list(string), [])
       user = object({
         nodes_on_start = string

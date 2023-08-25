@@ -10,6 +10,7 @@ locals {
         system_node_count      = cluster.system.nodes_on_start
         rg                     = cluster.rg
         exclusions             = cluster.node_pool_exclusions == null ? [] : cluster.node_pool_exclusions
+        force                  = cluster.force
       },
       {
         cluster_name           = cluster.cluster_name
@@ -20,6 +21,7 @@ locals {
         system_node_count      = cluster.system.nodes_on_stop
         rg                     = cluster.rg
         exclusions             = cluster.node_pool_exclusions == null ? [] : cluster.node_pool_exclusions
+        force                  = cluster.force
       }
     ]
   ]))
@@ -142,6 +144,15 @@ resource "azuredevops_build_definition" "aks_pipeline" {
   variable {
     name           = "TF_NODE_POOL_EXCLUSIONS"
     value          = jsonencode(local.aks_config[count.index].exclusions)
+    is_secret      = false
+    allow_override = false
+  }
+
+
+   # force start/stop the node pool
+  variable {
+    name           = "TF_FORCE"
+    value          = local.aks_config[count.index].force
     is_secret      = false
     allow_override = false
   }
