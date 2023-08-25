@@ -149,7 +149,7 @@ resource "azuredevops_build_definition" "aks_pipeline" {
   }
 
 
-   # force start/stop the node pool
+  # force start/stop the node pool
   variable {
     name           = "TF_FORCE"
     value          = local.aks_config[count.index].force
