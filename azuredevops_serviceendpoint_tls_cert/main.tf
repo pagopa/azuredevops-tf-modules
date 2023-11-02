@@ -27,7 +27,7 @@ resource "azurerm_federated_identity_credential" "federated_setup" {
 }
 
 resource "azurerm_role_assignment" "managed_identity_subscription_reader" {
-  scope                = var.subscription_id
+  scope                = local.subscription_scope_id
   role_definition_name = "Reader"
   principal_id         = azurerm_user_assigned_identity.identity.client_id
 }

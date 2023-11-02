@@ -1,5 +1,6 @@
 locals {
   default_audience_name = "api://AzureADTokenExchange"
+  subscription_scope_id = "/subscriptions/${var.subscription_id}"
 }
 
 variable "location" {
