@@ -15,12 +15,12 @@ output "service_principal_object_id" {
 #   description = "Service principal name"
 # }
 
-# output "service_endpoint_name" {
-#   value       = azuredevops_serviceendpoint_azurerm.this.service_endpoint_name
-#   description = "Service endpoint name"
-# }
+output "service_endpoint_name" {
+  value       = azuredevops_serviceendpoint_azurerm.azurerm.service_endpoint_name
+  description = "Service endpoint name"
+}
 
-# output "service_endpoint_id" {
-#   value       = azuredevops_serviceendpoint_azurerm.this.id
-#   description = "Service endpoint id"
-# }
+output "service_endpoint_id" {
+  value       = azuredevops_serviceendpoint_azurerm.azurerm.id
+  description = "Service endpoint id"
+}
