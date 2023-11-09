@@ -6,7 +6,7 @@ resource "azurerm_user_assigned_identity" "identity" {
 
 resource "azuredevops_serviceendpoint_azurerm" "azurerm" {
   project_id                             = var.project_id
-  service_endpoint_name                  = "service_connection_${var.name}"
+  service_endpoint_name                  = "${upper(var.name)}-SERVICE-CONN"
   description                            = "Managed by Terraform"
   service_endpoint_authentication_scheme = "WorkloadIdentityFederation"
   credentials {
