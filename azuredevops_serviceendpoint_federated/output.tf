@@ -4,11 +4,11 @@
 #   description = "Service principal application id"
 # }
 
-# output "service_principal_object_id" {
-#   value       = data.azuread_service_principal.this.object_id
-#   sensitive   = true
-#   description = "Service principal object id"
-# }
+output "service_principal_object_id" {
+  value       = azurerm_user_assigned_identity.identity.principal_id
+  sensitive   = true
+  description = "Service principal object id"
+}
 
 # output "service_principal_name" {
 #   value       = "azdo-sp-${var.name}"

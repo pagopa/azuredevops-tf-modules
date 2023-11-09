@@ -1,6 +1,5 @@
 locals {
   default_audience_name = "api://AzureADTokenExchange"
-  subscription_scope_id = "/subscriptions/${var.subscription_id}"
 }
 
 variable "location" {
@@ -37,6 +36,12 @@ variable "subscription_name" {
   description = "(Required) Azure Subscription name related to tenant where create service principal"
 }
 
+variable "default_roleassignment_rg_prefix" {
+  type        = string
+  default     = ""
+  description = "(Optional) Add a prefix to default_roleassignment_rg"
+}
+
 # variable "renew_token" {
 #   type        = string
 #   description = "(Required) Renew token to recreate service principal. Change it to renew service principal credentials"
@@ -58,10 +63,4 @@ variable "subscription_name" {
 # variable "credential_key_vault_resource_group" {
 #   type        = string
 #   description = "(Required) Key vault resource group where store service principal credentials"
-# }
-
-# variable "default_roleassignment_rg_prefix" {
-#   type        = string
-#   default     = ""
-#   description = "(Optional) Add a prefix to default_roleassignment_rg"
 # }

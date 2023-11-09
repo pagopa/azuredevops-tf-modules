@@ -1,4 +1,4 @@
-# azuredevops_serviceendpoint_azurerm_limited
+# azuredevops_serviceendpoint_federated
 
 This module allow the creation of a service connection (azurerm type) with name: `azdo-sp-****`.
 Using a Service Principal, and store the credentials into a Key Vault.
