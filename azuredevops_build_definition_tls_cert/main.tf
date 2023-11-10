@@ -159,16 +159,19 @@ module "azuredevops_serviceendpoint_federated" {
   resource_group_name = var.dns_zone_resource_group
 }
 
+# TODO tom: does this record exist before or it is created by challenge?
 # get the dns txt record to use for the acme challenge
-data "azurerm_dns_ns_record" "txt_record" {
-  name                = var.dns_record_name
-  zone_name           = var.dns_zone_name
-  resource_group_name = var.dns_zone_resource_group
-}
+# data "azurerm_dns_txt_record" "acme_record" {
+#   name                = var.dns_record_name
+#   zone_name           = var.dns_zone_name
+#   resource_group_name = var.dns_zone_resource_group
+# }
 
 # authorize the service endpoint created to read/write access to txt record
 resource "azurerm_role_assignment" "managed_identity_default_role_assignment" {
-  scope                = data.azurerm_dns_ns_record.txt_record.id
+  # TODO tom: note above
+  # scope                = data.azurerm_dns_txt_record.acme_record.id
+  scope                = "/subscriptions/${var.subscription_id}/resourceGroups/${var.dns_zone_resource_group}/providers/Microsoft.Network/dnszones/${var.dns_zone_name}/TXT/${trim("_acme-challenge.${var.dns_record_name}", ".")}"
   role_definition_name = "DNS Zone Contributor"
   principal_id         = module.azuredevops_serviceendpoint_federated.identity_principal_id
 }

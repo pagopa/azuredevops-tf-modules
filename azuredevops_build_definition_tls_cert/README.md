@@ -39,7 +39,6 @@ Module that allows:
 | [azuredevops_resource_authorization.service_connection_ids_authorization](https://registry.terraform.io/providers/microsoft/azuredevops/latest/docs/resources/resource_authorization) | resource |
 | [azurerm_role_assignment.managed_identity_default_role_assignment](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/role_assignment) | resource |
 | [time_sleep.wait](https://registry.terraform.io/providers/hashicorp/time/latest/docs/resources/sleep) | resource |
-| [azurerm_dns_ns_record.txt_record](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/dns_ns_record) | data source |
 
 ## Inputs
 
