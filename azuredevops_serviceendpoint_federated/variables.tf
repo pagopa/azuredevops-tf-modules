@@ -12,7 +12,7 @@ variable "name" {
 }
 
 variable "resource_group_name" {
-  type = string
+  type        = string
   description = "Resource group where the managed identity will be create"
 }
 
@@ -41,26 +41,3 @@ variable "default_roleassignment_rg_prefix" {
   default     = ""
   description = "(Optional) Add a prefix to default_roleassignment_rg"
 }
-
-# variable "renew_token" {
-#   type        = string
-#   description = "(Required) Renew token to recreate service principal. Change it to renew service principal credentials"
-# }
-
-
-
-
-# variable "credential_subcription" {
-#   type        = string
-#   description = "(Required) Azure Subscription where store service principal credentials"
-# }
-
-# variable "credential_key_vault_name" {
-#   type        = string
-#   description = "(Required) Key vault name where store service principal credentials"
-# }
-
-# variable "credential_key_vault_resource_group" {
-#   type        = string
-#   description = "(Required) Key vault resource group where store service principal credentials"
-# }
