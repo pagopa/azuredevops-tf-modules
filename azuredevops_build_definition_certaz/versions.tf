@@ -4,11 +4,11 @@ terraform {
   required_providers {
     azuredevops = {
       source  = "microsoft/azuredevops"
-      version = ">= 0.5.0"
+      version = "<= 0.10.0"
     }
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = "<= 3.53.0"
+      version = "<= 3.71.0"
     }
     time = {
       source  = "hashicorp/time"
