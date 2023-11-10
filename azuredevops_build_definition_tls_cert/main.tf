@@ -152,6 +152,17 @@ resource "azuredevops_resource_authorization" "service_connection_ids_authorizat
   type       = "endpoint"
 }
 
+resource "azuredevops_resource_authorization" "service_connection_le_authorization" {
+  depends_on = [azuredevops_build_definition.pipeline, time_sleep.wait]
+
+  project_id    = var.project_id
+  resource_id   = module.azuredevops_serviceendpoint_federated.service_endpoint_id
+  definition_id = azuredevops_build_definition.pipeline.id
+
+  authorized = true
+  type       = "endpoint"
+}
+
 # service endpoint for federated authorizion, used for accessing dns txt record of acme challenge
 module "azuredevops_serviceendpoint_federated" {
   source = "git::https://github.com/pagopa/azuredevops-tf-modules.git//azuredevops_serviceendpoint_federated?ref=v4.0.0"
