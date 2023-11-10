@@ -10,10 +10,6 @@ terraform {
       source  = "hashicorp/azurerm"
       version = "<= 3.71.0"
     }
-    null = {
-      source  = "hashicorp/null"
-      version = ">= 1.3.0"
-    }
     time = {
       source  = "hashicorp/time"
       version = ">= 0.7.0"

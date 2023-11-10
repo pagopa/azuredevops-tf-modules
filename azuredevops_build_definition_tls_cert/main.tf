@@ -4,7 +4,7 @@ locals {
 }
 
 resource "azuredevops_build_definition" "pipeline" {
-  depends_on = [null_resource.this, module.secrets]
+  depends_on = [module.secrets]
 
   project_id      = var.project_id
   name            = trim(var.name, ".")
@@ -130,6 +130,7 @@ resource "azuredevops_build_definition" "pipeline" {
 # The service connection resource is not ready immediately
 # so the recommendation is to wait 30 seconds until it's ready
 # https://github.com/microsoft/terraform-provider-azuredevops/issues/266
+# TODO tom: this should be fixed by https://github.com/microsoft/terraform-provider-azuredevops/pull/475/commits/742006154cd92b3177298a00adf61f9d250e0924 ??
 resource "time_sleep" "wait" {
   create_duration = "30s"
 }
@@ -159,70 +160,39 @@ resource "azuredevops_resource_authorization" "service_connection_ids_authorizat
   type       = "endpoint"
 }
 
-resource "null_resource" "this" {
-  # needs az cli > 2.0.81
-  # see https://github.com/Azure/azure-cli/issues/12152
+# service endpoint for federated authorizion, used for accessing dns txt record of acme challenge
+module "azuredevops_serviceendpoint_federated" {
+  source = "git::https://github.com/pagopa/azuredevops-tf-modules.git//azuredevops_serviceendpoint_federated?ref=v4.0.0"
 
-  triggers = {
-    renew_token               = var.renew_token
-    subscription_id           = var.subscription_id
-    subscription_name         = var.subscription_name
-    credential_subcription    = var.credential_subcription
-    credential_key_vault_name = var.credential_key_vault_name
-    dns_record_name           = var.dns_record_name
-    dns_zone_name             = var.dns_zone_name
-    name                      = local.secret_name
-    dns_zone_resource_group   = var.dns_zone_resource_group
-  }
+  project_id          = var.project_id
+  name                = "azdo-acme-challenge-${local.secret_name}"
+  tenant_id           = var.tenant_id
+  subscription_name   = var.subscription_name
+  subscription_id     = var.subscription_id
+  location            = var.location
+  resource_group_name = var.dns_zone_resource_group
+}
 
-  # https://docs.microsoft.com/it-it/cli/azure/ad/sp?view=azure-cli-latest#az_ad_sp_create_for_rbac
-  provisioner "local-exec" {
-    command = <<EOT
-      CREDENTIAL_VALUE=$(az ad sp create-for-rbac \
-        --name "azdo-sp-acme-challenge-${self.triggers.name}" \
-        --role "DNS Zone Contributor" \
-        --scope "/subscriptions/${self.triggers.subscription_id}/resourceGroups/${self.triggers.dns_zone_resource_group}/providers/Microsoft.Network/dnszones/${self.triggers.dns_zone_name}/TXT/${trim("_acme-challenge.${self.triggers.dns_record_name}", ".")}" \
-        -o json)
+# get the dns txt record to use for the acme challenge
+data "azurerm_dns_ns_record" "txt_record" {
+  name                = var.dns_record_name
+  zone_name           = var.dns_zone_name
+  resource_group_name = var.dns_zone_resource_group
+}
 
-      az keyvault secret set \
-        --subscription "${self.triggers.credential_subcription}" \
-        --vault-name "${self.triggers.credential_key_vault_name}" \
-        --name "azdo-sp-acme-challenge-${self.triggers.name}" \
-        --value "$CREDENTIAL_VALUE"
-    EOT
-  }
-
-  # https://docs.microsoft.com/it-it/cli/azure/ad/sp?view=azure-cli-latest#az_ad_sp_delete
-  provisioner "local-exec" {
-    when    = destroy
-    command = <<EOT
-      SERVICE_PRINCIPAL_ID=$(az keyvault secret show \
-        --subscription "${self.triggers.credential_subcription}" \
-        --vault-name "${self.triggers.credential_key_vault_name}" \
-        --name "azdo-sp-acme-challenge-${self.triggers.name}" \
-        -o tsv --query value | jq -r '.appId')
-
-      az ad sp delete --id "$SERVICE_PRINCIPAL_ID"
-
-      az keyvault secret set \
-        --subscription "${self.triggers.credential_subcription}" \
-        --vault-name "${self.triggers.credential_key_vault_name}" \
-        --name "azdo-sp-acme-challenge-${self.triggers.name}" \
-        --value "DELETEME" \
-        --disabled true \
-        --description "DELETEME"
-    EOT
-  }
+# authorize the service endpoint created to read/write access to txt record
+resource "azurerm_role_assignment" "managed_identity_default_role_assignment" {
+  scope                = data.azurerm_dns_ns_record.txt_record.id
+  role_definition_name = "DNS Zone Contributor"
+  principal_id         = module.azuredevops_serviceendpoint_federated.identity_principal_id
 }
 
 module "secrets" {
-  depends_on     = [null_resource.this]
   source         = "git::https://github.com/pagopa/terraform-azurerm-v3.git//key_vault_secrets_query?ref=v6.15.2"
   resource_group = var.credential_key_vault_resource_group
   key_vault_name = var.credential_key_vault_name
 
   secrets = [
-    "azdo-sp-acme-challenge-${local.secret_name}",
     "le-private-key-json",
     "le-regr-json",
   ]

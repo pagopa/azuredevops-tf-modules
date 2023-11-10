@@ -1,3 +1,7 @@
+variable "location" {
+  type = string
+}
+
 variable "project_id" {
   type        = string
   description = "(Required) Azure DevOps project ID"
@@ -11,11 +15,6 @@ variable "repository" {
     pipelines_path = string
   })
   description = "(Required) GitHub repository attributes"
-}
-
-variable "renew_token" {
-  type        = string
-  description = "(Required) Renew token to recreate service principal. Change it to renew service principal credentials"
 }
 
 variable "name" {
@@ -70,11 +69,6 @@ variable "subscription_id" {
 variable "tenant_id" {
   type        = string
   description = "(Required) Azure Tenant ID related to tenant where create service principal"
-}
-
-variable "credential_subcription" {
-  type        = string
-  description = "(Required) Azure Subscription where store service principal credentials"
 }
 
 variable "credential_key_vault_name" {
