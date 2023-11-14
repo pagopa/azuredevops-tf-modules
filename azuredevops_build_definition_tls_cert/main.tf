@@ -63,6 +63,12 @@ resource "azuredevops_build_definition" "pipeline" {
   }
 
   variable {
+    name           = "LE_AZURE_IDENTITY_TYPE"
+    value          = "MANAGED_IDENTITY"
+    allow_override = false
+  }
+
+  variable {
     name           = "AZURE_DNS_ZONE_RESOURCE_GROUP"
     value          = var.dns_zone_resource_group
     allow_override = false
