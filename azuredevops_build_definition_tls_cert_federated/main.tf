@@ -128,7 +128,6 @@ resource "azuredevops_build_definition" "pipeline" {
 # The service connection resource is not ready immediately
 # so the recommendation is to wait 30 seconds until it's ready
 # https://github.com/microsoft/terraform-provider-azuredevops/issues/266
-# TODO tom: this should be fixed by https://github.com/microsoft/terraform-provider-azuredevops/pull/475/commits/742006154cd92b3177298a00adf61f9d250e0924 ??
 resource "time_sleep" "wait" {
   create_duration = "30s"
 }
