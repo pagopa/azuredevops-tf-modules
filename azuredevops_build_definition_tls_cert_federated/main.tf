@@ -15,7 +15,7 @@ resource "azuredevops_build_definition" "pipeline" {
     repo_type             = "GitHub"
     repo_id               = "${var.repository.organization}/${var.repository.name}"
     branch_name           = var.repository.branch_name
-    yml_path              = "azure-pipelines.yaml"
+    yml_path              = "azure-pipelines-federated.yaml"
     service_connection_id = var.github_service_connection_id
   }
 
