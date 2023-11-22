@@ -114,16 +114,15 @@ resource "time_sleep" "sa_wait" {
 }
 
 # github_service_connection_id serviceendpoint authorization
-resource "azuredevops_resource_authorization" "sa_github_service_connection_authorization" {
+resource "azuredevops_pipeline_authorization" "sa_github_service_connection_authorization" {
   count      = length(local.aks_config)
   depends_on = [azuredevops_build_definition.aks_pipeline, time_sleep.sa_wait]
 
-  project_id    = var.project_id
-  resource_id   = var.github_service_connection_id
-  definition_id = azuredevops_build_definition.aks_pipeline[count.index].id
+  project_id  = var.project_id
+  resource_id = var.github_service_connection_id
+  pipeline_id = azuredevops_build_definition.aks_pipeline[count.index].id
 
-  authorized = true
-  type       = "endpoint"
+  type = "endpoint"
 }
 
 
@@ -151,15 +150,14 @@ resource "azuredevops_resource_authorization" "sa_github_service_connection_auth
 #                     count.index        floor(count.index/ number of service connection ids)         count.index % number of service connection ids
 ##############################################################################################################################
 # others service_connection_ids serviceendpoint authorization
-resource "azuredevops_resource_authorization" "sa_service_connection_ids_authorization" {
+resource "azuredevops_pipeline_authorization" "sa_service_connection_ids_authorization" {
   depends_on = [azuredevops_build_definition.aks_pipeline, time_sleep.sa_wait]
   count      = local.service_connection_ids_sa_total_combinations_count
 
-  project_id    = var.project_id
-  resource_id   = var.service_connection_ids_authorization[count.index % length(var.service_connection_ids_authorization)]
-  definition_id = azuredevops_build_definition.aks_pipeline[floor(count.index / length(var.service_connection_ids_authorization))].id
+  project_id  = var.project_id
+  resource_id = var.service_connection_ids_authorization[count.index % length(var.service_connection_ids_authorization)]
+  pipeline_id = azuredevops_build_definition.aks_pipeline[floor(count.index / length(var.service_connection_ids_authorization))].id
 
-  authorized = true
-  type       = "endpoint"
+  type = "endpoint"
 }
 
