@@ -7,7 +7,7 @@ resource "azuredevops_build_definition" "pipeline" {
   depends_on = [module.secrets]
 
   project_id      = var.project_id
-  name            = trim(var.name, ".")
+  name            = trimprefix("${var.dns_record_name}.${var.dns_zone_name}", ".")
   path            = "\\${var.path}"
   agent_pool_name = var.agent_pool_name
 
