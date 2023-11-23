@@ -7,7 +7,7 @@ resource "azuredevops_build_definition" "pipeline" {
   depends_on = [module.secrets]
 
   project_id      = var.project_id
-  name            = trim(var.name, ".")
+  name            = trimprefix("${var.dns_record_name}.${var.dns_zone_name}", ".")
   path            = "\\${var.path}"
   agent_pool_name = var.agent_pool_name
 
@@ -133,39 +133,33 @@ resource "time_sleep" "wait" {
 }
 
 # github_service_connection_id serviceendpoint authorization
-resource "azuredevops_resource_authorization" "github_service_connection_authorization" {
+resource "azuredevops_pipeline_authorization" "github_service_connection_authorization" {
   depends_on = [azuredevops_build_definition.pipeline, time_sleep.wait]
 
-  project_id    = var.project_id
-  resource_id   = var.github_service_connection_id
-  definition_id = azuredevops_build_definition.pipeline.id
-
-  authorized = true
-  type       = "endpoint"
+  project_id  = var.project_id
+  resource_id = var.github_service_connection_id
+  pipeline_id = azuredevops_build_definition.pipeline.id
+  type        = "endpoint"
 }
 
 # others service_connection_ids serviceendpoint authorization
-resource "azuredevops_resource_authorization" "service_connection_ids_authorization" {
+resource "azuredevops_pipeline_authorization" "service_connection_ids_authorization" {
   depends_on = [azuredevops_build_definition.pipeline, time_sleep.wait]
   count      = var.service_connection_ids_authorization == null ? 0 : length(var.service_connection_ids_authorization)
 
-  project_id    = var.project_id
-  resource_id   = var.service_connection_ids_authorization[count.index]
-  definition_id = azuredevops_build_definition.pipeline.id
-
-  authorized = true
-  type       = "endpoint"
+  project_id  = var.project_id
+  resource_id = var.service_connection_ids_authorization[count.index]
+  pipeline_id = azuredevops_build_definition.pipeline.id
+  type        = "endpoint"
 }
 
-resource "azuredevops_resource_authorization" "service_connection_le_authorization" {
-  depends_on = [azuredevops_build_definition.pipeline, time_sleep.wait]
+resource "azuredevops_pipeline_authorization" "service_connection_le_authorization" {
+  depends_on = [time_sleep.wait]
 
-  project_id    = var.project_id
-  resource_id   = module.azuredevops_serviceendpoint_federated.service_endpoint_id
-  definition_id = azuredevops_build_definition.pipeline.id
-
-  authorized = true
-  type       = "endpoint"
+  project_id  = var.project_id
+  resource_id = module.azuredevops_serviceendpoint_federated.service_endpoint_id
+  pipeline_id = azuredevops_build_definition.pipeline.id
+  type        = "endpoint"
 }
 
 # service endpoint for federated authorizion, used for accessing dns txt record of acme challenge

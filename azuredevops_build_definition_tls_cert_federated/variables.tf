@@ -17,11 +17,6 @@ variable "repository" {
   description = "(Required) GitHub repository attributes"
 }
 
-variable "name" {
-  type        = string
-  description = "(Required) Pipeline name equals to domain name"
-}
-
 variable "agent_pool_name" {
   type        = string
   default     = "Azure Pipelines"
