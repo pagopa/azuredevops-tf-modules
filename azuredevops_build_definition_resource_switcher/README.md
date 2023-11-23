@@ -188,7 +188,7 @@ You'll have to create your own, customizing the parameters reading section, and 
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.3.0 |
-| <a name="requirement_azuredevops"></a> [azuredevops](#requirement\_azuredevops) | <= 0.10.0 |
+| <a name="requirement_azuredevops"></a> [azuredevops](#requirement\_azuredevops) | ~> 0.10.0 |
 | <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | <= 3.71.0 |
 | <a name="requirement_null"></a> [null](#requirement\_null) | >= 1.3.0 |
 | <a name="requirement_time"></a> [time](#requirement\_time) | >= 0.7.0 |
