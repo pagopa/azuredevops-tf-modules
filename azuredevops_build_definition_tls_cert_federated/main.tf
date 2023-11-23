@@ -164,7 +164,7 @@ resource "azuredevops_pipeline_authorization" "service_connection_le_authorizati
 
 # service endpoint for federated authorizion, used for accessing dns txt record of acme challenge
 module "azuredevops_serviceendpoint_federated" {
-  source = "git::https://github.com/pagopa/azuredevops-tf-modules.git//azuredevops_serviceendpoint_federated?ref=v4.0.0"
+  source = "git::https://github.com/pagopa/azuredevops-tf-modules.git//azuredevops_serviceendpoint_federated?ref=v4.1.3"
 
   project_id          = var.project_id
   name                = "azdo-acme-challenge-${local.secret_name}"
