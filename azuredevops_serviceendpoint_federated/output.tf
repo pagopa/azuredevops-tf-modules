@@ -15,10 +15,15 @@ output "identity_app_name" {
 
 output "identity_client_id" {
   value       = azurerm_user_assigned_identity.identity.client_id
-  description = "User Managed Identity client id"
+  description = "The ID of the app associated with the Identity."
 }
 
 output "identity_principal_id" {
   value       = azurerm_user_assigned_identity.identity.principal_id
-  description = "User Managed Identity principal id"
+  description = "The ID of the Service Principal object associated with the created Identity."
+}
+
+output "service_principal_object_id" {
+  value       = azurerm_user_assigned_identity.identity.principal_id
+  description = "The ID of the Service Principal object associated with the created Identity."
 }
