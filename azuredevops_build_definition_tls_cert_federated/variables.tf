@@ -104,7 +104,7 @@ variable "schedules" {
     })
   })
   default = {
-    days_to_build              = ["Mon"]
+    days_to_build              = ["Thu"]
     schedule_only_with_changes = false
     start_hours                = 1
     start_minutes              = 0
