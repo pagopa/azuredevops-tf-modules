@@ -80,8 +80,9 @@ No modules.
 | Name | Description |
 |------|-------------|
 | <a name="output_identity_app_name"></a> [identity\_app\_name](#output\_identity\_app\_name) | User Managed Identity name |
-| <a name="output_identity_client_id"></a> [identity\_client\_id](#output\_identity\_client\_id) | User Managed Identity client id |
-| <a name="output_identity_principal_id"></a> [identity\_principal\_id](#output\_identity\_principal\_id) | User Managed Identity principal id |
+| <a name="output_identity_client_id"></a> [identity\_client\_id](#output\_identity\_client\_id) | The ID of the app associated with the Identity. |
+| <a name="output_identity_principal_id"></a> [identity\_principal\_id](#output\_identity\_principal\_id) | The ID of the Service Principal object associated with the created Identity. |
 | <a name="output_service_endpoint_id"></a> [service\_endpoint\_id](#output\_service\_endpoint\_id) | Service endpoint id |
 | <a name="output_service_endpoint_name"></a> [service\_endpoint\_name](#output\_service\_endpoint\_name) | Service endpoint name |
+| <a name="output_service_principal_object_id"></a> [service\_principal\_object\_id](#output\_service\_principal\_object\_id) | The ID of the Service Principal object associated with the created Identity. |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
