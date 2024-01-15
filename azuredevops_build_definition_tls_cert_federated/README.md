@@ -19,7 +19,7 @@ Module that allows:
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.3.0 |
-| <a name="requirement_azuredevops"></a> [azuredevops](#requirement\_azuredevops) | ~> 0.10.0 |
+| <a name="requirement_azuredevops"></a> [azuredevops](#requirement\_azuredevops) | >= 0.10.0, <= 0.12.0 |
 | <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | <= 3.71.0 |
 | <a name="requirement_time"></a> [time](#requirement\_time) | >= 0.7.0 |
 
@@ -27,7 +27,7 @@ Module that allows:
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_azuredevops_serviceendpoint_federated"></a> [azuredevops\_serviceendpoint\_federated](#module\_azuredevops\_serviceendpoint\_federated) | git::https://github.com/pagopa/azuredevops-tf-modules.git//azuredevops_serviceendpoint_federated | v4.1.3 |
+| <a name="module_azuredevops_serviceendpoint_federated"></a> [azuredevops\_serviceendpoint\_federated](#module\_azuredevops\_serviceendpoint\_federated) | ../azuredevops_serviceendpoint_federated | n/a |
 | <a name="module_secrets"></a> [secrets](#module\_secrets) | git::https://github.com/pagopa/terraform-azurerm-v3.git//key_vault_secrets_query | v6.15.2 |
 
 ## Resources
