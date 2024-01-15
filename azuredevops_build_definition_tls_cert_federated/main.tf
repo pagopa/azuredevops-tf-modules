@@ -142,7 +142,10 @@ resource "azuredevops_pipeline_authorization" "github_service_connection_authori
   type        = "endpoint"
 }
 
-# others service_connection_ids serviceendpoint authorization
+# outhorize other service connection usage from the pipeline.
+# this is typically used for authorizing the service connection
+# for accessing the certificate in key vault.
+# these service connections are passed to this module as vars.
 resource "azuredevops_pipeline_authorization" "service_connection_ids_authorization" {
   depends_on = [azuredevops_build_definition.pipeline, time_sleep.wait]
   count      = var.service_connection_ids_authorization == null ? 0 : length(var.service_connection_ids_authorization)
@@ -153,16 +156,14 @@ resource "azuredevops_pipeline_authorization" "service_connection_ids_authorizat
   type        = "endpoint"
 }
 
-resource "azuredevops_pipeline_authorization" "service_connection_le_authorization" {
-  depends_on = [time_sleep.wait]
-
-  project_id  = var.project_id
-  resource_id = module.azuredevops_serviceendpoint_federated.service_endpoint_id
-  pipeline_id = azuredevops_build_definition.pipeline.id
-  type        = "endpoint"
-}
-
-# service endpoint for federated authorizion, used for accessing dns txt record of acme challenge
+# federated service endpoint for accessing dns txt record of acme challenge.
+# the managed identity related to this service endpoint will be able ONLY to
+# access that specific txt record.
+# this means that there will be at least two different service connections,
+# with related managed identities in azure: one for accessing the txt record,
+# needed for acme, and one for accessing the certificate in key vault, needed
+# for checking certicate expiration and for updating with the new certificate
+# provided by let's encrypt.
 module "azuredevops_serviceendpoint_federated" {
   source = "git::https://github.com/pagopa/azuredevops-tf-modules.git//azuredevops_serviceendpoint_federated?ref=v4.1.3"
 
@@ -173,6 +174,16 @@ module "azuredevops_serviceendpoint_federated" {
   subscription_id     = var.subscription_id
   location            = var.location
   resource_group_name = var.dns_zone_resource_group
+}
+
+# authorize the service endpoint for accessing txt record to be used by the pipeline
+resource "azuredevops_pipeline_authorization" "service_connection_le_authorization" {
+  depends_on = [time_sleep.wait]
+
+  project_id  = var.project_id
+  resource_id = module.azuredevops_serviceendpoint_federated.service_endpoint_id
+  pipeline_id = azuredevops_build_definition.pipeline.id
+  type        = "endpoint"
 }
 
 # authorize the service endpoint created to read/write access to txt record

@@ -1,16 +1,155 @@
-# azuredevops_build_definition_tls_cert
+# azuredevops_build_definition_tls_cert_federated
 
-Module that allows:
+Module for creating a AzureDevops pipeline that renews a TLS
+certificate stored in Azure KeyVault with ACME on Let's Encrypt
+authority.
 
-* **pipeline**: creation with repo usually linked to <https://github.com/pagopa/le-azure-acme-tiny>
-* **resource auth**: create authorization that allow to connect to (service connection already created):
-  * github service connection
-  * azure rm service connection (usually: `XXX-TLS-CERT-SERVICE-CONN`)
-* **SP azdo-sp-acme-challenge-xxx**: that allow the python script acme_tiny.py to create a DNS record TXT on DNS to valite certificate on Let's encrypt
+This module manages the following resources:
+
+* **Azure DevOps pipeline**: creation with repo usually linked to
+  <https://github.com/pagopa/le-azure-acme-tiny>.
+* **Azure Managed Identity with federated OIDC credentials** with
+  permissions to modify a specific record in a DNS zone.  This
+  identity is used for solving the ACME challenge, that consists in
+  writing a TXT record on a DNS record.  The ACME challenge is solved
+  bt the
+  [acme_tiny.py](https://github.com/pagopa/le-azure-acme-tiny/blob/master/acme_tiny.py)
+  script.
+* **Azure RM service connection** for federated auth with the managed
+  identity above (usually: `XXX-TLS-CERT-SERVICE-CONN`)
 
 ## Architecture
 
 ![architecture](./docs/module-arch.drawio.png)
+
+## Usage
+
+Reference Azure DevOps project:
+```hcl
+data "azuredevops_project" "project" {
+  name = "my-projects"
+}
+```
+
+Get the GitHub token from KV:
+```hcl
+module "secret_core" {
+  source = "git::https://github.com/pagopa/terraform-azurerm-v3//key_vault_secrets_query?ref=v7.20.0"
+  resource_group = "my-kv-rg"
+  key_vault_name = "my-kv"
+
+  secrets = [
+    "azure-devops-github-ro-TOKEN",
+  ]
+}
+```
+
+Create a AZDO service connection for cloning pipeline repo (i.e., `le-azure-acme-tiny`) 
+from GitHub with previously retrieved token:
+```hcl
+resource "azuredevops_serviceendpoint_github" "azure_devops_github_ro" {
+  project_id            = data.azuredevops_project.project.id
+  service_endpoint_name = "azure-devops-github-ro"
+  auth_personal {
+    personal_access_token = module.secret_core.values["azure-devops-github-ro-TOKEN"].value
+  }
+  lifecycle {
+    ignore_changes = [description, authorization]
+  }
+}
+```
+
+Get Let's Encrypt credentials and store them into KV (requires Docker, it runs a local provisioner):
+```hcl
+module "letsencrypt" {
+  source = "git::https://github.com/pagopa/terraform-azurerm-v3//letsencrypt_credential?ref=v7.20.0"
+  
+  prefix            = "my"
+  env               = "p"
+  key_vault_name    = "my-kv"
+  subscription_name = "my-sub"
+}
+```
+
+Create service connection and related managed identity for editing the certificate on KV:
+```hcl
+module "tls_cert_service_conn" {
+  source = "git::https://github.com/pagopa/azuredevops-tf-modules.git//azuredevops_serviceendpoint_federated?ref=v4.0.0"
+  
+  project_id          = data.azuredevops_project.project.id
+  name                = "my-p-tls-cert"
+  tenant_id           = "my-tenant-id"
+  subscription_name   = "my-sub-name"
+  subscription_id     = "my-sub-id"
+  location            = "westeurope"
+  resource_group_name = "default-roleassignment-rg"
+}
+
+data "azurerm_key_vault" "kv" {
+  resource_group_name = "my-kv-rg"
+  name                = "my-kv"
+}
+
+resource "azurerm_key_vault_access_policy" "tls_cert_service_conn_kv_access_policy" {
+  key_vault_id = data.azurerm_key_vault.kv.id
+  tenant_id    = "my-tenant-id"
+  object_id    = module.tls_cert_service_conn.identity_principal_id
+  certificate_permissions = ["Get", "Import"]
+}
+```
+
+Finally, use this module for creating pipeline:
+```hcl
+module "tlscert-portalefatturazione-pagopa-it-cert_az" {
+  depends_on = [module.letsencrypt]
+  
+  source = "git::<https://github.com/pagopa/azuredevops-tf-modules.git//azuredevops_build_definition_tls_cert_federated?ref=v4.1.5>"
+  
+  project_id = data.azuredevops_project.project.id
+  location   = "westeurope"
+  repository = {
+    organization   = "pagopa"
+    name           = "le-azure-acme-tiny"
+    branch_name    = "refs/heads/master"
+    pipelines_path = "."
+  }
+  name                         = "my.pagopa.it"
+  path                         = "my\\TLS-Certificates"
+  github_service_connection_id = azuredevops_serviceendpoint_github.azure_devops_github_ro.id
+  
+  dns_record_name         = ""
+  dns_zone_name           = "my.pagopa.it"
+  dns_zone_resource_group = "my-dns-rg"
+  tenant_id               = "my-tenant-id"
+  subscription_name       = "my-sub"
+  subscription_id         = "my-sub-id"
+  
+  credential_key_vault_name           = "my-kv"
+  credential_key_vault_resource_group = "my-kv-rg"
+  
+  variables = {
+    CERT_NAME_EXPIRE_SECONDS     = "2592000" #30 days
+    KEY_VAULT_SERVICE_CONNECTION = module.tls_cert_service_conn.service_endpoint_name,
+    KEY_VAULT_NAME               = "my-kv"
+  }
+  variables_secret = {}
+  
+  service_connection_ids_authorization = [ module.tls_cert_service_conn.service_endpoint_id ]
+  
+  schedules = {
+    days_to_build              = ["Thu"]
+    schedule_only_with_changes = false
+    start_hours                = 3
+    start_minutes              = 0
+    time_zone                  = "(UTC+01:00) Amsterdam, Berlin, Bern, Rome, Stockholm, Vienna"
+    branch_filter = {
+      include = ["refs/heads/master"]
+      exclude = []
+    }
+  }
+}
+```
+
 
 <!-- markdownlint-disable -->
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
