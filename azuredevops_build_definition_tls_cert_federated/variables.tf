@@ -92,7 +92,7 @@ variable "dns_zone_resource_group" {
 }
 
 variable "managed_identity_resource_group_name" {
-  type = string
+  type        = string
   description = "(Required) Managed identity resource group, where will be created"
 }
 
