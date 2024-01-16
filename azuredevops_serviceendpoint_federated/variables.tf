@@ -1,5 +1,5 @@
 locals {
-  default_audience_name = "api://AzureADTokenExchange"
+  default_audience_name        = "api://AzureADTokenExchange"
   serviceendpoint_azurerm_name = var.serviceendpoint_azurerm_name != "" ? "${upper(var.serviceendpoint_azurerm_name)}-SERVICE-CONN" : "${upper(var.name)}-SERVICE-CONN"
 }
 
@@ -15,7 +15,7 @@ variable "name" {
 variable "serviceendpoint_azurerm_name" {
   type        = string
   description = "(Optional) Service connection azurerm name"
-  default = ""
+  default     = ""
 }
 
 variable "resource_group_name" {
