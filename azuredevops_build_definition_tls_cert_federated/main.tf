@@ -3,6 +3,20 @@ locals {
   secret_name     = replace(trim("${var.dns_record_name}.${var.dns_zone_name}", "."), ".", "-")
 }
 
+module "secrets" {
+  source         = "git::https://github.com/pagopa/terraform-azurerm-v3.git//key_vault_secrets_query?ref=v7.46.0"
+  resource_group = var.credential_key_vault_resource_group
+  key_vault_name = var.credential_key_vault_name
+
+  secrets = [
+    "le-private-key-json",
+    "le-regr-json",
+  ]
+}
+
+#
+# Pipeline
+#
 resource "azuredevops_build_definition" "pipeline" {
   depends_on = [module.secrets]
 
@@ -153,14 +167,11 @@ resource "azuredevops_pipeline_authorization" "service_connection_ids_authorizat
   type        = "endpoint"
 }
 
-resource "azuredevops_pipeline_authorization" "service_connection_le_authorization" {
-  depends_on = [time_sleep.wait]
-
-  project_id  = var.project_id
-  resource_id = module.azuredevops_serviceendpoint_federated.service_endpoint_id
-  pipeline_id = azuredevops_build_definition.pipeline.id
-  type        = "endpoint"
-}
+#
+# DNS Managed identity + Service connection for pipeline
+# this two object are mandatory for permission in DNS and allow pipeline to use
+# service connection id and not more service principal id and secret
+#
 
 # service endpoint for federated authorizion, used for accessing dns txt record of acme challenge
 module "azuredevops_serviceendpoint_federated" {
@@ -172,7 +183,16 @@ module "azuredevops_serviceendpoint_federated" {
   subscription_name   = var.subscription_name
   subscription_id     = var.subscription_id
   location            = var.location
-  resource_group_name = var.dns_zone_resource_group
+  resource_group_name = var.managed_identity_resource_group_name
+}
+
+resource "azuredevops_pipeline_authorization" "service_connection_le_authorization" {
+  depends_on = [time_sleep.wait]
+
+  project_id  = var.project_id
+  resource_id = module.azuredevops_serviceendpoint_federated.service_endpoint_id
+  pipeline_id = azuredevops_build_definition.pipeline.id
+  type        = "endpoint"
 }
 
 # authorize the service endpoint created to read/write access to txt record
@@ -180,15 +200,4 @@ resource "azurerm_role_assignment" "managed_identity_default_role_assignment" {
   scope                = "/subscriptions/${var.subscription_id}/resourceGroups/${var.dns_zone_resource_group}/providers/Microsoft.Network/dnszones/${var.dns_zone_name}/TXT/${trim("_acme-challenge.${var.dns_record_name}", ".")}"
   role_definition_name = "DNS Zone Contributor"
   principal_id         = module.azuredevops_serviceendpoint_federated.identity_principal_id
-}
-
-module "secrets" {
-  source         = "git::https://github.com/pagopa/terraform-azurerm-v3.git//key_vault_secrets_query?ref=v6.15.2"
-  resource_group = var.credential_key_vault_resource_group
-  key_vault_name = var.credential_key_vault_name
-
-  secrets = [
-    "le-private-key-json",
-    "le-regr-json",
-  ]
 }

@@ -91,6 +91,11 @@ variable "dns_zone_resource_group" {
   description = "(Required) Dns zone resource group name"
 }
 
+variable "managed_identity_resource_group_name" {
+  type        = string
+  description = "(Required) Managed identity resource group, where will be created"
+}
+
 variable "schedules" {
   type = object({
     days_to_build              = list(string)
@@ -104,7 +109,7 @@ variable "schedules" {
     })
   })
   default = {
-    days_to_build              = ["Thu"]
+    days_to_build              = ["Fri"]
     schedule_only_with_changes = false
     start_hours                = 1
     start_minutes              = 0
