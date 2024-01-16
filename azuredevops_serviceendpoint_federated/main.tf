@@ -34,7 +34,7 @@ resource "azurerm_role_assignment" "managed_identity_default_role_assignment" {
 #
 resource "azuredevops_serviceendpoint_azurerm" "azurerm" {
   project_id                             = var.project_id
-  service_endpoint_name                  = "${upper(var.name)}-SERVICE-CONN"
+  service_endpoint_name                  = local.serviceendpoint_azurerm_name
   description                            = "Managed by Terraform"
   service_endpoint_authentication_scheme = "WorkloadIdentityFederation"
   credentials {
