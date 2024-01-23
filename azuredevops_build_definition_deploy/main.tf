@@ -9,7 +9,7 @@ resource "azuredevops_build_definition" "pipeline" {
   agent_pool_name = var.agent_pool_name
 
   repository {
-    repo_type             = "GitHub"
+    repo_type             = var.repository_repo_type
     repo_id               = "${var.repository.organization}/${var.repository.name}"
     branch_name           = var.repository.branch_name
     yml_path              = "${var.repository.pipelines_path}/${local.yml_prefix_name}deploy-pipelines.yml"

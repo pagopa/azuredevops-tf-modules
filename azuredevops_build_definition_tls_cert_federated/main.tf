@@ -26,7 +26,7 @@ resource "azuredevops_build_definition" "pipeline" {
   agent_pool_name = var.agent_pool_name
 
   repository {
-    repo_type             = "GitHub"
+    repo_type             = var.repository_repo_type
     repo_id               = "${var.repository.organization}/${var.repository.name}"
     branch_name           = var.repository.branch_name
     yml_path              = "azure-pipelines-federated.yaml"
@@ -177,7 +177,7 @@ resource "azuredevops_pipeline_authorization" "service_connection_ids_authorizat
 #
 
 # service endpoint for federated authorizion, used for accessing dns txt record of acme challenge
-    
+
 # federated service endpoint for accessing dns txt record of acme challenge.
 # the managed identity related to this service endpoint will be able ONLY to
 # access that specific txt record.
