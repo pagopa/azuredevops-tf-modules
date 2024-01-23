@@ -78,6 +78,10 @@ resource "azuredevops_build_definition" "pipeline" {
   }
 }
 
+#
+# Authorization
+#
+
 # This is to work around an issue with azuredevops_resource_authorization
 # The service connection resource is not ready immediately
 # so the recommendation is to wait 30 seconds until it's ready
@@ -87,13 +91,14 @@ resource "time_sleep" "wait" {
 }
 
 # github_service_connection_id serviceendpoint authorization
-resource "azuredevops_pipeline_authorization" "github_service_connection_authorization" {
+resource "azuredevops_resource_authorization" "github_service_connection_authorization" {
   depends_on = [azuredevops_build_definition.pipeline, time_sleep.wait]
 
-  project_id  = var.project_id
-  resource_id = var.github_service_connection_id
-  pipeline_id = azuredevops_build_definition.pipeline.id
-  type        = "repository"
+  project_id    = var.project_id
+  resource_id   = var.github_service_connection_id
+  definition_id = azuredevops_build_definition.pipeline.id
+  authorized    = true
+  type          = "endpoint"
 }
 
 # others service_connection_ids serviceendpoint authorization
