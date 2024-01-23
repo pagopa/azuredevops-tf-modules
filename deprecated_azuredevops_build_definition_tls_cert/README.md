@@ -28,7 +28,7 @@ Module that allows:
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_secrets"></a> [secrets](#module\_secrets) | git::https://github.com/pagopa/terraform-azurerm-v3.git//key_vault_secrets_query | v6.15.2 |
+| <a name="module_secrets"></a> [secrets](#module\_secrets) | git::https://github.com/pagopa/terraform-azurerm-v3.git//key_vault_secrets_query | v7.46.0 |
 
 ## Resources
 
