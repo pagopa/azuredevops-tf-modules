@@ -198,15 +198,6 @@ module "azuredevops_serviceendpoint_federated" {
   resource_group_name = var.managed_identity_resource_group_name
 }
 
-resource "azuredevops_pipeline_authorization" "service_connection_le_authorization" {
-  depends_on = [time_sleep.wait]
-
-  project_id  = var.project_id
-  resource_id = module.azuredevops_serviceendpoint_federated.service_endpoint_id
-  pipeline_id = azuredevops_build_definition.pipeline.id
-  type        = "endpoint"
-}
-
 # authorize the service endpoint for accessing txt record to be used by the pipeline
 resource "azuredevops_pipeline_authorization" "service_connection_le_authorization" {
   depends_on = [time_sleep.wait]
