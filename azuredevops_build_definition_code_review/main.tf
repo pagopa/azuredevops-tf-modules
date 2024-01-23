@@ -9,7 +9,7 @@ resource "azuredevops_build_definition" "pipeline" {
   agent_pool_name = var.agent_pool_name
 
   repository {
-    repo_type             = "GitHub"
+    repo_type             = var.repository_repo_type
     repo_id               = "${var.repository.organization}/${var.repository.name}"
     branch_name           = var.repository.branch_name
     yml_path              = "${var.repository.pipelines_path}/${local.yml_prefix_name}code-review-pipelines.yml"
@@ -41,7 +41,7 @@ resource "azuredevops_build_definition" "pipeline" {
         for_each = var.pull_request_trigger_use_yaml == true ? [] : ["dummy"]
 
         content {
-          auto_cancel = false
+          auto_cancel = var.pull_request_trigger_auto_cancel
           branch_filter {
             include = [var.repository.branch_name]
           }
@@ -91,14 +91,13 @@ resource "time_sleep" "wait" {
 }
 
 # github_service_connection_id serviceendpoint authorization
-resource "azuredevops_resource_authorization" "github_service_connection_authorization" {
+resource "azuredevops_pipeline_authorization" "github_service_connection_authorization" {
   depends_on = [azuredevops_build_definition.pipeline, time_sleep.wait]
 
-  project_id    = var.project_id
-  resource_id   = var.github_service_connection_id
-  definition_id = azuredevops_build_definition.pipeline.id
-  authorized    = true
-  type          = "endpoint"
+  project_id  = var.project_id
+  resource_id = var.github_service_connection_id
+  pipeline_id = azuredevops_build_definition.pipeline.id
+  type        = "endpoint"
 }
 
 # others service_connection_ids serviceendpoint authorization
