@@ -93,7 +93,7 @@ resource "azuredevops_pipeline_authorization" "github_service_connection_authori
   project_id  = var.project_id
   resource_id = var.github_service_connection_id
   pipeline_id = azuredevops_build_definition.pipeline.id
-  type        = "endpoint"
+  type        = "repository"
 }
 
 # others service_connection_ids serviceendpoint authorization
