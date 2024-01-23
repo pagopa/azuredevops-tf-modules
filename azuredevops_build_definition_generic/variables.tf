@@ -31,15 +31,15 @@ variable "pull_request_trigger_use_yaml" {
 }
 
 variable "pull_request_trigger_auto_cancel" {
-type = bool
-description = "Allow to cancel previous runs"
-default = true
+  type        = bool
+  description = "Allow to cancel previous runs"
+  default     = true
 }
 
 variable "repository_repo_type" {
-  type = string
+  type        = string
   description = " (Optional) The repository type. Valid values: GitHub or GitHub Enterprise. Defaults to GitHub. If repo_type is GitHubEnterprise, must use existing project and GitHub Enterprise service connection."
-  default = "GitHub"
+  default     = "GitHub"
 }
 
 # todo not works

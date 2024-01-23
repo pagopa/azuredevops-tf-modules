@@ -22,9 +22,9 @@ variable "repository" {
 }
 
 variable "repository_repo_type" {
-  type = string
+  type        = string
   description = " (Optional) The repository type. Valid values: GitHub or GitHub Enterprise. Defaults to GitHub. If repo_type is GitHubEnterprise, must use existing project and GitHub Enterprise service connection."
-  default = "GitHub"
+  default     = "GitHub"
 }
 
 variable "agent_pool_name" {
