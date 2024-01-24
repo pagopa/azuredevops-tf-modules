@@ -3,6 +3,12 @@ variable "project_id" {
   description = "(Required) Azure DevOps project ID"
 }
 
+variable "agent_pool_name" {
+  type        = string
+  default     = "Azure Pipelines"
+  description = "The agent pool that should execute the build"
+}
+
 variable "repository" {
   type = object({
     organization    = string # organization name (e.g. pagopaspa)
@@ -37,9 +43,16 @@ variable "pull_request_trigger_use_yaml" {
   default     = false
 }
 
-variable "github_service_connection_id" {
+variable "pull_request_trigger_auto_cancel" {
+  type        = bool
+  description = "Allow to cancel previous runs"
+  default     = true
+}
+
+variable "repository_repo_type" {
   type        = string
-  description = "(Required) GitHub service connection ID used to link Azure DevOps."
+  description = " (Optional) The repository type. Valid values: GitHub or GitHub Enterprise. Defaults to GitHub. If repo_type is GitHubEnterprise, must use existing project and GitHub Enterprise service connection."
+  default     = "GitHub"
 }
 
 variable "variables" {
@@ -54,14 +67,17 @@ variable "variables_secret" {
   description = "(Optional) Pipeline secret variables"
 }
 
+
+#
+# Service connection
+#
+variable "github_service_connection_id" {
+  type        = string
+  description = "(Required) GitHub service connection ID used to link Azure DevOps."
+}
+
 variable "service_connection_ids_authorization" {
   type        = list(string)
   default     = null
   description = "(Optional) List service connection IDs that pipeline needs authorization. github_service_connection_id is authorized by default"
-}
-
-variable "agent_pool_name" {
-  type        = string
-  default     = "Azure Pipelines"
-  description = "The agent pool that should execute the build"
 }

@@ -26,7 +26,7 @@ resource "azuredevops_build_definition" "pipeline" {
   agent_pool_name = var.agent_pool_name
 
   repository {
-    repo_type             = "GitHub"
+    repo_type             = var.repository_repo_type
     repo_id               = "${var.repository.organization}/${var.repository.name}"
     branch_name           = var.repository.branch_name
     yml_path              = "azure-pipelines-federated.yaml"
@@ -177,7 +177,7 @@ resource "azuredevops_pipeline_authorization" "service_connection_ids_authorizat
 #
 
 # service endpoint for federated authorizion, used for accessing dns txt record of acme challenge
-    
+
 # federated service endpoint for accessing dns txt record of acme challenge.
 # the managed identity related to this service endpoint will be able ONLY to
 # access that specific txt record.
@@ -196,15 +196,6 @@ module "azuredevops_serviceendpoint_federated" {
   subscription_id     = var.subscription_id
   location            = var.location
   resource_group_name = var.managed_identity_resource_group_name
-}
-
-resource "azuredevops_pipeline_authorization" "service_connection_le_authorization" {
-  depends_on = [time_sleep.wait]
-
-  project_id  = var.project_id
-  resource_id = module.azuredevops_serviceendpoint_federated.service_endpoint_id
-  pipeline_id = azuredevops_build_definition.pipeline.id
-  type        = "endpoint"
 }
 
 # authorize the service endpoint for accessing txt record to be used by the pipeline

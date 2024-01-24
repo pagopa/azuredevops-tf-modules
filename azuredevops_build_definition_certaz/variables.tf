@@ -51,3 +51,9 @@ variable "service_connection_ids_authorization" {
   default     = null
   description = "(Optional) List service connection IDs that pipeline needs authorization. github_service_connection_id is authorized by default"
 }
+
+variable "repository_repo_type" {
+  type        = string
+  description = " (Optional) The repository type. Valid values: GitHub or GitHub Enterprise. Defaults to GitHub. If repo_type is GitHubEnterprise, must use existing project and GitHub Enterprise service connection."
+  default     = "GitHub"
+}

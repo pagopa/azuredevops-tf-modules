@@ -9,7 +9,7 @@ resource "azuredevops_build_definition" "pipeline" {
   agent_pool_name = var.agent_pool_name
 
   repository {
-    repo_type             = "GitHub"
+    repo_type             = var.repository_repo_type
     repo_id               = "${var.repository.organization}/${var.repository.name}"
     branch_name           = var.repository.branch_name
     yml_path              = "${var.repository.pipelines_path}/${local.yml_prefix_name}code-review-pipelines.yml"
@@ -26,7 +26,7 @@ resource "azuredevops_build_definition" "pipeline" {
 
   dynamic "pull_request_trigger" {
 
-    for_each = var.pull_request_trigger_use_yaml == false ? [] : ["dummy"]
+    for_each = ["dummy"]
 
     content {
       use_yaml       = var.pull_request_trigger_use_yaml == false ? null : true
@@ -41,7 +41,7 @@ resource "azuredevops_build_definition" "pipeline" {
         for_each = var.pull_request_trigger_use_yaml == true ? [] : ["dummy"]
 
         content {
-          auto_cancel = false
+          auto_cancel = var.pull_request_trigger_auto_cancel
           branch_filter {
             include = [var.repository.branch_name]
           }
@@ -77,6 +77,10 @@ resource "azuredevops_build_definition" "pipeline" {
     }
   }
 }
+
+#
+# Authorization
+#
 
 # This is to work around an issue with azuredevops_resource_authorization
 # The service connection resource is not ready immediately

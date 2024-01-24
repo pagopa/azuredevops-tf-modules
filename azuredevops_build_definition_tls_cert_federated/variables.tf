@@ -28,11 +28,6 @@ variable "path" {
   description = "(Required) Pipeline path on Azure DevOps"
 }
 
-variable "github_service_connection_id" {
-  type        = string
-  description = "(Required) GitHub service connection ID used to link Azure DevOps."
-}
-
 variable "variables" {
   type        = map(any)
   default     = null
@@ -43,6 +38,17 @@ variable "variables_secret" {
   type        = map(any)
   default     = null
   description = "(Optional) Pipeline secret variables"
+}
+
+variable "repository_repo_type" {
+  type        = string
+  description = " (Optional) The repository type. Valid values: GitHub or GitHub Enterprise. Defaults to GitHub. If repo_type is GitHubEnterprise, must use existing project and GitHub Enterprise service connection."
+  default     = "GitHub"
+}
+
+variable "github_service_connection_id" {
+  type        = string
+  description = "(Required) GitHub service connection ID used to link Azure DevOps."
 }
 
 variable "service_connection_ids_authorization" {

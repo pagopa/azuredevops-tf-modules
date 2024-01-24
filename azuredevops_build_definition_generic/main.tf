@@ -5,7 +5,7 @@ resource "azuredevops_build_definition" "pipeline" {
   agent_pool_name = var.agent_pool_name
 
   repository {
-    repo_type             = "GitHub"
+    repo_type             = var.repository_repo_type
     repo_id               = "${var.repository.organization}/${var.repository.name}"
     branch_name           = var.repository.branch_name
     yml_path              = "${var.repository.pipelines_path}/${var.pipeline_yml_filename}"
@@ -26,7 +26,7 @@ resource "azuredevops_build_definition" "pipeline" {
 
   dynamic "pull_request_trigger" {
 
-    for_each = var.pull_request_trigger_use_yaml == false ? [] : ["dummy"]
+    for_each = ["dummy"]
 
     content {
       use_yaml       = var.pull_request_trigger_use_yaml == false ? null : true
@@ -41,7 +41,7 @@ resource "azuredevops_build_definition" "pipeline" {
         for_each = var.pull_request_trigger_use_yaml == true ? [] : ["dummy"]
 
         content {
-          auto_cancel = false
+          auto_cancel = var.pull_request_trigger_auto_cancel
           branch_filter {
             include = [var.repository.branch_name]
           }
@@ -53,27 +53,6 @@ resource "azuredevops_build_definition" "pipeline" {
       }
     }
   }
-
-  # todo not works
-  # dynamic "ci_trigger" {
-  #   for_each = var.ci_trigger
-
-  #   content {
-  #     override {
-  #       batch                            = false
-  #       max_concurrent_builds_per_branch = 1
-  #       polling_interval                 = 0
-  #       branch_filter {
-  #         include = ci_trigger.value.branch_filter.include
-  #         exclude = ci_trigger.value.branch_filter.exclude
-  #       }
-  #       path_filter {
-  #         include = ci_trigger.value.path_filter.include
-  #         exclude = ci_trigger.value.path_filter.exclude
-  #       }
-  #     }
-  #   }
-  # }
 
   dynamic "variable" {
     for_each = var.variables

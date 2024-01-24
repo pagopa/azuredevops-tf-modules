@@ -37,6 +37,11 @@ variable "pull_request_trigger_use_yaml" {
   default     = false
 }
 
+variable "repository_repo_type" {
+  type        = string
+  description = " (Optional) The repository type. Valid values: GitHub or GitHub Enterprise. Defaults to GitHub. If repo_type is GitHubEnterprise, must use existing project and GitHub Enterprise service connection."
+  default     = "GitHub"
+}
 # todo not works
 # variable "ci_trigger" {
 #   type = object({
