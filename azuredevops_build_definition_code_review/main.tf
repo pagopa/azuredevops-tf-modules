@@ -76,6 +76,12 @@ resource "azuredevops_build_definition" "pipeline" {
       allow_override = false
     }
   }
+
+  lifecycle {
+    ignore_changes = [
+      pull_request_trigger.0.override.0.auto_cancel,
+    ]
+  }
 }
 
 #
