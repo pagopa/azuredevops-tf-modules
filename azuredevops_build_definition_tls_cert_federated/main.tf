@@ -187,7 +187,7 @@ resource "azuredevops_pipeline_authorization" "service_connection_ids_authorizat
 # for checking certicate expiration and for updating with the new certificate
 # provided by let's encrypt.
 module "azuredevops_serviceendpoint_federated" {
-  source = "git::https://github.com/pagopa/azuredevops-tf-modules.git//azuredevops_serviceendpoint_federated?ref=v5.2.0"
+  source = "git::https://github.com/pagopa/azuredevops-tf-modules.git//azuredevops_serviceendpoint_federated?ref=v5.4.0"
 
   project_id          = var.project_id
   name                = "azdo-acme-challenge-${local.secret_name}"
