@@ -23,7 +23,6 @@ repos:
       - id: check-merge-conflict
       - id: check-vcs-permalinks
       - id: forbid-new-submodules
-      - id: no-commit-to-branch
       # Common errors
       - id: end-of-file-fixer
         exclude_types: [sql, text, binary]
