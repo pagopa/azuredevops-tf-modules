@@ -44,7 +44,7 @@ module "secret_core" {
 }
 ```
 
-Create a AZDO service connection for cloning pipeline repo (i.e., `le-azure-acme-tiny`) 
+Create a AZDO service connection for cloning pipeline repo (i.e., `le-azure-acme-tiny`)
 from GitHub with previously retrieved token:
 ```hcl
 resource "azuredevops_serviceendpoint_github" "azure_devops_github_ro" {
@@ -63,7 +63,7 @@ Get Let's Encrypt credentials and store them into KV (requires Docker, it runs a
 ```hcl
 module "letsencrypt" {
   source = "git::https://github.com/pagopa/terraform-azurerm-v3//letsencrypt_credential?ref=v7.20.0"
-  
+
   prefix            = "my"
   env               = "p"
   key_vault_name    = "my-kv"
@@ -75,7 +75,7 @@ Create service connection and related managed identity for editing the certifica
 ```hcl
 module "tls_cert_service_conn" {
   source = "git::https://github.com/pagopa/azuredevops-tf-modules.git//azuredevops_serviceendpoint_federated?ref=v4.0.0"
-  
+
   project_id          = data.azuredevops_project.project.id
   name                = "my-p-tls-cert"
   tenant_id           = "my-tenant-id"
@@ -102,9 +102,9 @@ Finally, use this module for creating pipeline:
 ```hcl
 module "tlscert-portalefatturazione-pagopa-it-cert_az" {
   depends_on = [module.letsencrypt]
-  
+
   source = "git::<https://github.com/pagopa/azuredevops-tf-modules.git//azuredevops_build_definition_tls_cert_federated?ref=v4.1.5>"
-  
+
   project_id = data.azuredevops_project.project.id
   location   = "westeurope"
   repository = {
@@ -116,26 +116,26 @@ module "tlscert-portalefatturazione-pagopa-it-cert_az" {
   name                         = "my.pagopa.it"
   path                         = "my\\TLS-Certificates"
   github_service_connection_id = azuredevops_serviceendpoint_github.azure_devops_github_ro.id
-  
+
   dns_record_name         = ""
   dns_zone_name           = "my.pagopa.it"
   dns_zone_resource_group = "my-dns-rg"
   tenant_id               = "my-tenant-id"
   subscription_name       = "my-sub"
   subscription_id         = "my-sub-id"
-  
+
   credential_key_vault_name           = "my-kv"
   credential_key_vault_resource_group = "my-kv-rg"
-  
+
   variables = {
     CERT_NAME_EXPIRE_SECONDS     = "2592000" #30 days
     KEY_VAULT_SERVICE_CONNECTION = module.tls_cert_service_conn.service_endpoint_name,
     KEY_VAULT_NAME               = "my-kv"
   }
   variables_secret = {}
-  
+
   service_connection_ids_authorization = [ module.tls_cert_service_conn.service_endpoint_id ]
-  
+
   schedules = {
     days_to_build              = ["Thu"]
     schedule_only_with_changes = false
@@ -166,7 +166,7 @@ module "tlscert-portalefatturazione-pagopa-it-cert_az" {
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_azuredevops_serviceendpoint_federated"></a> [azuredevops\_serviceendpoint\_federated](#module\_azuredevops\_serviceendpoint\_federated) | git::https://github.com/pagopa/azuredevops-tf-modules.git//azuredevops_serviceendpoint_federated | v5.2.0 |
+| <a name="module_azuredevops_serviceendpoint_federated"></a> [azuredevops\_serviceendpoint\_federated](#module\_azuredevops\_serviceendpoint\_federated) | git::https://github.com/pagopa/azuredevops-tf-modules.git//azuredevops_serviceendpoint_federated | v5.4.0 |
 | <a name="module_secrets"></a> [secrets](#module\_secrets) | git::https://github.com/pagopa/terraform-azurerm-v3.git//key_vault_secrets_query | v7.48.0 |
 
 ## Resources

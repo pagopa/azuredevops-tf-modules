@@ -160,4 +160,3 @@ resource "azuredevops_pipeline_authorization" "sa_service_connection_ids_authori
 
   type = "endpoint"
 }
-

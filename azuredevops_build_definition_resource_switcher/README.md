@@ -34,7 +34,7 @@ locals {
 module "my_service_switcher" {
   source = "git::https://github.com/pagopa/azuredevops-tf-modules.git//azuredevops_build_definition_resource_switcher?ref=<ref_version>"
   path   = var.my_variables.pipeline.path
-  
+
   providers = {
     azurerm = azurerm.dev
   }
@@ -124,7 +124,7 @@ repository = {
   - `stop_time`: stop time, expressed in `HH:mm` format, when to scale down/stop the cluster
   - `rg`: resource group name of the cluster to manage
   - `node_pool_exclusions`: (Optional) list of node pool names to exclude from the switcher elaboration
-  - `force`: (Optional) If your cluster has PDB which prevents scaling down, use force to completely shut down the node pools without using the scale. Default false 
+  - `force`: (Optional) If your cluster has PDB which prevents scaling down, use force to completely shut down the node pools without using the scale. Default false
   - `user`: configuration for `user` typed node pools
     - `nodes_on_start`: minimum and maximum number of nodes to be configured in the autoscaler when the node pool is started. expressed in `<min>,<max>` format
     - `nodes_on_stop`: minimum and maximum number of nodes to be configured in the autoscaler when the node pool is stopped. expressed in `<min>,<max>` format
@@ -172,7 +172,7 @@ repository = {
 First of all, you need to create a new `tf` file for dedicated to the new resource, similar to `storage_account_pipeline.tf` or `aks_pipeline.tf`, in which you will:
 
 - customize the variables passed to the pipeline template
-- change the names of the resources to avoid overlapping 
+- change the names of the resources to avoid overlapping
 - parse the scheduling configuration for your resource
 - change the name of the pipeline template that will be used (`repository.yml_path`)
 
