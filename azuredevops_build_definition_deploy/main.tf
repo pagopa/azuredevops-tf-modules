@@ -54,27 +54,6 @@ resource "azuredevops_build_definition" "pipeline" {
     }
   }
 
-  # todo not works
-  # dynamic "ci_trigger" {
-  #   for_each = var.ci_trigger
-
-  #   content {
-  #     override {
-  #       batch                            = false
-  #       max_concurrent_builds_per_branch = 1
-  #       polling_interval                 = 0
-  #       branch_filter {
-  #         include = ci_trigger.value.branch_filter.include
-  #         exclude = ci_trigger.value.branch_filter.exclude
-  #       }
-  #       path_filter {
-  #         include = ci_trigger.value.path_filter.include
-  #         exclude = ci_trigger.value.path_filter.exclude
-  #       }
-  #     }
-  #   }
-  # }
-
   dynamic "variable" {
     for_each = var.variables
     iterator = variable
@@ -112,6 +91,12 @@ resource "azuredevops_build_definition" "pipeline" {
         exclude = s.value.branch_filter.exclude
       }
     }
+  }
+
+  lifecycle {
+    ignore_changes = [
+      pull_request_trigger.0.override.0.auto_cancel,
+    ]
   }
 }
 
