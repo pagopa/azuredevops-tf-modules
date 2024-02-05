@@ -226,4 +226,3 @@ resource "azuredevops_pipeline_authorization" "aks_service_connection_ids_author
 
   type = "endpoint"
 }
-
