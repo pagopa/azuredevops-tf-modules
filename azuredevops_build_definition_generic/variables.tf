@@ -18,9 +18,21 @@ variable "repository" {
   description = "(Required) GitHub repository attributes"
 }
 
+variable "ci_trigger_enabled" {
+  type        = bool
+  description = "Enabled or disabled Continuous Integration"
+  default     = false
+}
+
 variable "ci_trigger_use_yaml" {
   type        = bool
   description = "(Optional) Use the azure-pipeline file for the build configuration. Defaults to false."
+  default     = false
+}
+
+variable "pull_request_trigger_enabled" {
+  type        = bool
+  description = "Enabled or disabled pull request validation trigger"
   default     = false
 }
 
@@ -41,22 +53,6 @@ variable "repository_repo_type" {
   description = " (Optional) The repository type. Valid values: GitHub or GitHub Enterprise. Defaults to GitHub. If repo_type is GitHubEnterprise, must use existing project and GitHub Enterprise service connection."
   default     = "GitHub"
 }
-
-# todo not works
-# variable "ci_trigger" {
-#   type = object({
-#     branch_filter = object({
-#       exclude = list(string)
-#       include = list(string)
-#     })
-#     path_filter = object({
-#       exclude = list(string)
-#       include = list(string)
-#     })
-#   })
-#   description = "(Optional) CI trigger policy"
-#   default     = null
-# }
 
 variable "github_service_connection_id" {
   type        = string
@@ -95,4 +91,20 @@ variable "pipeline_yml_filename" {
 variable "pipeline_name" {
   type        = string
   description = "(Required) Pipeline name"
+}
+
+variable "schedules" {
+  type = object({
+    days_to_build              = list(string)
+    schedule_only_with_changes = bool
+    start_hours                = number
+    start_minutes              = number
+    time_zone                  = string
+    branch_filter = object({
+      include = list(string)
+      exclude = list(string)
+    })
+  })
+  default     = null
+  description = "Allow to setup schedules trigger in azure devops. Usign that the schedules used in the yaml will be disabled"
 }

@@ -17,7 +17,7 @@ resource "azuredevops_build_definition" "pipeline" {
   }
 
   dynamic "ci_trigger" {
-    for_each = var.ci_trigger_use_yaml == false ? [] : ["dummy"]
+    for_each = var.ci_trigger_enabled == false ? [] : ["dummy"]
 
     content {
       use_yaml = var.ci_trigger_use_yaml
@@ -26,7 +26,7 @@ resource "azuredevops_build_definition" "pipeline" {
 
   dynamic "pull_request_trigger" {
 
-    for_each = var.pull_request_trigger_use_yaml == false ? [] : ["dummy"]
+    for_each = var.pull_request_trigger_enabled == false ? [] : ["dummy"]
 
     content {
       use_yaml       = var.pull_request_trigger_use_yaml == false ? null : true
