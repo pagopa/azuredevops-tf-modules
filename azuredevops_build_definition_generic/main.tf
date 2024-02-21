@@ -12,12 +12,8 @@ resource "azuredevops_build_definition" "pipeline" {
     service_connection_id = var.github_service_connection_id
   }
 
-  # ci_trigger {
-  #   use_yaml = var.ci_trigger_use_yaml == false ? null : true
-  # }
-
   dynamic "ci_trigger" {
-    for_each = var.ci_trigger_use_yaml == false ? [] : ["dummy"]
+    for_each = var.ci_trigger_enabled == false ? [] : ["dummy"]
 
     content {
       use_yaml = var.ci_trigger_use_yaml
@@ -26,7 +22,7 @@ resource "azuredevops_build_definition" "pipeline" {
 
   dynamic "pull_request_trigger" {
 
-    for_each = ["dummy"]
+    for_each = var.pull_request_trigger_enabled == false ? [] : ["dummy"]
 
     content {
       use_yaml       = var.pull_request_trigger_use_yaml == false ? null : true
@@ -74,6 +70,22 @@ resource "azuredevops_build_definition" "pipeline" {
       secret_value   = variable_secret.value
       is_secret      = true
       allow_override = false
+    }
+  }
+
+  dynamic "schedules" {
+    for_each = var.schedules != null ? [var.schedules] : []
+    iterator = s
+    content {
+      days_to_build              = s.value.days_to_build
+      schedule_only_with_changes = s.value.schedule_only_with_changes
+      start_hours                = s.value.start_hours
+      start_minutes              = s.value.start_minutes
+      time_zone                  = s.value.time_zone
+      branch_filter {
+        include = s.value.branch_filter.include
+        exclude = s.value.branch_filter.exclude
+      }
     }
   }
 
