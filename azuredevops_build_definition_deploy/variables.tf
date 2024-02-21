@@ -26,9 +26,9 @@ variable "path" {
 }
 
 variable "ci_trigger_enabled" {
-  type = bool
+  type        = bool
   description = "Enabled or disabled Continuous Integration"
-  default = false
+  default     = false
 }
 
 variable "ci_trigger_use_yaml" {
@@ -38,9 +38,9 @@ variable "ci_trigger_use_yaml" {
 }
 
 variable "pull_request_trigger_enabled" {
-  type = bool
+  type        = bool
   description = "Enabled or disabled pull request validation trigger"
-  default = false
+  default     = false
 }
 
 variable "pull_request_trigger_use_yaml" {
