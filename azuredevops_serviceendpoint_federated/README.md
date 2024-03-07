@@ -68,6 +68,7 @@ No modules.
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_approver_ids"></a> [approver\_ids](#input\_approver\_ids) | (Optional) Credential IDs for approving the use of the service connection | `list(string)` | `[]` | no |
+| <a name="input_check_approval_enabled"></a> [check\_approval\_enabled](#input\_check\_approval\_enabled) | (Optional) Flag to approve use of the service connection | `bool` | `false` | no |
 | <a name="input_default_roleassignment_rg_prefix"></a> [default\_roleassignment\_rg\_prefix](#input\_default\_roleassignment\_rg\_prefix) | (Optional) Add a prefix to default\_roleassignment\_rg | `string` | `""` | no |
 | <a name="input_location"></a> [location](#input\_location) | n/a | `string` | n/a | yes |
 | <a name="input_name"></a> [name](#input\_name) | (Required) Managed identity & Service connection name (if not defined `serviceendpoint_azurerm_name`) | `string` | n/a | yes |

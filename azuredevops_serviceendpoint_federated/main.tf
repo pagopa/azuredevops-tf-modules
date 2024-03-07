@@ -50,7 +50,7 @@ resource "azuredevops_serviceendpoint_azurerm" "azurerm" {
 #
 
 resource "azuredevops_check_approval" "this" {
-  count = length(var.approver_ids) > 0 ? 1 : 0
+  count = var.check_approval_enabled ? 1 : 0
 
   project_id           = var.project_id
   target_resource_id   = azuredevops_serviceendpoint_azurerm.azurerm.id
@@ -58,6 +58,5 @@ resource "azuredevops_check_approval" "this" {
 
   requester_can_approve = true
   approvers             = var.approver_ids
-
-  timeout = 120
+  timeout               = 120
 }
