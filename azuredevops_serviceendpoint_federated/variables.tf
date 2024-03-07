@@ -48,3 +48,9 @@ variable "default_roleassignment_rg_prefix" {
   default     = ""
   description = "(Optional) Add a prefix to default_roleassignment_rg"
 }
+
+variable "approver_ids" {
+  type        = list(string)
+  default     = []
+  description = "(Optional) Credential IDs for approving the use of the service connection"
+}

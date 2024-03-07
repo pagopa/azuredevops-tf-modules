@@ -56,6 +56,7 @@ No modules.
 
 | Name | Type |
 |------|------|
+| [azuredevops_check_approval.this](https://registry.terraform.io/providers/microsoft/azuredevops/latest/docs/resources/check_approval) | resource |
 | [azuredevops_serviceendpoint_azurerm.azurerm](https://registry.terraform.io/providers/microsoft/azuredevops/latest/docs/resources/serviceendpoint_azurerm) | resource |
 | [azurerm_federated_identity_credential.federated_setup](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/federated_identity_credential) | resource |
 | [azurerm_role_assignment.managed_identity_default_role_assignment](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/role_assignment) | resource |
@@ -66,6 +67,7 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+| <a name="input_approver_ids"></a> [approver\_ids](#input\_approver\_ids) | (Optional) Credential IDs for approving the use of the service connection | `list(string)` | `[]` | no |
 | <a name="input_default_roleassignment_rg_prefix"></a> [default\_roleassignment\_rg\_prefix](#input\_default\_roleassignment\_rg\_prefix) | (Optional) Add a prefix to default\_roleassignment\_rg | `string` | `""` | no |
 | <a name="input_location"></a> [location](#input\_location) | n/a | `string` | n/a | yes |
 | <a name="input_name"></a> [name](#input\_name) | (Required) Managed identity & Service connection name (if not defined `serviceendpoint_azurerm_name`) | `string` | n/a | yes |

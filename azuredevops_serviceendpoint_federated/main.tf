@@ -44,3 +44,20 @@ resource "azuredevops_serviceendpoint_azurerm" "azurerm" {
   azurerm_subscription_id   = var.subscription_id
   azurerm_subscription_name = var.subscription_name
 }
+
+#
+# Approval
+#
+
+resource "azuredevops_check_approval" "this" {
+  count = length(var.approver_ids) > 0 ? 1 : 0
+
+  project_id           = var.project_id
+  target_resource_id   = azuredevops_serviceendpoint_azurerm.azurerm.id
+  target_resource_type = "endpoint"
+
+  requester_can_approve = true
+  approvers             = var.approver_ids
+
+  timeout = 120
+}
