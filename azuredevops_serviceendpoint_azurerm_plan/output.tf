@@ -6,7 +6,7 @@ output "application_id" {
 
 output "app_name" {
   value       = local.app_name
-  description = "App name"
+  description = "Azure app name"
 }
 
 output "service_principal_object_id" {

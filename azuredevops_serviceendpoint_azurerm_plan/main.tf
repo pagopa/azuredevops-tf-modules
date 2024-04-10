@@ -1,7 +1,3 @@
-data "azuread_group" "group_directory_reader_permissions" {
-  display_name = var.iac_aad_group_name
-}
-
 data "azurerm_key_vault" "kv" {
   name                = var.credential_key_vault_name
   resource_group_name = var.credential_key_vault_resource_group
@@ -50,12 +46,6 @@ resource "azurerm_key_vault_secret" "credentials_password_value" {
 #
 # Roles
 #
-
-# assign SP to group with Directory Reader
-resource "azuread_group_member" "add_plan_app_to_directory_readers_group" {
-  group_object_id  = data.azuread_group.group_directory_reader_permissions.id
-  member_object_id = azuread_service_principal.sp_plan.object_id
-}
 
 # assign SP to default resource group to allow to be linked to subscription
 resource "azurerm_role_assignment" "default_resource_group_reader" {
