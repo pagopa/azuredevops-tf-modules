@@ -107,6 +107,12 @@ resource "azuredevops_build_definition" "pipeline" {
   }
 
   variable {
+    name           = "KEY_VAULT_NAME"
+    value          = var.credential_key_vault_name
+    allow_override = false
+  }
+
+  variable {
     name           = "LE_PRIVATE_KEY_JSON"
     secret_value   = module.secrets.values["le-private-key-json"].value
     is_secret      = true
