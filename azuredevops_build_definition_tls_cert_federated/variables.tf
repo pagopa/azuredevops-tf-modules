@@ -109,9 +109,9 @@ variable "managed_identity_resource_group_name" {
 }
 
 variable "cert_name_expire_seconds" {
-  type = number
+  type        = number
   description = "(Optional) Certficate expire in seconds. Default is '2592000' #30 days"
-  default = 2592000
+  default     = 2592000
 }
 
 variable "schedules" {
