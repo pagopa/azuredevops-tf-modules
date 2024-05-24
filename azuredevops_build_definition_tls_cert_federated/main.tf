@@ -101,12 +101,6 @@ resource "azuredevops_build_definition" "pipeline" {
   }
 
   variable {
-    name           = "KEY_VAULT_CERT_NAME"
-    value          = local.secret_name
-    allow_override = false
-  }
-
-  variable {
     name           = "LE_PRIVATE_KEY_JSON"
     secret_value   = module.secrets.values["le-private-key-json"].value
     is_secret      = true
@@ -117,6 +111,24 @@ resource "azuredevops_build_definition" "pipeline" {
     name           = "LE_REGR_JSON"
     secret_value   = module.secrets.values["le-regr-json"].value
     is_secret      = true
+    allow_override = false
+  }
+
+  variable {
+    name           = "KEY_VAULT_CERT_NAME"
+    value          = local.secret_name
+    allow_override = false
+  }
+
+  variable {
+    name           = "KEY_VAULT_NAME"
+    value          = var.credential_key_vault_name
+    allow_override = false
+  }
+
+  variable {
+    name           = "CERT_NAME_EXPIRE_SECONDS"
+    value          = var.cert_name_expire_seconds
     allow_override = false
   }
 

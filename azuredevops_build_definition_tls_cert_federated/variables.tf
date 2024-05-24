@@ -72,6 +72,9 @@ variable "tenant_id" {
   description = "(Required) Azure Tenant ID related to tenant where create service principal"
 }
 
+#
+# 🔒 KV
+#
 variable "credential_key_vault_name" {
   type        = string
   description = "(Required) key vault where store service principal credentials"
@@ -82,6 +85,9 @@ variable "credential_key_vault_resource_group" {
   description = "(Required) key vault resource group where store service principal credentials"
 }
 
+#
+# DNS
+#
 variable "dns_record_name" {
   type        = string
   description = "(Required) Dns record name"
@@ -100,6 +106,12 @@ variable "dns_zone_resource_group" {
 variable "managed_identity_resource_group_name" {
   type        = string
   description = "(Required) Managed identity resource group, where will be created"
+}
+
+variable "cert_name_expire_seconds" {
+  type        = number
+  description = "(Optional) Certficate expire in seconds. Default is '2592000' #30 days"
+  default     = 2592000
 }
 
 variable "schedules" {
