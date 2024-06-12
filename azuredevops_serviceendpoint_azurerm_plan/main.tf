@@ -64,7 +64,7 @@ resource "azurerm_role_assignment" "plan_app_subscription" {
 
 module "secrets" {
   depends_on = [azurerm_key_vault_secret.credentials_password_value]
-  source     = "git::https://github.com/pagopa/terraform-azurerm-v3.git//key_vault_secrets_query?ref=v7.48.0"
+  source     = "git::https://github.com/pagopa/terraform-azurerm-v3.git//key_vault_secrets_query?ref=v8.21.0"
 
   resource_group = var.credential_key_vault_resource_group
   key_vault_name = var.credential_key_vault_name

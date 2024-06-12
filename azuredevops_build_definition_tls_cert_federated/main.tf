@@ -4,7 +4,7 @@ locals {
 }
 
 module "secrets" {
-  source         = "git::https://github.com/pagopa/terraform-azurerm-v3.git//key_vault_secrets_query?ref=v7.48.0"
+  source         = "git::https://github.com/pagopa/terraform-azurerm-v3.git//key_vault_secrets_query?ref=v8.21.0"
   resource_group = var.credential_key_vault_resource_group
   key_vault_name = var.credential_key_vault_name
 
@@ -199,7 +199,7 @@ resource "azuredevops_pipeline_authorization" "service_connection_ids_authorizat
 # for checking certicate expiration and for updating with the new certificate
 # provided by let's encrypt.
 module "azuredevops_serviceendpoint_federated" {
-  source = "git::https://github.com/pagopa/azuredevops-tf-modules.git//azuredevops_serviceendpoint_federated?ref=v5.4.0"
+  source = "git::https://github.com/pagopa/azuredevops-tf-modules.git//azuredevops_serviceendpoint_federated?ref=v9.0.0"
 
   project_id          = var.project_id
   name                = "azdo-acme-challenge-${local.secret_name}"
