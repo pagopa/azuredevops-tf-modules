@@ -133,9 +133,9 @@ module "tlscert-testit-itn-internal-devopslab-pagopa-it-cert_az" {
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.3.0 |
-| <a name="requirement_azuredevops"></a> [azuredevops](#requirement\_azuredevops) | >= 0.10.0, <= 0.12.0 |
-| <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | <= 3.90.0 |
-| <a name="requirement_time"></a> [time](#requirement\_time) | >= 0.7.0 |
+| <a name="requirement_azuredevops"></a> [azuredevops](#requirement\_azuredevops) | ~> 1.1 |
+| <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | ~> 3.107 |
+| <a name="requirement_time"></a> [time](#requirement\_time) | ~> 0.11 |
 
 ## Modules
 
