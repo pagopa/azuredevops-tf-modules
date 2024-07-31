@@ -1,18 +1,13 @@
 locals {
   default_audience_name        = "api://AzureADTokenExchange"
-  serviceendpoint_azurerm_name = var.serviceendpoint_azurerm_name != "" ? "${upper(var.serviceendpoint_azurerm_name)}-SERVICE-CONN" : "${upper(var.name)}-SERVICE-CONN"
+  serviceendpoint_azurerm_name = "${upper(var.serviceendpoint_azurecr_name_prefix)}-SERVICE-CONN"
 }
 
 variable "location" {
   type = string
 }
 
-variable "name" {
-  type        = string
-  description = "(Required) Managed identity & Service connection name (if not defined `serviceendpoint_azurerm_name`)"
-}
-
-variable "serviceendpoint_azurerm_name" {
+variable "serviceendpoint_azurecr_name_prefix" {
   type        = string
   description = "(Optional) Service connection azurerm name"
   default     = ""
@@ -49,14 +44,14 @@ variable "default_roleassignment_rg_prefix" {
   description = "(Optional) Add a prefix to default_roleassignment_rg"
 }
 
-variable "check_approval_enabled" {
-  type        = bool
-  default     = false
-  description = "(Optional) Flag to approve use of the service connection"
+### ACR
+
+variable "azurecr_resource_group_name" {
+  type        = string
+  description = "Resource group name where the ACR is installed"
 }
 
-variable "approver_ids" {
-  type        = list(string)
-  default     = []
-  description = "(Optional) Credential IDs for approving the use of the service connection"
+variable "azurecr_name" {
+  type        = string
+  description = "ACR's name"
 }

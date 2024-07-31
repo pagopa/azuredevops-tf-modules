@@ -1,10 +1,10 @@
 output "service_endpoint_id" {
-  value       = azuredevops_serviceendpoint_azurerm.azurerm.id
+  value       = azuredevops_serviceendpoint_azurecr.container_registry.id
   description = "Service endpoint id"
 }
 
 output "service_endpoint_name" {
-  value       = azuredevops_serviceendpoint_azurerm.azurerm.service_endpoint_name
+  value       = azuredevops_serviceendpoint_azurecr.container_registry.service_endpoint_name
   description = "Service endpoint name"
 }
 

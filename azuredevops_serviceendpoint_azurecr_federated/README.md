@@ -45,8 +45,8 @@ locals {
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.3.0 |
-| <a name="requirement_azuredevops"></a> [azuredevops](#requirement\_azuredevops) | ~> 1.1 |
-| <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | ~> 3.107 |
+| <a name="requirement_azuredevops"></a> [azuredevops](#requirement\_azuredevops) | >= 1.1 |
+| <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | >= 3.107 |
 
 ## Modules
 
@@ -56,8 +56,7 @@ No modules.
 
 | Name | Type |
 |------|------|
-| [azuredevops_check_approval.this](https://registry.terraform.io/providers/microsoft/azuredevops/latest/docs/resources/check_approval) | resource |
-| [azuredevops_serviceendpoint_azurerm.azurerm](https://registry.terraform.io/providers/microsoft/azuredevops/latest/docs/resources/serviceendpoint_azurerm) | resource |
+| [azuredevops_serviceendpoint_azurecr.container_registry](https://registry.terraform.io/providers/microsoft/azuredevops/latest/docs/resources/serviceendpoint_azurecr) | resource |
 | [azurerm_federated_identity_credential.federated_setup](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/federated_identity_credential) | resource |
 | [azurerm_role_assignment.managed_identity_default_role_assignment](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/role_assignment) | resource |
 | [azurerm_user_assigned_identity.identity](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/user_assigned_identity) | resource |
@@ -67,14 +66,13 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_approver_ids"></a> [approver\_ids](#input\_approver\_ids) | (Optional) Credential IDs for approving the use of the service connection | `list(string)` | `[]` | no |
-| <a name="input_check_approval_enabled"></a> [check\_approval\_enabled](#input\_check\_approval\_enabled) | (Optional) Flag to approve use of the service connection | `bool` | `false` | no |
+| <a name="input_azurecr_name"></a> [azurecr\_name](#input\_azurecr\_name) | ACR's name | `string` | n/a | yes |
+| <a name="input_azurecr_resource_group_name"></a> [azurecr\_resource\_group\_name](#input\_azurecr\_resource\_group\_name) | Resource group name where the ACR is installed | `string` | n/a | yes |
 | <a name="input_default_roleassignment_rg_prefix"></a> [default\_roleassignment\_rg\_prefix](#input\_default\_roleassignment\_rg\_prefix) | (Optional) Add a prefix to default\_roleassignment\_rg | `string` | `""` | no |
 | <a name="input_location"></a> [location](#input\_location) | n/a | `string` | n/a | yes |
-| <a name="input_name"></a> [name](#input\_name) | (Required) Managed identity & Service connection name (if not defined `serviceendpoint_azurerm_name`) | `string` | n/a | yes |
 | <a name="input_project_id"></a> [project\_id](#input\_project\_id) | (Required) Azure DevOps project ID | `string` | n/a | yes |
 | <a name="input_resource_group_name"></a> [resource\_group\_name](#input\_resource\_group\_name) | Resource group where the managed identity will be create | `string` | n/a | yes |
-| <a name="input_serviceendpoint_azurerm_name"></a> [serviceendpoint\_azurerm\_name](#input\_serviceendpoint\_azurerm\_name) | (Optional) Service connection azurerm name | `string` | `""` | no |
+| <a name="input_serviceendpoint_azurecr_name_prefix"></a> [serviceendpoint\_azurecr\_name\_prefix](#input\_serviceendpoint\_azurecr\_name\_prefix) | (Optional) Service connection azurerm name | `string` | `""` | no |
 | <a name="input_subscription_id"></a> [subscription\_id](#input\_subscription\_id) | (Required) Azure Subscription ID related to tenant where create service principal | `string` | n/a | yes |
 | <a name="input_subscription_name"></a> [subscription\_name](#input\_subscription\_name) | (Required) Azure Subscription name related to tenant where create service principal | `string` | n/a | yes |
 | <a name="input_tenant_id"></a> [tenant\_id](#input\_tenant\_id) | (Required) Azure Tenant ID related to tenant where create service principal | `string` | n/a | yes |
