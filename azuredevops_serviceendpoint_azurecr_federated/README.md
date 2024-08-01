@@ -1,9 +1,4 @@
-# azuredevops_serviceendpoint_federated
-
-This module allow the creation of a service connection (azurerm type) with name: `azdo-sp-****`.
-Using a Service Principal, and store the credentials into a Key Vault.
-
-> 🏁 This connection can be used to manage from azure devops, azure resources inside subscription
+# azuredevops_serviceendpoint_azurecr_federated
 
 ## Architecture
 
@@ -11,32 +6,28 @@ Using a Service Principal, and store the credentials into a Key Vault.
 
 ## How to use it
 
-```json
-module "LAB-TLS-CERT-SERVICE-CONN" {
-  depends_on = [azuredevops_project.project]
-  source     = "git::https://github.com/pagopa/azuredevops-tf-modules.git//azuredevops_serviceendpoint_azurerm_limited?ref=v2.0.4"
+```hcl
+module "dev_azurecr_service_conn" {
+  source = "git::https://github.com/pagopa/azuredevops-tf-modules.git//azuredevops_serviceendpoint_azurecr_federated?ref=azurecr-workload-identity"
   providers = {
-    azurerm = azurerm.lab
+    azurerm = azurerm.dev
   }
 
-  project_id        = azuredevops_project.project.id
-  renew_token       = local.tlscert_renew_token
-  name              = "${local.prefix}-d-tls-cert"
-  tenant_id         = module.secrets.values["TENANTID"].value
-  subscription_id   = module.secrets.values["LAB-SUBSCRIPTION-ID"].value
-  subscription_name = var.lab_subscription_name
+  project_id = local.devops_project_id
+  # #tfsec:ignore:general-secrets-no-plaintext-exposure
+  serviceendpoint_azurecr_name_prefix = "${local.dev_docker_registry_name}-docker"
 
-  credential_subcription              = var.lab_subscription_name
-  credential_key_vault_name           = local.dev_key_vault_name
-  credential_key_vault_resource_group = local.dev_key_vault_resource_group
-}
+  tenant_id         = data.azurerm_client_config.current.tenant_id
+  subscription_id   = data.azurerm_subscriptions.dev.subscriptions[0].subscription_id
+  subscription_name = data.azurerm_subscriptions.dev.subscriptions[0].display_name
 
-locals {
-    renew_token = "v1"
+  location            = local.location_service_conn
+  resource_group_name = local.dev_identity_rg_name
+
+  azurecr_name = local.dev_docker_registry_name
+  azurecr_resource_group_name = local.dev_docker_registry_rg_name
 }
 ```
-
-> Use **renew_token** to force module to recreate the resource, for example change the value to "v2"
 
 <!-- markdownlint-disable -->
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
