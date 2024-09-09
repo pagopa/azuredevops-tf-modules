@@ -15,6 +15,8 @@ locals {
       "DocumentDB Account Contributor",
       "API Management Service Contributor",
       "App Compliance Automation Reader",
+      "Azure Event Hubs Data Receiver",
+      "Azure Event Hubs Data Owner",
     ]
   }
 }
