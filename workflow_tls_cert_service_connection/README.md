@@ -11,12 +11,6 @@ This module simplifies the integration of Azure DevOps with Azure Key Vault for 
 
 No requirements.
 
-## Providers
-
-| Name | Version |
-|------|---------|
-| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | 3.117.1 |
-
 ## Modules
 
 | Name | Source | Version |

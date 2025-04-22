@@ -39,13 +39,6 @@ module "dev_azurecr_service_conn" {
 | <a name="requirement_azuredevops"></a> [azuredevops](#requirement\_azuredevops) | >= 1.1 |
 | <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | >= 3.107 |
 
-## Providers
-
-| Name | Version |
-|------|---------|
-| <a name="provider_azuredevops"></a> [azuredevops](#provider\_azuredevops) | >= 1.1 |
-| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | >= 3.107 |
-
 ## Modules
 
 No modules.

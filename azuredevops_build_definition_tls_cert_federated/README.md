@@ -137,14 +137,6 @@ module "tlscert-testit-itn-internal-devopslab-pagopa-it-cert_az" {
 | <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | ~> 3.107 |
 | <a name="requirement_time"></a> [time](#requirement\_time) | ~> 0.11 |
 
-## Providers
-
-| Name | Version |
-|------|---------|
-| <a name="provider_azuredevops"></a> [azuredevops](#provider\_azuredevops) | ~> 1.1 |
-| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | ~> 3.107 |
-| <a name="provider_time"></a> [time](#provider\_time) | ~> 0.11 |
-
 ## Modules
 
 | Name | Source | Version |

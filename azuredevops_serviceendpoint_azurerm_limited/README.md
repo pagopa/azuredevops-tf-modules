@@ -51,15 +51,6 @@ locals {
 | <a name="requirement_null"></a> [null](#requirement\_null) | ~> 3.2 |
 | <a name="requirement_time"></a> [time](#requirement\_time) | ~> 0.11 |
 
-## Providers
-
-| Name | Version |
-|------|---------|
-| <a name="provider_azuread"></a> [azuread](#provider\_azuread) | ~> 2.51 |
-| <a name="provider_azuredevops"></a> [azuredevops](#provider\_azuredevops) | ~> 1.1 |
-| <a name="provider_null"></a> [null](#provider\_null) | ~> 3.2 |
-| <a name="provider_time"></a> [time](#provider\_time) | ~> 0.11 |
-
 ## Modules
 
 | Name | Source | Version |
