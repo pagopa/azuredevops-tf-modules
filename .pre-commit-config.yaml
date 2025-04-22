@@ -20,21 +20,15 @@ repos:
         args: ['--allow-missing-credentials']
       - id: detect-private-key
   - repo: https://github.com/antonbabenko/pre-commit-terraform
-    rev: v1.97.3
+    rev: v1.96.2
     hooks:
       - id: terraform_fmt
       - id: terraform_docs
         args:
-          - markdown --sort-by required
+          - --args=--hide providers
+      #validate will exclude folders that contains xyz/test... and .utils that contains only scripts stuffs
       - id: terraform_validate
+        exclude: '(.*\/tests|.utils)'
         args:
-          - --init-args=-lockfile=readonly
           - --args=-json
           - --args=-no-color
-#      - id: terraform_providers_lock
-#        args:
-#          - --args=-platform=windows_amd64
-#          - --args=-platform=darwin_amd64
-#          - --args=-platform=darwin_arm64
-#          - --args=-platform=linux_amd64
-#          - --args=-platform=linux_arm64
