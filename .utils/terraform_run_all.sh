@@ -1,7 +1,5 @@
 #!/bin/bash
 
-
-
 #
 # bash .utils/terraform_run_all.sh init local
 # bash .utils/terraform_run_all.sh init docker
@@ -18,27 +16,33 @@ TAG=$(cat .terraform-version)
 ACTION="$1"
 MODE="$2"
 
+case "${MODE}" in
+  docker*)
+    docker pull "hashicorp/terraform:$TAG"
+  ;;
+  local*)
+    terraform -version
+  ;;
+  *)
+  exit 1
+esac
+
 function terraform_init(){
   folder="$1"
-
+  root_folder="$(pwd)"
   if [ -d "$folder" ]; then
     echo "🔬 folder: $folder in under terraform: $ACTION action $MODE mode"
 
-    terraform providers lock \
-    -platform=windows_amd64 \
-    -platform=darwin_amd64 \
-    -platform=darwin_arm64 \
-    -platform=linux_amd64
-
-    rm -rf "$folder/.ignore_features.tf"
+    rm -rf "$folder/ignore_features.tf"
     rm -rf "$folder/.terraform"
-    cp ".utils/features.tf" "$folder/ignore_features.tf"
+    rm -rf "$folder/.terraform.lock.hcl"
+    find "$folder" -type f -name '*.terraform.lock.hcl*' -delete
 
     cd "$folder" || exit
 
     case "${MODE}" in
       docker*)
-        docker run -v "$(pwd):/tmp" -w /tmp "hashicorp/terraform:$TAG" "$ACTION"
+        docker run -v "${root_folder}:/tmp" -w /tmp/${folder} "hashicorp/terraform:$TAG" "$ACTION"
       ;;
       local*)
         terraform "$ACTION"
