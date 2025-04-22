@@ -2,19 +2,15 @@ name: Static Analysis
 
 on:
   push:
+    branches:
+      - main
 
 jobs:
   static_analysis:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     steps:
-      - uses: actions/checkout@ee0669bd1cc54295c223e0bb666b733df41de1c5 # v2
-
-      - name: run_init
-        run: |
-          bash .utils/terraform_run_all.sh init docker
-
-      - name: run_test
-        run: |
-          TAG=v1.86.0
-          docker run -v $(pwd):/lint -w /lint ghcr.io/antonbabenko/pre-commit-terraform:$TAG run -a
+      - name: Static Analysis
+        uses: pagopa/eng-github-actions-iac-template/azure/terraform-static-analysis@1e65ac158f5f60d3e46d3621dd4321f7b6e2d80d # v1.8.0
+        with:
+          precommit_version: 'v1.97.3@sha256:cab76405fc6d068e20ca7c5a6f8d17c527356eed31dbc54151aec9fac65da128'

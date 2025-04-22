@@ -88,7 +88,7 @@ module "io-pn-mock_code_review" {
 ```
 
 <!-- markdownlint-disable -->
-<!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+<!-- BEGIN_TF_DOCS -->
 ## Requirements
 
 | Name | Version |
@@ -125,7 +125,7 @@ No modules.
 | <a name="input_pull_request_trigger_auto_cancel"></a> [pull\_request\_trigger\_auto\_cancel](#input\_pull\_request\_trigger\_auto\_cancel) | Allow to cancel previous runs | `bool` | `true` | no |
 | <a name="input_pull_request_trigger_enabled"></a> [pull\_request\_trigger\_enabled](#input\_pull\_request\_trigger\_enabled) | Enabled or disabled pull request validation trigger | `bool` | `true` | no |
 | <a name="input_pull_request_trigger_use_yaml"></a> [pull\_request\_trigger\_use\_yaml](#input\_pull\_request\_trigger\_use\_yaml) | (Optional) Use the azure-pipeline file for the build configuration. Defaults to false. | `bool` | `true` | no |
-| <a name="input_repository"></a> [repository](#input\_repository) | (Required) GitHub repository attributes | <pre>object({<br>    organization    = string # organization name (e.g. pagopaspa)<br>    name            = string # repository name inside the organizzation<br>    branch_name     = string<br>    pipelines_path  = string # path where i can find the pipelines yaml<br>    yml_prefix_name = string # prefix for yaml pipeline<br>  })</pre> | n/a | yes |
+| <a name="input_repository"></a> [repository](#input\_repository) | (Required) GitHub repository attributes | <pre>object({<br/>    organization    = string # organization name (e.g. pagopaspa)<br/>    name            = string # repository name inside the organizzation<br/>    branch_name     = string<br/>    pipelines_path  = string # path where i can find the pipelines yaml<br/>    yml_prefix_name = string # prefix for yaml pipeline<br/>  })</pre> | n/a | yes |
 | <a name="input_repository_repo_type"></a> [repository\_repo\_type](#input\_repository\_repo\_type) | (Optional) The repository type. Valid values: GitHub or GitHub Enterprise. Defaults to GitHub. If repo\_type is GitHubEnterprise, must use existing project and GitHub Enterprise service connection. | `string` | `"GitHub"` | no |
 | <a name="input_service_connection_ids_authorization"></a> [service\_connection\_ids\_authorization](#input\_service\_connection\_ids\_authorization) | (Optional) List service connection IDs that pipeline needs authorization. github\_service\_connection\_id is authorized by default | `list(string)` | `null` | no |
 | <a name="input_variables"></a> [variables](#input\_variables) | (Optional) Pipeline variables | `map(any)` | `null` | no |
@@ -134,4 +134,4 @@ No modules.
 ## Outputs
 
 No outputs.
-<!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+<!-- END_TF_DOCS -->

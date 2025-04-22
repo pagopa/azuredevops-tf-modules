@@ -76,7 +76,7 @@ module "io-pn-mock-variables_deploy" {
 ```
 
 <!-- markdownlint-disable -->
-<!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+<!-- BEGIN_TF_DOCS -->
 ## Requirements
 
 | Name | Version |
@@ -112,9 +112,9 @@ No modules.
 | <a name="input_project_id"></a> [project\_id](#input\_project\_id) | (Required) Azure DevOps project ID | `string` | n/a | yes |
 | <a name="input_pull_request_trigger_enabled"></a> [pull\_request\_trigger\_enabled](#input\_pull\_request\_trigger\_enabled) | Enabled or disabled pull request validation trigger | `bool` | `false` | no |
 | <a name="input_pull_request_trigger_use_yaml"></a> [pull\_request\_trigger\_use\_yaml](#input\_pull\_request\_trigger\_use\_yaml) | (Optional) Use the azure-pipeline file for the build configuration. Defaults to false. | `bool` | `false` | no |
-| <a name="input_repository"></a> [repository](#input\_repository) | (Required) GitHub repository attributes | <pre>object({<br>    organization    = string # organization name (e.g. pagopaspa)<br>    name            = string # repository name inside the organizzation<br>    branch_name     = string<br>    pipelines_path  = string # path where i can find the pipelines yaml<br>    yml_prefix_name = string # prefix for yaml pipeline<br>  })</pre> | n/a | yes |
+| <a name="input_repository"></a> [repository](#input\_repository) | (Required) GitHub repository attributes | <pre>object({<br/>    organization    = string # organization name (e.g. pagopaspa)<br/>    name            = string # repository name inside the organizzation<br/>    branch_name     = string<br/>    pipelines_path  = string # path where i can find the pipelines yaml<br/>    yml_prefix_name = string # prefix for yaml pipeline<br/>  })</pre> | n/a | yes |
 | <a name="input_repository_repo_type"></a> [repository\_repo\_type](#input\_repository\_repo\_type) | (Optional) The repository type. Valid values: GitHub or GitHub Enterprise. Defaults to GitHub. If repo\_type is GitHubEnterprise, must use existing project and GitHub Enterprise service connection. | `string` | `"GitHub"` | no |
-| <a name="input_schedules"></a> [schedules](#input\_schedules) | Allow to setup schedules trigger in azure devops. Usign that the schedules used in the yaml will be disabled | <pre>object({<br>    days_to_build              = list(string)<br>    schedule_only_with_changes = bool<br>    start_hours                = number<br>    start_minutes              = number<br>    time_zone                  = string<br>    branch_filter = object({<br>      include = list(string)<br>      exclude = list(string)<br>    })<br>  })</pre> | `null` | no |
+| <a name="input_schedules"></a> [schedules](#input\_schedules) | Allow to setup schedules trigger in azure devops. Usign that the schedules used in the yaml will be disabled | <pre>object({<br/>    days_to_build              = list(string)<br/>    schedule_only_with_changes = bool<br/>    start_hours                = number<br/>    start_minutes              = number<br/>    time_zone                  = string<br/>    branch_filter = object({<br/>      include = list(string)<br/>      exclude = list(string)<br/>    })<br/>  })</pre> | `null` | no |
 | <a name="input_service_connection_ids_authorization"></a> [service\_connection\_ids\_authorization](#input\_service\_connection\_ids\_authorization) | (Optional) List service connection IDs that pipeline needs authorization. github\_service\_connection\_id is authorized by default | `list(string)` | `null` | no |
 | <a name="input_variables"></a> [variables](#input\_variables) | (Optional) Pipeline variables | `map(any)` | `null` | no |
 | <a name="input_variables_secret"></a> [variables\_secret](#input\_variables\_secret) | (Optional) Pipeline secret variables | `map(any)` | `null` | no |
@@ -122,4 +122,4 @@ No modules.
 ## Outputs
 
 No outputs.
-<!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+<!-- END_TF_DOCS -->

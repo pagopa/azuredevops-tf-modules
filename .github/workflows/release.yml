@@ -3,7 +3,6 @@ name: Release
 on:
   # Trigger the workflow on push or pull request,
   # but only for the main branch
-  workflow_dispatch:
   push:
     branches:
       - main
@@ -17,19 +16,8 @@ jobs:
     name: Release
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@ee0669bd1cc54295c223e0bb666b733df41de1c5 # v2
+      - name: Release action
+        id: release
+        uses: pagopa/eng-github-actions-iac-template/global/release-action@main #
         with:
-          persist-credentials: false
-          fetch-depth: 0
-
-      - name: Semantic release
-        uses: cycjimmy/semantic-release-action@v3
-        id: semantic
-        with:
-          semantic_version: 19.0.5
-          extra_plugins: |
-            @semantic-release/release-notes-generator@10.0.3
-            @semantic-release/git@10.0.1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}

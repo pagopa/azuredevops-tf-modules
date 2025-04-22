@@ -39,7 +39,7 @@ locals {
 > Use **renew_token** to force module to recreate the resource, for example change the value to "v2"
 
 <!-- markdownlint-disable -->
-<!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+<!-- BEGIN_TF_DOCS -->
 ## Requirements
 
 | Name | Version |
@@ -90,4 +90,4 @@ locals {
 | <a name="output_service_principal_app_id"></a> [service\_principal\_app\_id](#output\_service\_principal\_app\_id) | Service principal application id |
 | <a name="output_service_principal_name"></a> [service\_principal\_name](#output\_service\_principal\_name) | Service principal name |
 | <a name="output_service_principal_object_id"></a> [service\_principal\_object\_id](#output\_service\_principal\_object\_id) | Service principal object id |
-<!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+<!-- END_TF_DOCS -->
