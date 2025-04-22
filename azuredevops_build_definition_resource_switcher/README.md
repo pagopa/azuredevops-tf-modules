@@ -182,7 +182,7 @@ In addition, you'll have to define the pipeline template to handle your resource
 You'll have to create your own, customizing the parameters reading section, and the shell script which actually switches on/off the resource
 
 <!-- markdownlint-disable -->
-<!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+<!-- BEGIN_TF_DOCS -->
 ## Requirements
 
 | Name | Version |
@@ -192,6 +192,13 @@ You'll have to create your own, customizing the parameters reading section, and 
 | <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | ~> 3.107 |
 | <a name="requirement_null"></a> [null](#requirement\_null) | ~> 3.2 |
 | <a name="requirement_time"></a> [time](#requirement\_time) | ~> 0.11 |
+
+## Providers
+
+| Name | Version |
+|------|---------|
+| <a name="provider_azuredevops"></a> [azuredevops](#provider\_azuredevops) | ~> 1.1 |
+| <a name="provider_time"></a> [time](#provider\_time) | ~> 0.11 |
 
 ## Modules
 
@@ -218,9 +225,9 @@ No modules.
 | <a name="input_github_service_connection_id"></a> [github\_service\_connection\_id](#input\_github\_service\_connection\_id) | (Required) GitHub service connection ID used to link Azure DevOps. | `string` | n/a | yes |
 | <a name="input_path"></a> [path](#input\_path) | (Required) Pipeline path on Azure DevOps | `string` | n/a | yes |
 | <a name="input_project_id"></a> [project\_id](#input\_project\_id) | (Required) Azure DevOps project ID | `string` | n/a | yes |
-| <a name="input_repository"></a> [repository](#input\_repository) | (Required) GitHub repository attributes | <pre>object({<br>    organization    = string<br>    name            = string<br>    branch_name     = string<br>    pipelines_path  = string<br>    yml_prefix_name = string<br>  })</pre> | <pre>{<br>  "branch_name": "refs/heads/main",<br>  "name": "eng-common-scripts",<br>  "organization": "pagopa",<br>  "pipelines_path": "devops",<br>  "yml_prefix_name": null<br>}</pre> | no |
+| <a name="input_repository"></a> [repository](#input\_repository) | (Required) GitHub repository attributes | <pre>object({<br/>    organization    = string<br/>    name            = string<br/>    branch_name     = string<br/>    pipelines_path  = string<br/>    yml_prefix_name = string<br/>  })</pre> | <pre>{<br/>  "branch_name": "refs/heads/main",<br/>  "name": "eng-common-scripts",<br/>  "organization": "pagopa",<br/>  "pipelines_path": "devops",<br/>  "yml_prefix_name": null<br/>}</pre> | no |
 | <a name="input_repository_repo_type"></a> [repository\_repo\_type](#input\_repository\_repo\_type) | (Optional) The repository type. Valid values: GitHub or GitHub Enterprise. Defaults to GitHub. If repo\_type is GitHubEnterprise, must use existing project and GitHub Enterprise service connection. | `string` | `"GitHub"` | no |
-| <a name="input_schedule_configuration"></a> [schedule\_configuration](#input\_schedule\_configuration) | (Required) structure defining which service to manage, when and how. See README.md for details | <pre>object({<br>    days_to_build = list(string)<br>    timezone      = string<br>    branch_filter = object({<br>      include = list(string)<br>      exclude = list(string)<br>    })<br>    aks = list(object({<br>      cluster_name         = string<br>      start_time           = string<br>      stop_time            = string<br>      rg                   = string<br>      force                = optional(bool, false)<br>      node_pool_exclusions = optional(list(string), [])<br>      user = object({<br>        nodes_on_start = string<br>        nodes_on_stop  = string<br>      })<br>      system = object({<br>        nodes_on_start = string<br>        nodes_on_stop  = string<br>      })<br>    }))<br>    sa_sftp = list(object({<br>      start_time = string<br>      stop_time  = string<br>      sa_name    = string<br>    }))<br>  })</pre> | <pre>{<br>  "aks": [],<br>  "branch_filter": null,<br>  "days_to_build": [],<br>  "sa_sftp": [],<br>  "timezone": null<br>}</pre> | no |
+| <a name="input_schedule_configuration"></a> [schedule\_configuration](#input\_schedule\_configuration) | (Required) structure defining which service to manage, when and how. See README.md for details | <pre>object({<br/>    days_to_build = list(string)<br/>    timezone      = string<br/>    branch_filter = object({<br/>      include = list(string)<br/>      exclude = list(string)<br/>    })<br/>    aks = list(object({<br/>      cluster_name         = string<br/>      start_time           = string<br/>      stop_time            = string<br/>      rg                   = string<br/>      force                = optional(bool, false)<br/>      node_pool_exclusions = optional(list(string), [])<br/>      user = object({<br/>        nodes_on_start = string<br/>        nodes_on_stop  = string<br/>      })<br/>      system = object({<br/>        nodes_on_start = string<br/>        nodes_on_stop  = string<br/>      })<br/>    }))<br/>    sa_sftp = list(object({<br/>      start_time = string<br/>      stop_time  = string<br/>      sa_name    = string<br/>    }))<br/>  })</pre> | <pre>{<br/>  "aks": [],<br/>  "branch_filter": null,<br/>  "days_to_build": [],<br/>  "sa_sftp": [],<br/>  "timezone": null<br/>}</pre> | no |
 | <a name="input_service_connection_ids_authorization"></a> [service\_connection\_ids\_authorization](#input\_service\_connection\_ids\_authorization) | (Optional) List service connection IDs that pipeline needs authorization. github\_service\_connection\_id is authorized by default | `list(string)` | `[]` | no |
 | <a name="input_timeout"></a> [timeout](#input\_timeout) | (Optional) Switcher pipeline timeout, in minutes | `number` | `30` | no |
 | <a name="input_variables"></a> [variables](#input\_variables) | (Optional) Pipeline variables | `map(any)` | `null` | no |
@@ -229,4 +236,4 @@ No modules.
 ## Outputs
 
 No outputs.
-<!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+<!-- END_TF_DOCS -->
