@@ -139,3 +139,9 @@ variable "schedules" {
   }
   description = "Allow to setup schedules trigger in azure devops. Usign that the schedules used in the yaml will be disabled"
 }
+
+variable "cert_diff_pipeline_enabled" {
+  type        = bool
+  description = "(Optional) Enabled cert diff pipeline"
+  default     = false
+}
