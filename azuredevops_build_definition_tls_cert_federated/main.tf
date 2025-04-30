@@ -236,7 +236,7 @@ resource "azuredevops_build_definition" "pipeline_cert_diff" {
   count      = var.cert_diff_pipeline_enabled ? 1 : 0
 
   project_id      = var.project_id
-  name            = "${trimprefix("${var.dns_record_name}.${var.dns_zone_name}", ".")}-Cert-Diff"
+  name            = "${trimprefix("${var.dns_record_name}.${var.dns_zone_name}", ".")}-[Cert-Diff]"
   path            = "\\${var.path}"
   agent_pool_name = var.agent_pool_name
 
@@ -244,7 +244,7 @@ resource "azuredevops_build_definition" "pipeline_cert_diff" {
     repo_type             = var.repository_repo_type
     repo_id               = "${var.repository.organization}/${var.repository.name}"
     branch_name           = var.repository.branch_name
-    yml_path              = "certdiff-azure-pipeline.yaml"
+    yml_path              = "azure-pipeline-cert-diff.yaml"
     service_connection_id = var.github_service_connection_id
   }
 
