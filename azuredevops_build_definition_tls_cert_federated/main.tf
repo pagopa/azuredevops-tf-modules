@@ -295,6 +295,12 @@ resource "azuredevops_build_definition" "pipeline_cert_diff" {
     allow_override = false
   }
 
+  variable {
+    name           = "CERT_DIFF_VERSION"
+    value          = var.cert_diff_version
+    allow_override = false
+  }
+
   build_completion_trigger {
     build_definition_id = azuredevops_build_definition.pipeline.id
     branch_filter {
