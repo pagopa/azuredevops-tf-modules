@@ -145,3 +145,9 @@ variable "cert_diff_pipeline_enabled" {
   description = "(Optional) Enabled cert diff pipeline"
   default     = false
 }
+
+variable "cert_diff_version" {
+  type        = string
+  description = "(Optional) Cert diff version"
+  default     = "0.2.5"
+}
