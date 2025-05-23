@@ -153,6 +153,7 @@ module "tlscert-testit-itn-internal-devopslab-pagopa-it-cert_az" {
 | [azuredevops_pipeline_authorization.github_service_connection_authorization](https://registry.terraform.io/providers/microsoft/azuredevops/latest/docs/resources/pipeline_authorization) | resource |
 | [azuredevops_pipeline_authorization.service_connection_ids_authorization](https://registry.terraform.io/providers/microsoft/azuredevops/latest/docs/resources/pipeline_authorization) | resource |
 | [azuredevops_pipeline_authorization.service_connection_le_authorization](https://registry.terraform.io/providers/microsoft/azuredevops/latest/docs/resources/pipeline_authorization) | resource |
+| [azurerm_monitor_scheduled_query_rules_alert.cert_diff_alert](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/monitor_scheduled_query_rules_alert) | resource |
 | [azurerm_role_assignment.managed_identity_default_role_assignment](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/role_assignment) | resource |
 | [time_sleep.wait](https://registry.terraform.io/providers/hashicorp/time/latest/docs/resources/sleep) | resource |
 
@@ -161,8 +162,7 @@ module "tlscert-testit-itn-internal-devopslab-pagopa-it-cert_az" {
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_agent_pool_name"></a> [agent\_pool\_name](#input\_agent\_pool\_name) | The agent pool that should execute the build | `string` | `"Azure Pipelines"` | no |
-| <a name="input_cert_diff_pipeline_enabled"></a> [cert\_diff\_pipeline\_enabled](#input\_cert\_diff\_pipeline\_enabled) | (Optional) Enabled cert diff pipeline | `bool` | `false` | no |
-| <a name="input_cert_diff_version"></a> [cert\_diff\_version](#input\_cert\_diff\_version) | (Optional) Cert diff version | `string` | `"0.2.5"` | no |
+| <a name="input_cert_diff_variables"></a> [cert\_diff\_variables](#input\_cert\_diff\_variables) | (Optional) Cert diff pipeline variables | <pre>object({<br/>    enabled           = bool<br/>    cert_diff_version = string<br/>    app_insights_id   = optional(string)<br/>    location          = optional(string)<br/>    app_insights_rg   = optional(string)<br/>    actions_group     = optional(list(string))<br/>  })</pre> | <pre>{<br/>  "cert_diff_version": "0.2.5",<br/>  "enabled": false<br/>}</pre> | no |
 | <a name="input_cert_name_expire_seconds"></a> [cert\_name\_expire\_seconds](#input\_cert\_name\_expire\_seconds) | (Optional) Certficate expire in seconds. Default is '2592000' #30 days | `number` | `2592000` | no |
 | <a name="input_credential_key_vault_name"></a> [credential\_key\_vault\_name](#input\_credential\_key\_vault\_name) | (Required) key vault where store service principal credentials | `string` | n/a | yes |
 | <a name="input_credential_key_vault_resource_group"></a> [credential\_key\_vault\_resource\_group](#input\_credential\_key\_vault\_resource\_group) | (Required) key vault resource group where store service principal credentials | `string` | n/a | yes |

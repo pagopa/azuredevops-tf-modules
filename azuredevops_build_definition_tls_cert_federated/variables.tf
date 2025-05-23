@@ -140,14 +140,18 @@ variable "schedules" {
   description = "Allow to setup schedules trigger in azure devops. Usign that the schedules used in the yaml will be disabled"
 }
 
-variable "cert_diff_pipeline_enabled" {
-  type        = bool
-  description = "(Optional) Enabled cert diff pipeline"
-  default     = false
-}
-
-variable "cert_diff_version" {
-  type        = string
-  description = "(Optional) Cert diff version"
-  default     = "0.2.5"
+variable "cert_diff_variables" {
+  type = object({
+    enabled           = bool
+    cert_diff_version = string
+    app_insights_id   = optional(string)
+    location          = optional(string)
+    app_insights_rg   = optional(string)
+    actions_group     = optional(list(string))
+  })
+  default = {
+    enabled           = false
+    cert_diff_version = "0.2.5"
+  }
+  description = "(Optional) Cert diff pipeline variables"
 }

@@ -233,7 +233,7 @@ resource "azurerm_role_assignment" "managed_identity_default_role_assignment" {
 #
 resource "azuredevops_build_definition" "pipeline_cert_diff" {
   depends_on = [azuredevops_build_definition.pipeline]
-  count      = var.cert_diff_pipeline_enabled ? 1 : 0
+  count      = var.cert_diff_variables.enabled ? 1 : 0
 
   project_id      = var.project_id
   name            = "${trimprefix("${var.dns_record_name}.${var.dns_zone_name}", ".")}-[Cert-Diff]"
@@ -297,7 +297,7 @@ resource "azuredevops_build_definition" "pipeline_cert_diff" {
 
   variable {
     name           = "CERT_DIFF_VERSION"
-    value          = var.cert_diff_version
+    value          = var.cert_diff_variables.cert_diff_version
     allow_override = false
   }
 
@@ -306,5 +306,47 @@ resource "azuredevops_build_definition" "pipeline_cert_diff" {
     branch_filter {
       include = [var.repository.branch_name]
     }
+  }
+}
+
+resource "azurerm_monitor_scheduled_query_rules_alert" "cert_diff_alert" {
+  count = var.cert_diff_variables.enabled ? 1 : 0
+
+  name                = "${trimprefix("${var.dns_record_name}.${var.dns_zone_name}", "-")} cert diff alert"
+  resource_group_name = var.cert_diff_variables.app_insights_rg
+  location            = var.cert_diff_variables.location
+  description         = "Alert if ${trimprefix("${var.dns_record_name}.${var.dns_zone_name}", "-")}-[Cert-Diff] pipeline status is missing or failed in the last 8 days"
+  enabled             = true
+  severity            = 2
+  frequency           = 60
+  time_window         = 2880
+
+  data_source_id = var.cert_diff_variables.app_insights_id
+
+  action {
+    action_group = var.cert_diff_variables.actions_group
+  }
+
+  query = <<-QUERY
+    let expectedTests = availabilityResults
+    | where name contains "Cert-Diff"
+    | where timestamp > ago(${var.cert_name_expire_seconds}s)
+    | summarize by name;
+
+    let recentResults = availabilityResults
+    | where name contains "Cert-Diff"
+    | where timestamp > ago(8d)
+    | summarize hasFailure = any(success == false), hasAny = count() > 0 by name;
+
+    expectedTests
+    | join kind=leftouter recentResults on name
+    | extend status = iff(isnull(hasAny), "Missing", iff(hasFailure, "Failed", "OK"))
+    | where status in ("Missing", "Failed")
+    | project name, status
+  QUERY
+
+  trigger {
+    operator  = "GreaterThan"
+    threshold = 0
   }
 }
