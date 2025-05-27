@@ -310,7 +310,7 @@ resource "azuredevops_build_definition" "pipeline_cert_diff" {
 }
 
 resource "azurerm_monitor_scheduled_query_rules_alert" "cert_diff_alert" {
-  count = var.cert_diff_variables.enabled ? 1 : 0
+  count = var.cert_diff_variables.alert_enabled ? 1 : 0
 
   name                = "${trimprefix("${var.dns_record_name}.${var.dns_zone_name}", "-")} cert diff alert"
   resource_group_name = var.cert_diff_variables.app_insights_rg
@@ -318,7 +318,7 @@ resource "azurerm_monitor_scheduled_query_rules_alert" "cert_diff_alert" {
   description         = "Alert if ${trimprefix("${var.dns_record_name}.${var.dns_zone_name}", "-")}-[Cert-Diff] pipeline status is missing or failed in the last 8 days"
   enabled             = true
   severity            = 2
-  frequency           = 60
+  frequency           = 1440 # 24 hours
   time_window         = 2880
 
   data_source_id = var.cert_diff_variables.app_insights_id
@@ -329,13 +329,13 @@ resource "azurerm_monitor_scheduled_query_rules_alert" "cert_diff_alert" {
 
   query = <<-QUERY
     let expectedTests = availabilityResults
-    | where name contains "Cert-Diff"
+    | where name contains "${trimprefix("${var.dns_record_name}.${var.dns_zone_name}", ".")}-[Cert-Diff]"
     | where timestamp > ago(${var.cert_name_expire_seconds}s)
     | summarize by name;
 
     let recentResults = availabilityResults
-    | where name contains "Cert-Diff"
-    | where timestamp > ago(8d)
+    | where name contains "${trimprefix("${var.dns_record_name}.${var.dns_zone_name}", ".")}-[Cert-Diff]"
+    | where timestamp > ago(7d)
     | summarize hasFailure = any(success == false), hasAny = count() > 0 by name;
 
     expectedTests

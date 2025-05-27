@@ -143,6 +143,7 @@ variable "schedules" {
 variable "cert_diff_variables" {
   type = object({
     enabled           = bool
+    alert_enabled     = bool
     cert_diff_version = string
     app_insights_id   = optional(string)
     location          = optional(string)
@@ -151,6 +152,7 @@ variable "cert_diff_variables" {
   })
   default = {
     enabled           = false
+    alert_enabled     = false
     cert_diff_version = "0.2.5"
   }
   description = "(Optional) Cert diff pipeline variables"
