@@ -145,8 +145,7 @@ variable "cert_diff_variables" {
     enabled           = bool
     alert_enabled     = bool
     cert_diff_version = string
-    app_insights_id   = optional(string)
-    location          = optional(string)
+    app_insights_name = optional(string)
     app_insights_rg   = optional(string)
     actions_group     = optional(list(string))
   })

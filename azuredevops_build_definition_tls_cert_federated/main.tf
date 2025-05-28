@@ -14,6 +14,7 @@ module "secrets" {
   ]
 }
 
+
 #
 # Pipeline
 #
@@ -231,6 +232,12 @@ resource "azurerm_role_assignment" "managed_identity_default_role_assignment" {
 #
 # Pipeline Cert Diff
 #
+
+data "azurerm_application_insights" "this" {
+  name                = var.cert_diff_variables.app_insights_name
+  resource_group_name = var.cert_diff_variables.app_insights_rg
+}
+
 resource "azuredevops_build_definition" "pipeline_cert_diff" {
   depends_on = [azuredevops_build_definition.pipeline]
   count      = var.cert_diff_variables.enabled ? 1 : 0
@@ -301,6 +308,13 @@ resource "azuredevops_build_definition" "pipeline_cert_diff" {
     allow_override = false
   }
 
+  variable {
+    name           = "APP_INSIGHT_CONNECTION_STRING"
+    secret_value   = data.azurerm_application_insights.this.connection_string
+    is_secret      = true
+    allow_override = false
+  }
+
   build_completion_trigger {
     build_definition_id = azuredevops_build_definition.pipeline.id
     branch_filter {
@@ -313,15 +327,15 @@ resource "azurerm_monitor_scheduled_query_rules_alert" "cert_diff_alert" {
   count = var.cert_diff_variables.alert_enabled ? 1 : 0
 
   name                = "${trimprefix("${var.dns_record_name}.${var.dns_zone_name}", "-")} cert diff alert"
-  resource_group_name = var.cert_diff_variables.app_insights_rg
-  location            = var.cert_diff_variables.location
+  resource_group_name = data.azurerm_application_insights.this.resource_group_name
+  location            = data.azurerm_application_insights.this.location
   description         = "Alert if ${trimprefix("${var.dns_record_name}.${var.dns_zone_name}", "-")}-[Cert-Diff] pipeline status is missing or failed in the last 8 days"
   enabled             = true
   severity            = 2
   frequency           = 1440 # 24 hours
   time_window         = 2880
 
-  data_source_id = var.cert_diff_variables.app_insights_id
+  data_source_id = data.azurerm_application_insights.this.id
 
   action {
     action_group = var.cert_diff_variables.actions_group
