@@ -234,7 +234,7 @@ resource "azurerm_role_assignment" "managed_identity_default_role_assignment" {
 #
 
 data "azurerm_application_insights" "this" {
-  count      = var.cert_diff_variables.enabled ? 1 : 0
+  count = var.cert_diff_variables.enabled ? 1 : 0
 
   name                = var.cert_diff_variables.app_insights_name
   resource_group_name = var.cert_diff_variables.app_insights_rg
