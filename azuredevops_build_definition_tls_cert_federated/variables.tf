@@ -145,14 +145,18 @@ variable "cert_diff_variables" {
     enabled           = bool
     alert_enabled     = bool
     cert_diff_version = string
-    app_insights_name = optional(string)
-    app_insights_rg   = optional(string)
-    actions_group     = optional(list(string))
+    app_insights_name = string
+    app_insights_rg   = string
+    actions_group     = list(string)
   })
   default = {
     enabled           = false
     alert_enabled     = false
     cert_diff_version = "0.2.5"
+    cert_diff_version = ""
+    app_insights_name = ""
+    app_insights_rg   = ""
+    actions_group     = []
   }
   description = "(Optional) Cert diff pipeline variables"
 }
