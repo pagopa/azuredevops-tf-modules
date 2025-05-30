@@ -153,7 +153,6 @@ variable "cert_diff_variables" {
     enabled           = false
     alert_enabled     = false
     cert_diff_version = "0.2.5"
-    cert_diff_version = ""
     app_insights_name = ""
     app_insights_rg   = ""
     actions_group     = []
