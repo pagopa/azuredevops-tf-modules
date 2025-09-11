@@ -71,6 +71,7 @@ No modules.
 | <a name="input_check_approval_enabled"></a> [check\_approval\_enabled](#input\_check\_approval\_enabled) | (Optional) Flag to approve use of the service connection | `bool` | `false` | no |
 | <a name="input_default_roleassignment_rg_prefix"></a> [default\_roleassignment\_rg\_prefix](#input\_default\_roleassignment\_rg\_prefix) | (Optional) Add a prefix to default\_roleassignment\_rg | `string` | `""` | no |
 | <a name="input_location"></a> [location](#input\_location) | n/a | `string` | n/a | yes |
+| <a name="input_minimum_required_approvers"></a> [minimum\_required\_approvers](#input\_minimum\_required\_approvers) | n/a | `number` | `2` | no |
 | <a name="input_name"></a> [name](#input\_name) | (Required) Managed identity & Service connection name (if not defined `serviceendpoint_azurerm_name`) | `string` | n/a | yes |
 | <a name="input_project_id"></a> [project\_id](#input\_project\_id) | (Required) Azure DevOps project ID | `string` | n/a | yes |
 | <a name="input_resource_group_name"></a> [resource\_group\_name](#input\_resource\_group\_name) | Resource group where the managed identity will be create | `string` | n/a | yes |
