@@ -60,3 +60,8 @@ variable "approver_ids" {
   default     = []
   description = "(Optional) Credential IDs for approving the use of the service connection"
 }
+
+variable "minimum_required_approvers" {
+  type    = number
+  default = 2
+}

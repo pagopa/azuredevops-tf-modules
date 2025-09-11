@@ -56,7 +56,8 @@ resource "azuredevops_check_approval" "this" {
   target_resource_id   = azuredevops_serviceendpoint_azurerm.azurerm.id
   target_resource_type = "endpoint"
 
-  requester_can_approve = true
-  approvers             = var.approver_ids
-  timeout               = 120
+  requester_can_approve      = false
+  approvers                  = var.approver_ids
+  minimum_required_approvers = length(var.approver_ids) > 1 ? var.minimum_required_approvers : null
+  timeout                    = 120
 }
